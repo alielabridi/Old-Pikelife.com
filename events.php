@@ -608,7 +608,11 @@ $sessionUser = $_SESSION['usr_id'];
         </div>
         <!-- END WIDGET -->
 
-        <script>
+        <script type="text/javascript">
+            jQuery(document).ready(function($){ 
+                $('#interestsForm').hide();
+            });
+
             function showResult(str) {
               
               if (window.XMLHttpRequest) {
@@ -627,8 +631,40 @@ $sessionUser = $_SESSION['usr_id'];
               xmlhttp.open("GET","categorySearch.php?q="+str,true);
               xmlhttp.send();
             }
-        </script>
 
+            function showTextBox() {
+                jQuery(document).ready(function($){ 
+                    $('#interestsForm').show( "slow" );
+                    $('#createButton').hide();
+                });
+            }
+
+            function addInterest(interest) {
+                if(window.event.keyCode == 13){
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+                    } else {  // code for IE6, IE5
+                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+
+                    xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                            document.getElementById("categorySearch").innerHTML=xmlhttp.responseText;
+                        }
+                    }
+                      
+                    xmlhttp.open("GET","interestAdd.php?q="+interest,true);
+                    xmlhttp.send();
+
+                    jQuery(document).ready(function($){ 
+                        $('#createButton').show( "slow" );
+                        $('#interestsForm').hide();
+                      });
+                }
+            }
+
+        </script>
 
         <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Interests</h3>
             <form>
@@ -653,8 +689,11 @@ $sessionUser = $_SESSION['usr_id'];
                         <?php } ?>
 
                     </ul>
-                
-                    <a href="#" class="button red full">Create a Community</a>
+                    
+                    <div id='interestsForm'>
+                        <textarea placeholder='enter your interest' onkeyup='addInterest(this.value)'></textarea>
+                    </div>
+                    <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>
     
     </div>

@@ -150,15 +150,15 @@ $sessionUser = $_SESSION['usr_id'];
                     <div class="post_single_inner">
 
                         <?php
-                        
+                            $event_id = $_GET['event_id'];
                          // define variables and set to empty values
                         $Error = "";
-                        $event_name = $event_description = $event_place = $event_date = $event_time = $file_name = $event_type="";
+                        $event_name = $event_description = $event_place = $event_date = $event_time = $event_type="";
 
                         require_once('connect.php');
 
                         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-                            $event_id = $_GET['event_id'];
+                            
 
                             $events_query = $connect->query("
                                 SELECT *
@@ -189,16 +189,13 @@ $sessionUser = $_SESSION['usr_id'];
                                 || ($_FILES["file"]["type"] == "image/png"))
                             && in_array($extension, $allowedExts)) 
                             {
+                                $_FILES["file"]["name"] = $event_id . '.' . $extension;
                                   if ($_FILES["file"]["error"] > 0) {
                                     echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
                                   } else {
-                                    if (file_exists("img/upload/events/" . $_FILES["file"]["name"])) {
-                                        $Error = $_FILES["file"]["name"] . " already exists. ";
-                                    } else {
                                       move_uploaded_file($_FILES["file"]["tmp_name"],
-                                      "img/upload/events/" . $_FILES["file"]["name"]);
+                                      "img/upload/events/" . $_FILES["file"]["name"] );
                                       $file_name = $_FILES["file"]["name"];
-                                    }
                                 }
                             }
 
@@ -232,19 +229,19 @@ $sessionUser = $_SESSION['usr_id'];
 
                               require_once('connect.php');
 
-                                  $query = $connect->query("
+                              $query = $connect->query("
                                 
                                         UPDATE EVENTS 
                                         SET event_name =  '$event_name',
                                             event_time =  '$event_time',
                                             event_date =  '$event_date',
                                             event_place =  '$event_place',
-                                            event_pic = ' $file_name',
+                                            event_pic = '$event_id.jpg',
                                             event_description =  '$event_description',
                                             event_cat = $event_cat,
                                             event_type =  '$event_type' 
                                         WHERE event_id = $event_id 
-                                    ");
+                                    ");                               
                               
 
                               header( 'Location: /events.php' ) ;
@@ -254,8 +251,9 @@ $sessionUser = $_SESSION['usr_id'];
                     <div class="post_entry" style="text-align: center">
                         <h1 style="color:#C53434; font-weight:bold;">New Pike?</h1>
                         <p><span style="color:#C53434;"><?php echo $Error;?><span></span><br>
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post"
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>?event_id=<?php print_r($event_id); ?>" method="post"
                             enctype="multipart/form-data">
+                               
                                 <input type="text" name="event_name" placeholder="your activity name" value="<?php echo $event_name;?>"><br><br>
                                 <label>Date : <input type="date" name="event_date" value="<?php echo $event_date; ?>"></label><br>
                                 <label>Time : <input type="time" name="event_time" value="<?php echo $event_time ?>"></label><br>

@@ -172,6 +172,10 @@ $sessionUser = $_SESSION['usr_id'];
                                 || ($_FILES["file"]["type"] == "image/png"))
                             && in_array($extension, $allowedExts)) 
                             {
+                                    $query = $connect->query("SELECT MAX(event_id) AS Last_id FROM events;");
+                                    $event_id = $query->fetch();
+                                    $_FILES["file"]["name"] = ($event_id["Last_id"]+1) . '.' . $extension;
+
                                   if ($_FILES["file"]["error"] > 0) {
                                     echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
                                   } else {
