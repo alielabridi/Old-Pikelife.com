@@ -191,7 +191,7 @@
                                         <span class="time"><?php echo $event['event_time']; ?></span>
                                         <span class="place"><?php echo $event['event_place']; ?></span>
                                         <div data-href="https://developers.facebook.com/docs/plugins/" style="float:right;" class="fb-share-button" data-type="button"  data-width="100"></div>
-                                        <div data-href="https://developers.facebook.com/docs/plugins/" style="float:right;" class="fb-send"  data-width="100" data-height="30" data-colorscheme="light"></div>
+                                        <div style="float:right;" class="fb-send" data-href="https://developers.facebook.com/docs/plugins/" data-width="100" data-height="30" data-colorscheme="light"></div>
                                     
                                     </div>
                                     <div class="post_entry">
