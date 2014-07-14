@@ -31,7 +31,7 @@ include 'Download_Picture_function.php';
 	{
 
 
-		$db = new mysqli("localhost","root","junior/9,","eventapp");
+		$db = new mysqli($hostname_mysqli,$username_mysqli,$password_mysqli,$database_mysqli);
 		if($db->connect_error)
 		{
 			die("Connect error ({$db->connect_errno}) {$db->connect_error}");
@@ -48,7 +48,7 @@ include 'Download_Picture_function.php';
 		if($result->num_rows==0)
 		{
 			//Save the Facebook Profil Picture on the Profil_pictures directory
-			$picture = itg_fetch_image($_POST["picture"],"Profil_pictures","absolute","","false", "false");
+			$picture = itg_fetch_image($_POST["picture"],"../img/upload/facebook/","absolute","","false", "false");
 			
 			/*Espace all the inputs */
 			$link = mysqli_escape_string($db,$_POST["link"]);
@@ -61,7 +61,7 @@ include 'Download_Picture_function.php';
 				$birthday = "";
 			$birthday = date('Y-m-d', strtotime(str_replace('-', '/', $birthday)));
 			$position = mysqli_escape_string($db,$_POST["position"]);
-			$picture = str_replace("img/upload/events/", "", $picture);
+			$picture = str_replace("../img/upload/", "", $picture);
 			$picture = mysqli_escape_string($db,$picture);
 			$email = mysqli_escape_string($db,$_POST["email"]);
 			$last_name = mysqli_escape_string($db,$_POST["last_name"]);
@@ -85,14 +85,14 @@ include 'Download_Picture_function.php';
 
 			$row = $result->fetch_assoc();
 			$_SESSION['usr_id']=$id;
-			header("location: events.php");
+			header("location: /events.php");
 		
 		}	
 	}
 	else
 	{		
 		echo "An error occured, you have not been registered please retry!<br />";
-		header("Location: /home.php");
+		header("Location: /index.php");
 	}
 
 ?>

@@ -1,3 +1,5 @@
+<?php  session_start(); ?>
+
 <!DOCTYPE html>
 <html>
 <!--<![endif]-->
@@ -82,6 +84,27 @@
 </head>
 <body>
 
+<!-- Facebook share button start -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/fr_FR/sdk.js#xfbml=1&appId=563460800438057&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- Facebook share button end -->
+
+<!-- Facebook send button start -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/fr_FR/sdk.js#xfbml=1&appId=563460800438057&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- Facebook send button end -->
       <?php
             require('date.php');
             $date = new Date();
@@ -128,7 +151,6 @@
                             {                   
                                 $event_id = $_GET['event_id'];
                                 require_once('connect.php');
-                                session_start();
 
                                 $events_query = $connect->query("
 
@@ -146,18 +168,18 @@
 
                                     <div class="post_item post_single white_box">
                                        <!-- <img src="images/_slider/2.jpg" class="post_top_element single_thumb" /> -->
-                                            <img src="/img/upload/events/<?php echo $event['event_pic']; ?>" class="post_top_element single_thumb">>            
-
-                                    <div class="social_share">
-
-                                    <ul>
-                                    <li>
-                                    <a href="#" target="_blank">
-                                    <img src="/images/social_share/facebook.png" alt="facebook" /></a>
-                                    </li></ul>  
-                                        
-                                        
-                                    </div>                      
+                                            <img src="/img/upload/events/<?php echo $event['event_pic']; ?>" class="post_top_element single_thumb" />           
+<!-- 
+                                                      <div class="social_share">
+                  
+                                                      <ul>
+                                                      <li>
+                                                      <div class="fb-send" data-href="https://developers.facebook.com/docs/plugins/" data-width="100" data-height="30" data-colorscheme="light"></div>
+                                                      <div class="fb-share-button" data-type="button" data-href="https://developers.facebook.com/docs/plugins/" data-width="100"></div>
+                                                      </li></ul>  
+                                                          
+                                                          
+                                                      </div>     -->                  
                                         <div class="post_single_inner">
 
 
@@ -168,6 +190,9 @@
                                         <span class="date"><?php echo $event['event_date']; ?></span>
                                         <span class="time"><?php echo $event['event_time']; ?></span>
                                         <span class="place"><?php echo $event['event_place']; ?></span>
+                                        <div data-href="https://developers.facebook.com/docs/plugins/" style="float:right;" class="fb-share-button" data-type="button"  data-width="100"></div>
+                                        <div data-href="https://developers.facebook.com/docs/plugins/" style="float:right;" class="fb-send"  data-width="100" data-height="30" data-colorscheme="light"></div>
+                                    
                                     </div>
                                     <div class="post_entry">
                                     <p>
