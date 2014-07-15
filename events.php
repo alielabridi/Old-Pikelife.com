@@ -262,79 +262,7 @@ $sessionUser = $_SESSION['usr_id'];
 
 
 
-        <div id="calendar-2" class="widget widget_calendar white_box">
-
-            <h3 class="widget_title">Calendar</h3>
-            <div id="calendar_wrap">
-                 <table id="wp-calendar">
-                    <caption>
-                     <?php foreach ($date->months as $id=>$m): ?>
-                            <b href="#" class="month" id="Month<?php echo $id+1; ?>" width="50px" ><?php echo $m; ?></b>
-                        <?php endforeach; ?> <?php echo $year; ?>
-                    </caption>
-
-                    <thead>
-                    <tr>
-                        <th scope="col" title="Monday">M</th>
-                        <th scope="col" title="Tuesday">T</th>
-                        <th scope="col" title="Wednesday">W</th>
-                        <th scope="col" title="Thursday">T</th>
-                        <th scope="col" title="Friday">F</th>
-                        <th scope="col" title="Saturday">S</th>
-                        <th scope="col" title="Sunday">S</th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr>
-                        <td colspan="2" id="monthPrev"><a href="#">&laquo;</a></td>
-                        <td colspan="3"><a href="/add.php">New Pike</a></td>
-                        <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
-                    </tr>
-                    </tfoot>
-                <div class="clear"></div>
-
-                <?php $dates = current($dates); ?>
-                    <?php foreach ($dates as $m => $days): ?>
-
-                <tbody class="month" id="month<?php echo $m; ?>">
-                    <tr>
-                    <?php $end = end($days); foreach($days as $d=>$w): ?>
-                        <?php if($d == 1 && $w-1 > 0): ?>
-                            <td colspan="<?php echo $w-1; ?>" class="pad">&nbsp;</td>
-                        <?php endif ?>
-
-                        <?php
-                             if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
-                            {
-
-                                $qyear = $_GET['year'];
-                                $qmonth = $_GET['month'];
-                                $qday = $_GET['day'];
-                            }else{
-                                
-                                $qyear = $todyear;
-                                $qmonth = $todmonth;
-                                $qday = $todday;
-                            }
-                             if($d == $qday  && $m == $qmonth): ?>
-                            <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
-                        <?php else: ?>
-                            <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
-                        <?php endif ?>
-
-                        <?php if($w == 7): ?>
-                            </tr><tr>
-                        <?php endif; ?>
-                    <?php endforeach ?>
-                </tr>
-               
-                </tbody>
-            <?php endforeach; ?>
-
-
-             </table>
-            </div>
-        </div>
+        
      
 
         
@@ -700,6 +628,80 @@ $sessionUser = $_SESSION['usr_id'];
                         <textarea placeholder='enter your interest' onkeyup='addInterest(this)'></textarea>
                     </div>
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
+        </div>
+
+        <div id="calendar-2" class="widget widget_calendar white_box">
+
+            <h3 class="widget_title">Calendar</h3>
+            <div id="calendar_wrap">
+                 <table id="wp-calendar">
+                    <caption>
+                     <?php foreach ($date->months as $id=>$m): ?>
+                            <b href="#" class="month" id="Month<?php echo $id+1; ?>" width="50px" ><?php echo $m; ?></b>
+                        <?php endforeach; ?> <?php echo $year; ?>
+                    </caption>
+
+                    <thead>
+                    <tr>
+                        <th scope="col" title="Monday">M</th>
+                        <th scope="col" title="Tuesday">T</th>
+                        <th scope="col" title="Wednesday">W</th>
+                        <th scope="col" title="Thursday">T</th>
+                        <th scope="col" title="Friday">F</th>
+                        <th scope="col" title="Saturday">S</th>
+                        <th scope="col" title="Sunday">S</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2" id="monthPrev"><a href="#">&laquo;</a></td>
+                        <td colspan="3"><a href="/add.php">New Pike</a></td>
+                        <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
+                    </tr>
+                    </tfoot>
+                <div class="clear"></div>
+
+                <?php $dates = current($dates); ?>
+                    <?php foreach ($dates as $m => $days): ?>
+
+                <tbody class="month" id="month<?php echo $m; ?>">
+                    <tr>
+                    <?php $end = end($days); foreach($days as $d=>$w): ?>
+                        <?php if($d == 1 && $w-1 > 0): ?>
+                            <td colspan="<?php echo $w-1; ?>" class="pad">&nbsp;</td>
+                        <?php endif ?>
+
+                        <?php
+                             if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                            {
+
+                                $qyear = $_GET['year'];
+                                $qmonth = $_GET['month'];
+                                $qday = $_GET['day'];
+                            }else{
+                                
+                                $qyear = $todyear;
+                                $qmonth = $todmonth;
+                                $qday = $todday;
+                            }
+                             if($d == $qday  && $m == $qmonth): ?>
+                            <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
+                        <?php else: ?>
+                            <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
+                        <?php endif ?>
+
+                        <?php if($w == 7): ?>
+                            </tr><tr>
+                        <?php endif; ?>
+                    <?php endforeach ?>
+                </tr>
+               
+                </tbody>
+            <?php endforeach; ?>
+
+
+             </table>
+            </div>
         </div>
     
     </div>
