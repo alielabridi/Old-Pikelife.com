@@ -39,8 +39,6 @@
               AND chat_user_receiver =$sessionUser
               ORDER BY chat_time DESC 
           ");
-          $hint = $hint ."<a class='button red full' onclick='returnContact()'>Return to contacts</a>";
-          $hint = $hint . "<textarea placeholder='send your message here' onkeyup='sendChat($q, this.value)'></textarea>";
 
            while($contact = $contact_query->fetch()){
               $usr_lname = $contact["usr_lname"];

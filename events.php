@@ -222,7 +222,8 @@ $sessionUser = $_SESSION['usr_id'];
 
                                                         <?php }else{ ?>
 
-                                                            <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>                                                            
+                                                            <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
+                                                            <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">Delete</a>                                                            
 
                                                         <?php } ?>
 
@@ -422,11 +423,14 @@ $sessionUser = $_SESSION['usr_id'];
         </script>
 
         <script type="text/javascript">
+            var userSender;
+
             jQuery(document).ready(function($){ 
                 $('#chatBox').hide();
                 $('#chatBoxForm').hide();
             });
             function chatResult(user_sender) {
+                    userSender = user_sender;
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp=new XMLHttpRequest();
@@ -451,7 +455,7 @@ $sessionUser = $_SESSION['usr_id'];
                      });            
             }
 
-            function sendChat(user_sender, post) {
+            function sendChat(element) {
                 if(window.event.keyCode == 13){
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -464,9 +468,10 @@ $sessionUser = $_SESSION['usr_id'];
                         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
                             document.getElementById("chatBox").innerHTML=xmlhttp.responseText;
                         }
+                        element.value = ''
                     }
                       
-                    xmlhttp.open("GET","chatSend.php?q="+user_sender+"&post="+post,true);
+                    xmlhttp.open("GET","chatSend.php?q="+userSender+"&post="+element.value,true);
                     xmlhttp.send();
                 }          
             }
@@ -537,7 +542,7 @@ $sessionUser = $_SESSION['usr_id'];
 
                     <div id='chatBoxForm'>
                         <a class='button red full' onclick='returnContact()'>Return to contacts</a>
-                        <textarea placeholder='send your message here' onkeyup='sendChat($q, this.value)'></textarea>
+                        <textarea placeholder='send your message here' onkeydown='sendChat(this)'></textarea>
                     </div>
 
                     <ul id="contactSearch">
@@ -639,7 +644,7 @@ $sessionUser = $_SESSION['usr_id'];
                 });
             }
 
-            function addInterest(interest) {
+            function addInterest(element) {
                 if(window.event.keyCode == 13){
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -651,10 +656,11 @@ $sessionUser = $_SESSION['usr_id'];
                     xmlhttp.onreadystatechange=function() {
                         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
                             document.getElementById("categorySearch").innerHTML=xmlhttp.responseText;
+                            element.value = '';
                         }
                     }
                       
-                    xmlhttp.open("GET","interestAdd.php?q="+interest,true);
+                    xmlhttp.open("GET","interestAdd.php?q="+element.value,true);
                     xmlhttp.send();
 
                     jQuery(document).ready(function($){ 
@@ -691,7 +697,7 @@ $sessionUser = $_SESSION['usr_id'];
                     </ul>
                     
                     <div id='interestsForm'>
-                        <textarea placeholder='enter your interest' onkeyup='addInterest(this.value)'></textarea>
+                        <textarea placeholder='enter your interest' onkeyup='addInterest(this)'></textarea>
                     </div>
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>
