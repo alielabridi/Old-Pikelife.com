@@ -148,6 +148,25 @@ $sessionUser = $_SESSION['usr_id'];
                     <div class="post_item post_single white_box">
 
                     <div class="post_single_inner">
+                        <?php
+
+                            $todyear = date('Y');
+                            $todmonth = date('m');
+                            $todday = date('d');
+
+                            if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                            {
+
+                                $qyear = $_GET['year'];
+                                $qmonth = $_GET['month'];
+                                $qday = $_GET['day'];
+                            }else{
+                                
+                                $qyear = $todyear;
+                                $qmonth = $todmonth;
+                                $qday = $todday;
+                            }
+                        ?>
 
                         <?php
                             $event_id = $_GET['event_id'];
@@ -307,6 +326,374 @@ $sessionUser = $_SESSION['usr_id'];
 
 
 
+        
+     
+
+        
+        <script type="text/javascript">
+        jQuery(document).ready(function($){ 
+            $('#tab_wrapper_tab_widget-2').each(function() {
+                $(this).find(".tab_content").hide();
+                $(this).find("ul.tab_menu li:first").addClass("active").show(); 
+                $(this).find(".tab_content:first").show();
+            });
+            
+            $("ul.tab_menu li").click(function(e) {
+                $(this).parents('#tab_wrapper_tab_widget-2').find("ul.tab_menu li").removeClass("active"); 
+                $(this).addClass("active");
+                $(this).parents('#tab_wrapper_tab_widget-2').find(".tab_content").hide();
+        
+                var activeTab = $(this).find("a").attr("href");
+                $(this).parents('#tab_wrapper_tab_widget-2').find(activeTab).show();
+                
+                e.preventDefault();
+            });
+            
+            $("ul.tab_menu li a").click(function(e) {
+                e.preventDefault();
+            })
+        });
+        </script>
+
+        <script>
+            function pikesResult(str) {
+              
+              if (window.XMLHttpRequest) {
+                     // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+              } else {  // code for IE6, IE5
+                     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+              }
+              
+              xmlhttp.onreadystatechange=function() {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                      document.getElementById("PikesSearch").innerHTML=xmlhttp.responseText;
+                    }
+              }
+              
+              xmlhttp.open("GET","PikesSearch.php?q="+str,true);
+              xmlhttp.send();
+            }
+
+            function contactResult(str) {
+              
+              if (window.XMLHttpRequest) {
+                     // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+              } else {  // code for IE6, IE5
+                     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+              }
+              
+              xmlhttp.onreadystatechange=function() {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                      document.getElementById("contactSearch").innerHTML=xmlhttp.responseText;
+                    }
+              }
+              
+              xmlhttp.open("GET","contactSearch.php?q="+str,true);
+              xmlhttp.send();
+            }
+
+            function notifsResult(str) {
+              
+              if (window.XMLHttpRequest) {
+                     // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+              } else {  // code for IE6, IE5
+                     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+              }
+              
+              xmlhttp.onreadystatechange=function() {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                      document.getElementById("notifsSearch").innerHTML=xmlhttp.responseText;
+                    }
+              }
+              
+              xmlhttp.open("GET","notifsSearch.php?q="+str,true);
+              xmlhttp.send();
+            }
+        </script>
+
+        <script type="text/javascript">
+            var userSender;
+
+            jQuery(document).ready(function($){ 
+                $('#chatBox').hide();
+                $('#chatBoxForm').hide();
+            });
+            function chatResult(user_sender) {
+                    userSender = user_sender;
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+                    } else {  // code for IE6, IE5
+                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                      
+                    xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                            document.getElementById("chatBox").innerHTML=xmlhttp.responseText;
+                        }
+                    }
+              
+                    xmlhttp.open("GET","chatFetch.php?q="+user_sender,true);
+                    xmlhttp.send();
+
+                    jQuery(document).ready(function($){ 
+                        $('#contactSearch').hide();
+                        $('#contactSearchForm').hide();
+                        $('#chatBox').show( "slow" );
+                        $('#chatBoxForm').show( "slow" );
+                     });            
+            }
+
+            function sendChat(element) {
+                if(window.event.keyCode == 13){
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+                    } else {  // code for IE6, IE5
+                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+
+                    xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                            document.getElementById("chatBox").innerHTML=xmlhttp.responseText;
+                        }
+                        element.value = ''
+                    }
+                      
+                    xmlhttp.open("GET","chatSend.php?q="+userSender+"&post="+element.value,true);
+                    xmlhttp.send();
+                }          
+            }
+
+            function returnContact(){
+                jQuery(document).ready(function($){ 
+                    $('#chatBoxForm').hide();
+                    $('#chatBox').hide();
+                    $('#contactSearchForm').show( "slow" );
+                    $('#contactSearch').show( "slow" );
+                });
+            }
+            
+        </script>
+        
+        <!-- BEGIN WIDGET -->
+        <div class="widget tab_wrapper white_box" id="tab_wrapper_tab_widget-2">
+            
+            <ul class="tab_menu"><li class="tab_post"><a href="#post_tab">Notifs</a></li><li  class="tab_comment"><a href="#comment_tab">Contacts</a></li><li class="tab_tag"><a href="#tag_tab">your pikes</a></li></ul>
+            <div class="clear"></div>
+            <div class="tabs_container">
+            <div id="post_tab" class="tab_content recent_posts">
+                    <form>
+                        <input type="text" placeholder="Click to search in your notifications ..." onkeyup="notifsResult(this.value)">
+                    </form>
+                    <ul id="notifsSearch">
+                        <?php      
+                            require_once('connect.php');
+
+                            $notification_query = $connect->query("
+                                SELECT * 
+                                FROM  notification 
+                                WHERE notification_user =$sessionUser
+                            ");
+
+                            while($notification = $notification_query->fetch()){
+                        ?>
+                            <li>
+                                <?php if( $notification['notification_type'] == "invitation") {?>
+                                     <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
+                                        <img src="images/notif_images/<?php echo $notification['notification_image'] ?>" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
+                                    </a>
+                                    <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                    </a> 
+                                <?php }elseif ($notification['notification_type'] == "chat") { ?>
+                                    <a href="#" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
+                                        <img src="images/notif_images/<?php echo $notification['notification_image'] ?>" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
+                                    </a>
+                                    <a href="#" title="Praesent Et Urna Turpis Sadips" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                    </a> 
+                                <?php }else{ ?> 
+                                <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
+                                        <img src="images/notif_images/<?php echo $notification['notification_image'] ?>" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
+                                    </a>
+                                    <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                    </a> 
+                                <?php } ?>
+                            </li>
+                        <?php } ?>
+                        
+                    </ul>                         
+                </div>
+                                
+                <div id="comment_tab" class="tab_content recent_comments" >
+                     <form id="contactSearchForm">
+                            <input type="text" placeholder="Search Contacts by Last Name ..." onkeyup="contactResult(this.value)">
+                    </form>
+
+                    <div id='chatBoxForm'>
+                        <a class='button red full' onclick='returnContact()'>Return to contacts</a>
+                        <textarea placeholder='send your message here' onkeydown='sendChat(this)'></textarea>
+                    </div>
+
+                    <ul id="contactSearch">
+                        
+                        <?php      
+                            require_once('connect.php');
+
+                            $contact_query = $connect->query("
+                                SELECT * 
+                                FROM  friends 
+                                JOIN userapps U ON U.Facebook_ID = friends.user_other
+                                WHERE user_me =$sessionUser
+                            ");
+
+                            while($contact = $contact_query->fetch()){
+                            ?>
+                                <li >
+                                    <img alt='' src='http://1.gravatar.com/avatar/5bea567fcf9dd1022d9224e07bf194a5?s=50&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' />
+                                    <p>
+                                        <cite><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></cite><br>
+                                        <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
+                                    </p>
+                                    <div class="clear"></div>
+                                </li> 
+
+                            <?php } ?>
+                    </ul>
+                    <ul id="chatBox">
+                        
+                    </ul>                          
+  
+                </div>
+                                
+                  <div id="tag_tab" class="tab_content recent_posts">
+
+                    <form>
+                        <input type="text" placeholder="Click to search your pikes ..." onkeyup="pikesResult(this.value)">
+                    </form>
+                    <ul id="PikesSearch">
+                        <?php      
+                            require_once('connect.php');
+
+                            $pikes_query = $connect->query("
+                                SELECT E.event_id ,E.event_pic,E.event_name,E.event_date, E.event_time FROM  joinevents
+                                    JOIN EVENTS E ON E.event_id = joinevents.event_id
+                                    WHERE usr_id =$sessionUser
+                                UNION
+
+                                SELECT event_id,event_pic,event_name,event_date, event_time FROM  events
+                                    WHERE usr_create =$sessionUser
+                                ORDER BY event_date, event_time DESC
+                            ");
+
+                            while($pike = $pikes_query->fetch()){
+                            ?>
+                                <li>
+                                     <a href="/view.php?event_id=<?php echo $pike['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
+                                        <img src="img/upload/events/<?php echo $pike['event_pic'] ?>" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
+                                    </a>
+                                    <a href="/view.php?event_id=<?php echo $pike['event_id'] ?>" class="title"><?php echo $pike['event_name'] ?></a><em><?php echo $pike['event_date'] ?> - <?php echo $pike['event_time'] ?></em><div class="clear"></div>   
+                                    </a>  
+                                </li>
+                            <?php } ?>
+                    </ul>  
+                    </div>       
+            </div>
+            
+        </div>
+        <!-- END WIDGET -->
+
+        <script type="text/javascript">
+            jQuery(document).ready(function($){ 
+                $('#interestsForm').hide();
+            });
+
+            function showResult(str) {
+              
+              if (window.XMLHttpRequest) {
+                     // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+              } else {  // code for IE6, IE5
+                     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+              }
+              
+              xmlhttp.onreadystatechange=function() {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                      document.getElementById("categorySearch").innerHTML=xmlhttp.responseText;
+                    }
+              }
+              
+              xmlhttp.open("GET","categorySearch.php?q="+str,true);
+              xmlhttp.send();
+            }
+
+            function showTextBox() {
+                jQuery(document).ready(function($){ 
+                    $('#interestsForm').show( "slow" );
+                    $('#createButton').hide();
+                });
+            }
+
+            function addInterest(element) {
+                if(window.event.keyCode == 13){
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+                    } else {  // code for IE6, IE5
+                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+
+                    xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                            document.getElementById("categorySearch").innerHTML=xmlhttp.responseText;
+                            element.value = '';
+                        }
+                    }
+                      
+                    xmlhttp.open("GET","interestAdd.php?q="+element.value,true);
+                    xmlhttp.send();
+
+                    jQuery(document).ready(function($){ 
+                        $('#createButton').show( "slow" );
+                        $('#interestsForm').hide();
+                      });
+                }
+            }
+
+        </script>
+
+        <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Interests</h3>
+            <form>
+                <input type="text" placeholder="click here to start searching in communities" onkeyup="showResult(this.value)">
+            </form> 
+
+            
+
+                    <ul style="overflow: scroll;height: 450px;" id="categorySearch">
+                        <?php      
+                            require_once('connect.php');
+
+                            $interests_query = $connect->query("
+                                SELECT *
+                                FROM interests
+                                ORDER BY interest_name Asc
+                            ");
+
+                            while($interest = $interests_query->fetch()){
+                        ?>
+                            <li class="cat-item cat-item-2"><a href="/events.php?interest=<?php echo $interest['interest_id'] ?>"><?php echo $interest['interest_name'] ?></a></li>
+                        <?php } ?>
+
+                    </ul>
+                    
+                    <div id='interestsForm'>
+                        <textarea placeholder='enter your interest' onkeyup='addInterest(this)'></textarea>
+                    </div>
+                    <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
+        </div>
+
         <div id="calendar-2" class="widget widget_calendar white_box">
 
             <h3 class="widget_title">Calendar</h3>
@@ -332,12 +719,11 @@ $sessionUser = $_SESSION['usr_id'];
                     <tfoot>
                     <tr>
                         <td colspan="2" id="monthPrev"><a href="#">&laquo;</a></td>
-                        <td colspan="3"></td>
+                        <td colspan="3"><a href="/add.php">New Pike</a></td>
                         <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
                     </tr>
                     </tfoot>
                 <div class="clear"></div>
-        
 
                 <?php $dates = current($dates); ?>
                     <?php foreach ($dates as $m => $days): ?>
@@ -348,10 +734,24 @@ $sessionUser = $_SESSION['usr_id'];
                         <?php if($d == 1 && $w-1 > 0): ?>
                             <td colspan="<?php echo $w-1; ?>" class="pad">&nbsp;</td>
                         <?php endif ?>
-                        <?php if($d == $qday  && $m == $qmonth): ?>
-                            <td style="background-color:#C53434"><a style="color:white" href="/events?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
+
+                        <?php
+                             if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                            {
+
+                                $qyear = $_GET['year'];
+                                $qmonth = $_GET['month'];
+                                $qday = $_GET['day'];
+                            }else{
+                                
+                                $qyear = $todyear;
+                                $qmonth = $todmonth;
+                                $qday = $todday;
+                            }
+                             if($d == $qday  && $m == $qmonth): ?>
+                            <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
                         <?php else: ?>
-                            <td><a href="/events?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
+                            <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
                         <?php endif ?>
 
                         <?php if($w == 7): ?>
@@ -366,87 +766,6 @@ $sessionUser = $_SESSION['usr_id'];
 
              </table>
             </div>
-        </div>
-     
-
-        
-        <script type="text/javascript">
-        jQuery(document).ready(function($){ 
-            $('#tab_wrapper_tab_widget-2').each(function() {
-                $(this).find(".tab_content").hide();
-                $(this).find("ul.tab_menu li:first").addClass("active").show(); 
-                $(this).find(".tab_content:first").show();
-            });
-            
-            $("ul.tab_menu li").click(function(e) {
-                $(this).parents('#tab_wrapper_tab_widget-2').find("ul.tab_menu li").removeClass("active"); 
-                $(this).addClass("active");
-                $(this).parents('#tab_wrapper_tab_widget-2').find(".tab_content").hide();
-        
-                var activeTab = $(this).find("a").attr("href");
-                $(this).parents('#tab_wrapper_tab_widget-2').find(activeTab).fadeIn();
-                
-                e.preventDefault();
-            });
-            
-            $("ul.tab_menu li a").click(function(e) {
-                e.preventDefault();
-            })
-        });
-        </script>
-        
-        <!-- BEGIN WIDGET -->
-        <div class="widget tab_wrapper white_box" id="tab_wrapper_tab_widget-2">
-            
-            <ul class="tab_menu"><li class="tab_post"><a href="#post_tab">Notifs</a></li><li  class="tab_comment"><a href="#comment_tab">chat</a></li><li class="tab_tag"><a href="#tag_tab">your pikes</a></li></ul>
-            <div class="clear"></div>
-            <div class="tabs_container">
-            <div id="post_tab" class="tab_content recent_posts">
-                    <ul>
-                        <li>
-                         <a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
-                            <img src="images/_small/1.jpg" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
-                        </a>
-                        <a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="title">Praesent Et Urna Turpis Sadips</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri<div class="clear"></div></li><li> <a href="http://localhost/GreatBox/?p=215" title="Donec At Mauris Enim Duis Untis" class="small_thumb"><img src="images/_small/2.jpg" width="50" height="50" alt="Donec At Mauris Enim Duis Untis"></a><a href="http://localhost/GreatBox/?p=215" title="Donec At Mauris Enim Duis Untis" class="title">Donec At Mauris Enim Duis ...</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri elit<div class="clear"></div></li><li> <a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="small_thumb"><img src="images/_small/3.jpg" width="50" height="50" alt="Praesent Et Urna Turpis Sadips"></a><a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="title">Praesent Et Urna Turpis Sadips</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri<div class="clear"></div></li><li> <a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="small_thumb"><img src="images/_small/4.jpg" width="50" height="50" alt="Praesent Et Urna Turpis Sadips"></a><a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="title">Praesent Et Urna Turpis Sadips</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri<div class="clear"></div></li><li> <a href="http://localhost/GreatBox/?p=211" title="Nullam Vitae Nibh Un Odiosters" class="small_thumb"><img src="images/_small/5.jpg" width="50" height="50" alt="Nullam Vitae Nibh Un Odiosters"></a><a href="http://localhost/GreatBox/?p=211" title="Nullam Vitae Nibh Un Odiosters" class="title">Nullam Vitae Nibh Un Odiosters</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri elit<div class="clear"></div></li></ul>    
-                        <a href="#" class="button red full">See all</a>                
-                </div>
-                                
-                <div id="comment_tab" class="tab_content recent_comments" >
-                    <br><div style="text-align: center"><a href="#" style="color:#C53434">New Message</a></div>  
-                    <ul><li><img alt='' src='http://1.gravatar.com/avatar/5bea567fcf9dd1022d9224e07bf194a5?s=50&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>Nguyen Duc:</cite> <em>2013-04-29 08:41:31</em> <a href="http://localhost/GreatBox/?p=213#comment-9" title="Nguyen Duc on Praesent Et Urna Turpis Sadips">You are right, that's an oversight on my part. Using ...</a></p><div class="clear"></div></li><li><img alt='' src='http://0.gravatar.com/avatar/0669909e23c39a648c28ea23c0b114d6?s=50&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>admin:</cite> <em>2012-08-02 13:39:49</em> <a href="http://localhost/GreatBox/?p=211#comment-4" title="admin on Nullam Vitae Nibh Un Odiosters">This is a reply test … Nulla nunc dui, tristique ...</a></p><div class="clear"></div></li><li><img alt='' src='http://0.gravatar.com/avatar/0669909e23c39a648c28ea23c0b114d6?s=50&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>admin:</cite> <em>2012-08-02 13:39:14</em> <a href="http://localhost/GreatBox/?p=211#comment-3" title="admin on Nullam Vitae Nibh Un Odiosters">This is a test … Quisque ligulas ipsum, euismod atras ...</a></p><div class="clear"></div></li><li><img alt='' src='http://0.gravatar.com/avatar/0669909e23c39a648c28ea23c0b114d6?s=50&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>admin:</cite> <em>2012-08-02 13:38:54</em> <a href="http://localhost/GreatBox/?p=213#comment-6" title="admin on Praesent Et Urna Turpis Sadips">This is a reply test … Class aptent taciti sociosqu ...</a></p><div class="clear"></div></li><li><img alt='' src='http://0.gravatar.com/avatar/0669909e23c39a648c28ea23c0b114d6?s=50&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>admin:</cite> <em>2012-08-02 13:38:32</em> <a href="http://localhost/GreatBox/?p=213#comment-5" title="admin on Praesent Et Urna Turpis Sadips">This is a test … Quisque ligulas ipsum, euismod atras ...</a></p><div class="clear"></div></li></ul>
-                    
-                    
-                             
-                    <a href="#" class="button red full">See all</a>
-                </div>
-                                
-                  <div id="tag_tab" class="tab_content recent_posts">
-                    <ul>
-                        <li>
-                         <a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
-                            <img src="images/_small/1.jpg" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
-                        </a>
-                        <a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="title">Praesent Et Urna Turpis Sadips</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri<div class="clear"></div></li><li> <a href="http://localhost/GreatBox/?p=215" title="Donec At Mauris Enim Duis Untis" class="small_thumb"><img src="images/_small/2.jpg" width="50" height="50" alt="Donec At Mauris Enim Duis Untis"></a><a href="http://localhost/GreatBox/?p=215" title="Donec At Mauris Enim Duis Untis" class="title">Donec At Mauris Enim Duis ...</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri elit<div class="clear"></div></li><li> <a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="small_thumb"><img src="images/_small/3.jpg" width="50" height="50" alt="Praesent Et Urna Turpis Sadips"></a><a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="title">Praesent Et Urna Turpis Sadips</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri<div class="clear"></div></li><li> <a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="small_thumb"><img src="images/_small/4.jpg" width="50" height="50" alt="Praesent Et Urna Turpis Sadips"></a><a href="http://localhost/GreatBox/?p=213" title="Praesent Et Urna Turpis Sadips" class="title">Praesent Et Urna Turpis Sadips</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri<div class="clear"></div></li><li> <a href="http://localhost/GreatBox/?p=211" title="Nullam Vitae Nibh Un Odiosters" class="small_thumb"><img src="images/_small/5.jpg" width="50" height="50" alt="Nullam Vitae Nibh Un Odiosters"></a><a href="http://localhost/GreatBox/?p=211" title="Nullam Vitae Nibh Un Odiosters" class="title">Nullam Vitae Nibh Un Odiosters</a>Quisque ligulas ipsum, euismod atras vulputate iltricies etri elit<div class="clear"></div></li></ul>  
-                        <a href="#" class="button red full">See all</a>                  
-                </div>              
-                                
-            </div>
-            
-        </div>
-        <!-- END WIDGET -->
-
-        <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Categories</h3>      <ul>
-                <li class="cat-item cat-item-2"><a href="http://localhost/GreatBox/?cat=2" title="View all posts filed under Design">Design</a>
-            </li>
-                <li class="cat-item cat-item-3"><a href="http://localhost/GreatBox/?cat=3" title="View all posts filed under Photography">Photography</a>
-            </li>
-                <li class="cat-item cat-item-12"><a href="http://localhost/GreatBox/?cat=12" title="View all posts filed under Slider">Slider</a>
-            </li>
-                <li class="cat-item cat-item-4"><a href="http://localhost/GreatBox/?cat=4" title="View all posts filed under Videos">Videos</a>
-            </li>
-                <li class="cat-item cat-item-5"><a href="http://localhost/GreatBox/?cat=5" title="View all posts filed under Wordpress">Wordpress</a>
-            </li>
-                    </ul>
         </div>
     
     </div>

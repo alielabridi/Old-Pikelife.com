@@ -218,7 +218,7 @@ $sessionUser = $_SESSION['usr_id'];
                                                         if($event['Facebook_ID'] != $sessionUser){
                                                         
                                                         ?>
-                                                            <a href="#" class="button green">Pike</a>
+                                                            <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
 
                                                         <?php }else{ ?>
 
