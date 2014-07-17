@@ -27,7 +27,8 @@
                 $usr_fname = $invitation["usr_fname"];
                 $picture_link = $invitation["picture_link"];
                 $Facebook_ID = $invitation["Facebook_ID"];
-
+                $picture_link = $contact["picture_link"];
+                
                 $hint = $hint . "<li ><img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
                 $hint = $hint . "<p><cite>$usr_lname $usr_fname</cite><br><a href='/pike_invitation.php?event_id=$event_id&amp;user_invited=$Facebook_ID' style='width:55%;margin-top:10px;text-align:center;' class='button blue small'>Invite</a><div class='clear'><br></li>";
                          

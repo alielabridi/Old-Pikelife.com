@@ -260,10 +260,9 @@ $sessionUser = $_SESSION['usr_id'];
                                             event_cat = $event_cat,
                                             event_type =  '$event_type' 
                                         WHERE event_id = $event_id 
-                                    ");                               
-                              
+                                    "); 
 
-                              header( 'Location: /events.php' ) ;
+                              header( "Location: /view.php?event_id=$event_id") ;
                           }
                     ?>
 

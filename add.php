@@ -245,7 +245,7 @@ $sessionUser = $_SESSION['usr_id'];
 
                                 ");
 
-                              header( 'Location: /events.php' ) ;
+                              header( "Location: /view.php?event_id=".$event_id["Last_id"]+1) ;
                           }
                     ?>
                     
