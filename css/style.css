@@ -859,7 +859,26 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 		background:url(images/widget_icons/folder.png) 20px center no-repeat;
 		padding-left:45px;
 	}
-	
+
+	.widget_invitations li { padding:20px;}
+	.widget_invitations li:last-child {
+		-webkit-border-bottom-right-radius: 2px;
+		-webkit-border-bottom-left-radius: 2px;
+		-moz-border-radius-bottomright: 2px;
+		-moz-border-radius-bottomleft: 2px;
+		border-bottom-right-radius: 2px;
+		border-bottom-left-radius: 2px;
+	}
+	.widget_invitations li a{ color: #666 }
+	.widget_invitations img.avatar{ float:left; margin-right:15px; background-color:#fff; border:1px solid #eee; 
+		padding:3px; -webkit-border-radius: 2px;
+		-moz-border-radius: 2px;
+		border-radius: 2px;}
+
+	.widget_invitations li p{ margin:0; padding:0;}
+	.widget_invitations li cite { font-weight:bold; display:inline }
+	.widget_invitations li em { color: #999;font-size:11px; }
+
 	/** Widget page **/
 	.widget_pages li {
 		background:url(images/widget_icons/page.png) 20px center no-repeat;

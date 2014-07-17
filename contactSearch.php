@@ -24,8 +24,9 @@
               $usr_lname = $contact["usr_lname"];
               $usr_fname = $contact["usr_fname"];
               $usr_id = $contact["user_other"];
+              $picture_link = $contact["picture_link"];
 
-              $hint = $hint . "<li ><img alt='' src='http://1.gravatar.com/avatar/5bea567fcf9dd1022d9224e07bf194a5?s=50&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' />";
+              $hint = $hint . "<li ><img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
               $hint = $hint . "<p><cite>$usr_lname $usr_fname</cite><br>";
               $hint = $hint . "<em style='cursor:pointer' onclick='chatResult($usr_id)'>click to view conversation</em></p><div class='clear'></div></li>";
             }
@@ -43,8 +44,9 @@
               $usr_lname = $contact["usr_lname"];
               $usr_fname = $contact["usr_fname"];
               $usr_id = $contact["usr_id"];
+              $picture_link = $contact["picture_link"];
 
-              $hint = $hint . "<li ><img alt='' src='http://1.gravatar.com/avatar/5bea567fcf9dd1022d9224e07bf194a5?s=50&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' />";
+              $hint = $hint . "<li ><img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
               $hint = $hint . "<p><cite>$usr_lname $usr_fname</cite><br>";
               $hint = $hint . "<em style='cursor:pointer' onclick='chatResult($usr_id)'>click to view conversation</em></p><div class='clear'></div></li>";
             }
