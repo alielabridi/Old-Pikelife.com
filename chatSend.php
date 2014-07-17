@@ -45,7 +45,8 @@
               $usr_fname = $contact["usr_fname"];
               $chat_message = $contact["chat_message"];
               $chat_time = $contact["chat_time"];
-
+              $picture_link = $contact["picture_link"];
+              
               $hint = $hint . "<li ><img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
               $hint = $hint . "<p><cite>$usr_lname $usr_fname</cite><br>";
               $hint = $hint . "<em>$chat_time</em><br/>";

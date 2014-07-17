@@ -23,6 +23,7 @@
             SELECT * 
             FROM feedback
             JOIN userapps U ON U.Facebook_ID = feedback.feedback_user_id
+            where feedback_event_id = $event_id
             ORDER BY feedback_time DESC
           ");
           

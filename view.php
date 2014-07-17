@@ -355,16 +355,25 @@ $sessionUser = $_SESSION['usr_id'];?>
 <div class="related_posts white_box">
     <h3 class="rp_title">Pictures</h3>
     <div class="rp_col_wrapper clearfix">
-            
-        <div class="rp_col">
-            <div class="small_thumb"><img src="/images/_related/upload.png" alt="Nunc tincidunt" title="Upload a photo" /></div>
-        </div>
+        <?php 
+
+            $pictures_query = $connect->query("
+                SELECT * FROM picture
+                where event_id = ".$event_id."
+            ");
+
+            while($picture = $pictures_query->fetch()){ ?>
+                <div class="rp_col">
+                    <div class="small_thumb"><img src="/img/upload/pictures/<?php echo $picture["picture_link"]; ?>"/></div>
+                </div>
+            <?php } ?>
 
     </div>
 
     <div style="text-align:center">
         <br>
         <form action="/addEventPicture.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
+            <label>only jpeg, jpg, pjpeg, x-png, and png are allowed</label>
             <input type="file" name="file"><br><br>
             <input class="button gray small" type="submit" name="submit" value="Upload Picture"><br><br>
         </form>
@@ -374,14 +383,27 @@ $sessionUser = $_SESSION['usr_id'];?>
 <div class="related_posts white_box">
     <h3 class="rp_title">Files</h3>
     <div class="rp_col_wrapper clearfix">
-        <div class="rp_col">
-            <div class="small_thumb"><img src="/images/_related/upload.png" alt="Nunc tincidunt" title="Upload a file" /></div>
-        </div> 
+
+        <?php 
+
+            $files_query = $connect->query("
+                SELECT * FROM files
+                where file_event_id = ".$event_id."
+            ");
+
+            while($file = $files_query->fetch()){ ?>
+                <div class="rp_col" style="width:100%; height:100px">
+                    <a href="/img/upload/files/<?php echo $file["file_name"]; ?>"><div class="pdf_small_thumb"><?php echo $file["file_name"]; ?><br><em>click to view</em></div></a>
+                </div>
+            <?php } ?>
     </div>
     <div style="text-align:center">
         <br>
-        <input type="file" name="file" id="file"><br><br>
-        <input class="button gray small" type="submit" name="submit" value="Upload File"><br><br>
+        <form action="/addEventFile.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
+            <label>only pdf is allowed</label>
+            <input type="file" name="file" id="file"><br><br>
+            <input class="button gray small" type="submit" name="submit" value="Upload File"><br><br>
+        </form>
     </div>
 </div>
 
