@@ -1,7 +1,6 @@
 <html>
 <body onload="Login();">
 <div id="fb-root"></div>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
 <script>
   window.fbAsyncInit = function() {
     FB.init({
@@ -20,6 +19,7 @@
            if (response.authResponse) 
            {    
                 getPhoto();
+                friendlist();
                 getUserInfo();
                           
             } else 
@@ -44,7 +44,8 @@
           var birthday = response.birthday;
           var gender = response.gender;
           var position = response.location.name;
-           post('Facebook_SignUp.php', {id: id,email: email,last_name: last_name,first_name: first_name,link: link,birthday: birthday, position : position,gender: gender,picture:picture});
+
+           post('Facebook_SignUp.php', {id: id,email: email,last_name: last_name,first_name: first_name,link: link,birthday: birthday, position : position,gender: gender,picture:picture,friendlistjson: friendlistjson});
 
 
           });
@@ -57,6 +58,7 @@
       FB.api('/me/picture?type=large', function(response) 
       {
           window.picture = response.data.url;
+
  
       });
     
@@ -66,7 +68,8 @@
     {
       FB.api('/me/friends', function(response) 
       {
-        //console.log(response);
+        /*Convert into JSON the Facebook friendlist array and store it*/
+        window.friendlistjson = JSON.stringify(response.data);
       });
     }
 

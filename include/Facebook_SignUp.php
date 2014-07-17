@@ -52,6 +52,7 @@ include 'Download_Picture_function.php';
 			
 			/*Espace all the inputs */
 			$link = mysqli_escape_string($db,$_POST["link"]);
+
 			if($_POST["birthday"]!="undefined")
 			{
 				$birthday = mysqli_escape_string($db,$_POST["birthday"]);
@@ -59,6 +60,7 @@ include 'Download_Picture_function.php';
 			}
 			else 
 				$birthday = "";
+
 			$birthday = date('Y-m-d', strtotime(str_replace('-', '/', $birthday)));
 			$position = mysqli_escape_string($db,$_POST["position"]);
 			$picture = str_replace("../img/upload/", "", $picture);
@@ -67,7 +69,8 @@ include 'Download_Picture_function.php';
 			$last_name = mysqli_escape_string($db,$_POST["last_name"]);
 			$gender = mysqli_escape_string($db, $_POST["gender"]);
 
-			
+
+			/*Fill the database with the basic information*/
 			$sql = "INSERT INTO userapps (`usr_email`,`usr_lname`,`usr_fname`,`Facebook_ID`,`profil_link`,`birthday`,`location`,`gender`,`picture_link`)
 					VALUES(
 						'$email',
@@ -83,7 +86,26 @@ include 'Download_Picture_function.php';
 
 			$db->query($sql);
 
-			$row = $result->fetch_assoc();
+			/*Decode the json friendlist from JS*/
+			$friendlist=json_decode($_POST["friendlistjson"]);
+			if( isset($friendlist) ){
+				/*Insert the friendlist in the database*/
+				foreach ($friendlist as $key => $value) {
+					/*Espace the entered values for SECURITY reason*/
+					$user_id = mysqli_escape_string($db,$id);
+					$friend_id = mysqli_escape_string($db,$friendlist[$key]->id);
+					
+					/*Insert the user as having friends*/
+					$sql = "INSERT INTO `eventapp`.`friends` (`user_me`, `user_other`) VALUES ('$user_id', '$friend_id');";
+					$db->query($sql);
+					
+					/*Insert the friend as having the user as friend*/
+					$sql = "INSERT INTO `eventapp`.`friends` (`user_me`, `user_other`) VALUES ('$friend_id', '$user_id');";
+					$db->query($sql);
+				}
+			}
+
+			/*Set the session and redirect to the main dashboard*/
 			$_SESSION['usr_id']=$id;
 			header("location: /events.php");
 		
