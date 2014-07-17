@@ -288,7 +288,7 @@ $sessionUser = $_SESSION['usr_id'];?>
             while($participant = $participants_query->fetch()){ ?>
 
             <div class="rp_col">
-                    <div class="small_thumb"><img src="/images/_related/nobody.png" alt="Nunc tincidunt" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div>
+                    <div class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div>
             </div>
 
         <?php } ?>
@@ -297,21 +297,59 @@ $sessionUser = $_SESSION['usr_id'];?>
     </div>
 </div>  
 
+<script type="text/javascript">
+
+            function addFeedback(element, event_id) {
+                if(window.event.keyCode == 13){
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+                    } else {  // code for IE6, IE5
+                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+
+                    xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                            document.getElementById("feedbackSearch").innerHTML=xmlhttp.responseText;
+                            element.value = '';
+                        }
+                    }
+                      
+                    xmlhttp.open("GET","feedbackAdd.php?q="+element.value+"&event_id="+event_id,true);
+                    xmlhttp.send();
+                }
+            }
+
+        </script>
+
 <div class="related_posts white_box">
-    <h3 class="rp_title">opinions</h3>
+    <h3 class="rp_title">Discussions</h3>
     <div class="rp_col_wrapper clearfix">
             
-        <div id="comment_tab" class="tab_content recent_comments">
-                    <ul><li><img alt='' src='http://1.gravatar.com/avatar/5bea567fcf9dd1022d9224e07bf194a5?s=50&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>Nguyen Duc:</cite> <em>2013-04-29 08:41:31</em><br> <a href="http://localhost/GreatBox/?p=213#comment-9" title="Nguyen Duc on Praesent Et Urna Turpis Sadips">You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part.You are right, that's an oversight on my part. Using ...</a></p><div class="clear"></div></li><li><img alt='' src='http://0.gravatar.com/avatar/0669909e23c39a648c28ea23c0b114d6?s=50&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>admin:</cite> <em>2012-08-02 13:39:49</em> <a href="http://localhost/GreatBox/?p=211#comment-4" title="admin on Nullam Vitae Nibh Un Odiosters">This is a reply test … Nulla nunc dui, tristique ...</a></p><div class="clear"></div></li><li><img alt='' src='http://0.gravatar.com/avatar/0669909e23c39a648c28ea23c0b114d6?s=50&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>admin:</cite> <em>2012-08-02 13:39:14</em> <a href="http://localhost/GreatBox/?p=211#comment-3" title="admin on Nullam Vitae Nibh Un Odiosters">This is a test … Quisque ligulas ipsum, euismod atras ...</a></p><div class="clear"></div></li><li><img alt='' src='http://0.gravatar.com/avatar/0669909e23c39a648c28ea23c0b114d6?s=50&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>admin:</cite> <em>2012-08-02 13:38:54</em> <a href="http://localhost/GreatBox/?p=213#comment-6" title="admin on Praesent Et Urna Turpis Sadips">This is a reply test … Class aptent taciti sociosqu ...</a></p><div class="clear"></div></li><li><img alt='' src='http://0.gravatar.com/avatar/0669909e23c39a648c28ea23c0b114d6?s=50&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>admin:</cite> <em>2012-08-02 13:38:32</em> <a href="http://localhost/GreatBox/?p=213#comment-5" title="admin on Praesent Et Urna Turpis Sadips">This is a test … Quisque ligulas ipsum, euismod atras ...</a></p><div class="clear"></div></li></ul><br>         
+        <div id="comment_tab" class="tab_content recent_comments" style="overflow: auto;">
+                    <ul id="feedbackSearch">
+                        <?php 
+
+                            $feedbacks_query = $connect->query("
+                                SELECT * FROM feedback
+                                JOIN userapps U ON U.Facebook_ID = feedback.feedback_user_id
+                                where feedback.feedback_event_id = ".$event_id."
+                            ");
+
+                            while($feedback = $feedbacks_query->fetch()){ ?>
+                                <li><img src='/include/Profil_pictures/<?php echo $feedback["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' /><p><cite><?php echo $feedback["usr_lname"] . ' '. $feedback["usr_fname"]; ?>:</cite> <em><?php echo $feedback["feedback_time"]; ?></em><br> <a href="#"><?php echo $feedback["feedback_message"]; ?></a></p><div class="clear"></div></li>
+                            <?php } ?>
+
+                    </ul><br>         
 
                 </div>
                 
     </div>
     <div style="text-align: center">
-                        <form>
-                            <textarea type="text" placeholder="say what you think ;)" style="width:756px; height:131px"></textarea><br>
-                        </form>
-                    </div> 
+        <form>
+            <textarea type="text" placeholder="say what you think ;)" style="width:756px; height:131px" onkeydown="addFeedback(this, <?php echo $event_id ?>)"></textarea><br>
+        </form>
+    </div> 
 </div>
 
 <div class="related_posts white_box">
@@ -321,12 +359,15 @@ $sessionUser = $_SESSION['usr_id'];?>
         <div class="rp_col">
             <div class="small_thumb"><img src="/images/_related/upload.png" alt="Nunc tincidunt" title="Upload a photo" /></div>
         </div>
+
     </div>
 
     <div style="text-align:center">
         <br>
-        <input type="file" name="file" id="file"><br><br>
-        <input class="button gray small" type="submit" name="submit" value="Upload Picture"><br><br>
+        <form action="/addEventPicture.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
+            <input type="file" name="file"><br><br>
+            <input class="button gray small" type="submit" name="submit" value="Upload Picture"><br><br>
+        </form>
     </div>
 </div>
 
@@ -634,7 +675,7 @@ $sessionUser = $_SESSION['usr_id'];?>
                             while($contact = $contact_query->fetch()){
                             ?>
                                 <li >
-                                    <img alt='' src='http://1.gravatar.com/avatar/5bea567fcf9dd1022d9224e07bf194a5?s=50&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' />
+                                    <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
                                         <cite><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
