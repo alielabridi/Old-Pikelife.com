@@ -1,6 +1,25 @@
-<?php  session_start(); 
-$sessionUser = $_SESSION['usr_id'];
-$piked = false;
+<?php   session_start(); 
+
+        $event_id = $_GET['event_id'];
+        require_once('connect.php');
+
+        $sessionUser = $_SESSION['usr_id'];
+        $piked = false;
+
+        $creator_query = $connect->query("
+
+            SELECT count(*) AS creator_exist
+            FROM events
+            WHERE event_id = ". $event_id ." and usr_create = $sessionUser
+
+        ");
+
+                                        
+        if($creator = $creator_query->fetch()){
+            if($creator["creator_exist"] > 0){
+                $piked = true;
+            }
+        }
 ?>
 
 <!DOCTYPE html>
@@ -234,7 +253,7 @@ $piked = false;
                                             if($participanted = $participated_query->fetch()){
                                                 if($participanted["participanted"] > 0){ 
                                             ?>
-                                                <span style="color:green;border-style:solid;">Piked</span>
+                                                <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
                                         <?php } else {?>
                                                 <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
                                         <?php } } ?>
@@ -366,12 +385,13 @@ $piked = false;
 
             $pictures_query = $connect->query("
                 SELECT * FROM picture
+                left join userapps U on U.Facebook_ID = usr_upload
                 where event_id = ".$event_id."
             ");
 
             while($picture = $pictures_query->fetch()){ ?>
                 <div class="rp_col">
-                    <div class="small_thumb"><img src="/img/upload/pictures/<?php echo $picture["picture_link"]; ?>"/></div>
+                    <div class="small_thumb" style="text-align:center"><img src="/img/upload/pictures/<?php echo $picture["pic_link"]; ?>"/><em>Uploaded by<br><strong><?php echo $picture["usr_lname"] . ' '. $picture["usr_fname"]; ?></strong></em></div>
                 </div>
             <?php } ?>
 
@@ -380,7 +400,7 @@ $piked = false;
         <div style="text-align:center">
             <br>
             <form action="/addEventPicture.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
-                <label>only jpeg, jpg, pjpeg, x-png, and png are allowed</label>
+                <label> Limitted size is 2Mb and only jpeg, jpg, pjpeg, x-png, and png are allowed</label>
                 <input type="file" name="file"><br><br>
                 <input class="button gray small" type="submit" name="submit" value="Upload Picture"><br><br>
             </form>
@@ -396,12 +416,13 @@ $piked = false;
 
             $files_query = $connect->query("
                 SELECT * FROM files
+                left join userapps U on U.Facebook_ID = usr_upload
                 where file_event_id = ".$event_id."
             ");
 
             while($file = $files_query->fetch()){ ?>
                 <div class="rp_col" style="width:100%; height:100px">
-                    <a href="/img/upload/files/<?php echo $file["file_name"]; ?>" target="_blank"><div class="pdf_small_thumb"><?php echo $file["file_name"]; ?><br><em>click to view</em></div></a>
+                    <a href="/img/upload/files/<?php echo $file["file_link"]; ?>" target="_blank"><div class="pdf_small_thumb"><?php echo $file["file_name"]; ?><br><strong>Uploaded by <?php echo $file["usr_lname"] . ' ' . $file["usr_fname"]; ?></strong><br><em>click to view</em></div></a>
                 </div>
             <?php } ?>
     </div>
@@ -409,7 +430,7 @@ $piked = false;
         <div style="text-align:center">
             <br>
             <form action="/addEventFile.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
-                <label>only pdf is allowed</label>
+                <label>only pdf is allowed<br> Limitted size is 2Mb and only pdf is allowed</label>
                 <input type="file" name="file" id="file"><br><br>
                 <input class="button gray small" type="submit" name="submit" value="Upload File"><br><br>
             </form>

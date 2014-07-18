@@ -185,11 +185,13 @@ $sessionUser = $_SESSION['usr_id'];
                             $temp = explode(".", $_FILES["file"]["name"]);
                             $extension = end($temp);
 
-                            if ((($_FILES["file"]["type"] == "image/jpeg")
-                                || ($_FILES["file"]["type"] == "image/jpg")
-                                || ($_FILES["file"]["type"] == "image/pjpeg")
-                                || ($_FILES["file"]["type"] == "image/x-png")
-                                || ($_FILES["file"]["type"] == "image/png"))
+                            if ((($_FILES["file"]["type"] == "image/gif")
+                            || ($_FILES["file"]["type"] == "image/jpeg")
+                            || ($_FILES["file"]["type"] == "image/jpg")
+                            || ($_FILES["file"]["type"] == "image/pjpeg")
+                            || ($_FILES["file"]["type"] == "image/x-png")
+                            || ($_FILES["file"]["type"] == "image/png"))
+                            && ($_FILES["file"]["size"] < 20000)
                             && in_array($extension, $allowedExts)) 
                             {
                                     $query = $connect->query("SELECT MAX(event_id) AS Last_id FROM events;");
@@ -199,21 +201,16 @@ $sessionUser = $_SESSION['usr_id'];
                                   if ($_FILES["file"]["error"] > 0) {
                                     echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
                                   } else {
-                                    if (file_exists("img/upload/events/" . $_FILES["file"]["name"])) {
-                                        $Error = $_FILES["file"]["name"] . " already exists. ";
-                                    } else {
-                                      move_uploaded_file($_FILES["file"]["tmp_name"],
-                                      "img/upload/events/" . $_FILES["file"]["name"]);
-                                      $file_name = $_FILES["file"]["name"];
+                                        if (file_exists("img/upload/events/" . $_FILES["file"]["name"])) {
+                                            $Error = $_FILES["file"]["name"] . " already exists. ";
+                                        } else {
+                                          move_uploaded_file($_FILES["file"]["tmp_name"],
+                                          "img/upload/events/" . $_FILES["file"]["name"]);
+                                          $file_name = $_FILES["file"]["name"];
+                                        }
                                     }
-                                }
-                            }
 
-                            else {
-                              $Error = "File is not of the following format {jpeg, jpg, pjpeg,x-png,png}";
-                            }
-
-                            function test_input($data) {
+                                function test_input($data) {
                                $data = trim($data);
                                $data = stripslashes($data);
                                $data = htmlspecialchars($data);
@@ -228,7 +225,7 @@ $sessionUser = $_SESSION['usr_id'];
                                 $event_place = test_input($_POST["event_place"]);
                               }
 
-                              if (!empty($_POST["event_date"]) || !empty($_POST["event_time"]) || !empty($_POST["event_type"])) {
+                              if (!empty($_POST["event_date"]) && !empty($_POST["event_time"]) && !empty($_POST["event_type"])) {
                                     $event_date = test_input($_POST["event_date"]);
                                     $event_time = test_input($_POST["event_time"]);
                                     $event_type = test_input($_POST["event_type"]);
@@ -237,7 +234,8 @@ $sessionUser = $_SESSION['usr_id'];
                                     $Error = "missing fields";
                               }
 
-                              $query = $connect->query("
+                              if(!empty($_POST["event_date"]) && !empty($_POST["event_time"]) && !empty($_POST["event_type"]) && !empty($_POST["event_name"]) && !empty($_POST["event_description"]) && !empty($_POST["event_place"])){
+                                $query = $connect->query("
 
                                     INSERT INTO events
                                     (event_name, event_time, event_date, usr_create, event_place, event_pic, event_description, event_cat, event_type)
@@ -245,7 +243,12 @@ $sessionUser = $_SESSION['usr_id'];
 
                                 ");
 
-                              header( "Location: /events.php") ;
+                                header( "Location: /events.php");
+
+                              }
+                            }else {
+                              $Error = "File exceeds 2Mb or it is not of the following format {jpeg, jpg, pjpeg, x-png, png}";
+                            }     
                           }
                     ?>
                     
@@ -278,7 +281,7 @@ $sessionUser = $_SESSION['usr_id'];
                                     <option value="Public">Public</option>
                                     <option value="Secret">Secret</option>
                                 </select><br><br>
-                                <label>select picture of your event</label>
+                                <label>select a picture for your event</label>
                                 <input type="file" name="file" id="file"><br><br><br>
                                 <input type="submit" name="submit" value="Submit">
                             </form>

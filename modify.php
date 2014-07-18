@@ -174,25 +174,21 @@ $sessionUser = $_SESSION['usr_id'];
                         $Error = "";
                         $event_name = $event_description = $event_place = $event_date = $event_time = $event_type="";
 
-                        require_once('connect.php');
+                        require_once('connect.php'); 
 
-                        if ($_SERVER["REQUEST_METHOD"] == "GET") {
-                            
+                        $events_query = $connect->query("
+                            SELECT *
+                            FROM events
+                            WHERE event_id = $event_id
 
-                            $events_query = $connect->query("
-                                SELECT *
-                                FROM events
-                                WHERE event_id = $event_id
+                         ");
 
-                             ");
-
-                            if($event = $events_query->fetch()){
-                                $event_name = $event["event_name"];
-                                $event_description = $event["event_description"];
-                                $event_place = $event["event_place"];
-                                $event_date = $event["event_date"];
-                                $event_time = $event["event_time"];
-                            }
+                        if($event = $events_query->fetch()){
+                            $event_name = $event["event_name"];
+                            $event_description = $event["event_description"];
+                            $event_place = $event["event_place"];
+                            $event_date = $event["event_date"];
+                            $event_time = $event["event_time"];
                         }
 
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -201,12 +197,13 @@ $sessionUser = $_SESSION['usr_id'];
                             $temp = explode(".", $_FILES["file"]["name"]);
                             $extension = end($temp);
 
-                            if ((($_FILES["file"]["type"] == "image/jpeg")
+                            if ((($_FILES["file"]["type"] == "image/gif")
+                                || ($_FILES["file"]["type"] == "image/jpeg")
                                 || ($_FILES["file"]["type"] == "image/jpg")
                                 || ($_FILES["file"]["type"] == "image/pjpeg")
                                 || ($_FILES["file"]["type"] == "image/x-png")
                                 || ($_FILES["file"]["type"] == "image/png"))
-                            && in_array($extension, $allowedExts)) 
+                                && in_array($extension, $allowedExts) == 1)
                             {
                                 $_FILES["file"]["name"] = $event_id . '.' . $extension;
                                   if ($_FILES["file"]["error"] > 0) {
@@ -216,11 +213,8 @@ $sessionUser = $_SESSION['usr_id'];
                                       "img/upload/events/" . $_FILES["file"]["name"] );
                                       $file_name = $_FILES["file"]["name"];
                                 }
-                            }
 
-                            else {
-                              $Error = "File is not of the following format {jpeg, jpg, pjpeg,x-png,png}";
-                            }
+                                print_r("heey");
 
                             function test_input($data) {
                                $data = trim($data);
@@ -246,24 +240,31 @@ $sessionUser = $_SESSION['usr_id'];
                                     $Error = "missing fields";
                               }
 
-                              require_once('connect.php');
+                              if(!empty($_POST["event_date"]) && !empty($_POST["event_time"]) && !empty($_POST["event_type"]) && !empty($_POST["event_name"]) && !empty($_POST["event_description"]) && !empty($_POST["event_place"])){
+                              
+                                  require_once('connect.php');
 
-                              $query = $connect->query("
-                                
-                                        UPDATE EVENTS 
-                                        SET event_name =  '$event_name',
-                                            event_time =  '$event_time',
-                                            event_date =  '$event_date',
-                                            event_place =  '$event_place',
-                                            event_pic = '$event_id.jpg',
-                                            event_description =  '$event_description',
-                                            event_cat = $event_cat,
-                                            event_type =  '$event_type' 
-                                        WHERE event_id = $event_id 
-                                    "); 
+                                  $query = $connect->query("
+                                    
+                                            UPDATE EVENTS 
+                                            SET event_name =  '$event_name',
+                                                event_time =  '$event_time',
+                                                event_date =  '$event_date',
+                                                event_place =  '$event_place',
+                                                event_pic = '$event_id.jpg',
+                                                event_description =  '$event_description',
+                                                event_cat = $event_cat,
+                                                event_type =  '$event_type' 
+                                            WHERE event_id = $event_id 
+                                        "); 
+                                  header( "Location: /view.php?event_id=$event_id") ;
+                              }
+                            }else {
+                              $Error = "it is not of the following format {jpeg, jpg, pjpeg,x-png,png}";
+                            }
 
-                              header( "Location: /view.php?event_id=$event_id") ;
-                          }
+                            
+                        }
                     ?>
 
                     <div class="post_entry" style="text-align: center">
@@ -298,7 +299,7 @@ $sessionUser = $_SESSION['usr_id'];
                                     <option value="Public">Public</option>
                                     <option value="Secret">Secret</option>
                                 </select><br><br>
-                                <label>select picture of your event</label>
+                                <label>select picture of your event<br>Your picture should not exceed 2Mb</label>
                                 <input type="file" name="file" id="file"><br><br><br>
                                 <input type="submit" name="submit" value="Submit">
                             </form>

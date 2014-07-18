@@ -1,7 +1,7 @@
 <?php
-
-session_start();
-$sessionUser = $_SESSION['usr_id'];
+        
+    session_start();
+    $sessionUser = $_SESSION['usr_id'];
 
 /**
  *
@@ -216,22 +216,24 @@ $sessionUser = $_SESSION['usr_id'];
                                                     <p></p>
                                                     <?php if($event['event_type'] != "Private" || ($event['event_type'] == "Private" && $event['usr_create'] == $sessionUser)){
                                                         if($event['Facebook_ID'] != $sessionUser){
-                                                        
+                                                            $participated_query = $connect->query("
+                                                                SELECT count(*) AS participanted FROM joinevents
+                                                                where event_id = ".$event['event_id']." and usr_ID = ". $sessionUser . "
+                                                            ");
+
+                                                            if($participanted = $participated_query->fetch()){
+                                                                if($participanted["participanted"] > 0){                                                        
                                                         ?>
-                                                            <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
-
+                                                            <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
+                                                            
+                                                        <?php }}}elseif($event["usr_create"] == $sessionUser) { ?>
+                                                           <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
+                                                            <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">End it</a>
                                                         <?php }else{ ?>
-
-                                                            <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
-                                                            <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">Delete</a>                                                            
-
+                                                                <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
                                                         <?php } ?>
 
-                                                    <?php
-                                                        }
-                                                    ?>
-
-                                            
+                                                    <?php } ?>                                            
                                                 </div>
                                         
                                         </div>

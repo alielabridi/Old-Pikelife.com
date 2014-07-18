@@ -1,4 +1,6 @@
         <?php
+            session_start();
+            $sessionUser = $_SESSION['usr_id'];
 
             require_once('connect.php');
 
@@ -10,7 +12,7 @@
 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-                $allowedExts = array("pdf", "doc", "txt", "ppt");
+                $allowedExts = array("pdf");
                 $temp = explode(".", $_FILES["file"]["name"]);
                 $extension = end($temp);
 
@@ -18,13 +20,14 @@
                 {
                     $query = $connect->query("SELECT MAX(file_id) AS Last_id FROM files;");
                     $file_id = $query->fetch();
-                    $_FILES["file"]["name"] = ($file_id["Last_id"]+1) . "_" . $_FILES["file"]["name"];
-                    echo $_FILES["file"]["name"];
+
+                    $file_link = $event_id . ($file_id["Last_id"]+1) . '.' .$extension;
+
                 if ($_FILES["file"]["error"] > 0) {
                     echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
                 } else {
                     move_uploaded_file($_FILES["file"]["tmp_name"],
-                    "img/upload/files/" . $_FILES["file"]["name"] );
+                    "img/upload/files/" . $file_link);
                     $file_name = $_FILES["file"]["name"];
                 }
             }
@@ -41,7 +44,7 @@
         }
 
         $query = $connect->query("
-            INSERT INTO files(file_event_id, file_name) VALUES ($event_id, '$file_name')
+            INSERT INTO files(file_event_id, file_name, file_link, usr_upload) VALUES ($event_id, '$file_name', '$file_link', $sessionUser)
         ");
 
         header( "Location: /view.php?event_id=$event_id") ;
