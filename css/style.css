@@ -454,6 +454,7 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 		 -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
 	}
 	.related_posts .rp_col .small_thumb { margin-bottom:20px; }
+	.related_posts .rp_col .pdf_small_thumb { margin-bottom:20px; display:block;}
 	.related_posts .rp_col .small_thumb img{ display:block; }
 	.related_posts .rp_col h4 { margin-bottom:20px;}
 
@@ -655,6 +656,52 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 
 /** WIDGETS
 -------------------------------------------- **/
+	.pdf_small_thumb{ 
+		display: inline-block;
+		margin-bottom: 0;
+		font-weight: 400;
+		text-align: center;
+		vertical-align: middle;
+		cursor: pointer;
+		background-image: none;
+		border: 1px solid transparent;
+		white-space: nowrap;
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.42857143;
+		border-radius: 4px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		color: #333;
+		background-color: #fff;
+		border-color: #ccc;
+	}
+
+	.pdf_small_thumb:hover{ 
+		display: inline-block;
+		margin-bottom: 0;
+		font-weight: 400;
+		text-align: center;
+		vertical-align: middle;
+		cursor: pointer;
+		background-image: none;
+		border: 1px solid transparent;
+		white-space: nowrap;
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.42857143;
+		border-radius: 4px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		color: #333;
+		background-color: #FFEFEF;
+		border-color: #ccc;
+	}
+
 	.small_thumb { 
 		background-color:#fff; border:1px solid #eee; 
 		padding:3px; -webkit-border-radius: 2px;
@@ -696,6 +743,7 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 	.recent_posts li em { color: #999; display: block; font-size:11px;}
 	.recent_posts a.title{ font-weight:bold; line-height:normal; display:block; margin-bottom:5px;}
 	.recent_posts .small_thumb { float:left; margin-right:15px;  }
+	.recent_posts .pdf_small_thumb { float:left; margin-right:15px;  }
 	.recent_posts img { float:left; display:block;}
 	
 	/** Recent comments **/
@@ -859,7 +907,26 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 		background:url(images/widget_icons/folder.png) 20px center no-repeat;
 		padding-left:45px;
 	}
-	
+
+	.widget_invitations li { padding:20px;}
+	.widget_invitations li:last-child {
+		-webkit-border-bottom-right-radius: 2px;
+		-webkit-border-bottom-left-radius: 2px;
+		-moz-border-radius-bottomright: 2px;
+		-moz-border-radius-bottomleft: 2px;
+		border-bottom-right-radius: 2px;
+		border-bottom-left-radius: 2px;
+	}
+	.widget_invitations li a{ color: #666 }
+	.widget_invitations img.avatar{ float:left; margin-right:15px; background-color:#fff; border:1px solid #eee; 
+		padding:3px; -webkit-border-radius: 2px;
+		-moz-border-radius: 2px;
+		border-radius: 2px;}
+
+	.widget_invitations li p{ margin:0; padding:0;}
+	.widget_invitations li cite { font-weight:bold; display:inline }
+	.widget_invitations li em { color: #999;font-size:11px; }
+
 	/** Widget page **/
 	.widget_pages li {
 		background:url(images/widget_icons/page.png) 20px center no-repeat;

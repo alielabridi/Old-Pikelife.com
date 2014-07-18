@@ -218,7 +218,7 @@ $sessionUser = $_SESSION['usr_id'];
                                                         if($event['Facebook_ID'] != $sessionUser){
                                                         
                                                         ?>
-                                                            <a href="#" class="button green">Pike</a>
+                                                            <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
 
                                                         <?php }else{ ?>
 
@@ -488,7 +488,7 @@ $sessionUser = $_SESSION['usr_id'];
                             while($contact = $contact_query->fetch()){
                             ?>
                                 <li >
-                                    <img alt='' src='http://1.gravatar.com/avatar/5bea567fcf9dd1022d9224e07bf194a5?s=50&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' />
+                                    <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
                                         <cite><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
