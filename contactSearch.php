@@ -43,7 +43,7 @@
            while($contact = $contact_query->fetch()){
               $usr_lname = $contact["usr_lname"];
               $usr_fname = $contact["usr_fname"];
-              $usr_id = $contact["usr_id"];
+              $usr_id = $contact["user_other"];
               $picture_link = $contact["picture_link"];
 
               $hint = $hint . "<li ><img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";

@@ -1,5 +1,7 @@
 <?php  session_start(); 
-$sessionUser = $_SESSION['usr_id'];?>
+$sessionUser = $_SESSION['usr_id'];
+$piked = false;
+?>
 
 <!DOCTYPE html>
 <html>
@@ -232,7 +234,7 @@ $sessionUser = $_SESSION['usr_id'];?>
                                             if($participanted = $participated_query->fetch()){
                                                 if($participanted["participanted"] > 0){ 
                                             ?>
-                                                <a href="/joinEvents_delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">Cancel Pike</a>
+                                                <span style="color:green;border-style:solid;">Piked</span>
                                         <?php } else {?>
                                                 <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
                                         <?php } } ?>
@@ -288,6 +290,9 @@ $sessionUser = $_SESSION['usr_id'];?>
             while($participant = $participants_query->fetch()){ ?>
 
             <div class="rp_col">
+                <?php if($participant["Facebook_ID"] == $sessionUser){
+                    $piked = true;
+                } ?>
                     <div class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div>
             </div>
 
@@ -345,11 +350,13 @@ $sessionUser = $_SESSION['usr_id'];?>
                 </div>
                 
     </div>
-    <div style="text-align: center">
-        <form>
-            <textarea type="text" placeholder="say what you think ;)" style="width:756px; height:131px" onkeydown="addFeedback(this, <?php echo $event_id ?>)"></textarea><br>
-        </form>
-    </div> 
+    <?php if($piked){ ?>
+        <div style="text-align: center">
+            <form>
+                <textarea type="text" placeholder="say what you think ;)" style="width:756px; height:131px" onkeydown="addFeedback(this, <?php echo $event_id ?>)"></textarea><br>
+            </form>
+        </div> 
+    <?php } ?>
 </div>
 
 <div class="related_posts white_box">
@@ -369,15 +376,16 @@ $sessionUser = $_SESSION['usr_id'];?>
             <?php } ?>
 
     </div>
-
-    <div style="text-align:center">
-        <br>
-        <form action="/addEventPicture.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
-            <label>only jpeg, jpg, pjpeg, x-png, and png are allowed</label>
-            <input type="file" name="file"><br><br>
-            <input class="button gray small" type="submit" name="submit" value="Upload Picture"><br><br>
-        </form>
-    </div>
+    <?php if($piked){ ?>
+        <div style="text-align:center">
+            <br>
+            <form action="/addEventPicture.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
+                <label>only jpeg, jpg, pjpeg, x-png, and png are allowed</label>
+                <input type="file" name="file"><br><br>
+                <input class="button gray small" type="submit" name="submit" value="Upload Picture"><br><br>
+            </form>
+        </div>
+    <?php } ?>
 </div>
 
 <div class="related_posts white_box">
@@ -393,18 +401,20 @@ $sessionUser = $_SESSION['usr_id'];?>
 
             while($file = $files_query->fetch()){ ?>
                 <div class="rp_col" style="width:100%; height:100px">
-                    <a href="/img/upload/files/<?php echo $file["file_name"]; ?>"><div class="pdf_small_thumb"><?php echo $file["file_name"]; ?><br><em>click to view</em></div></a>
+                    <a href="/img/upload/files/<?php echo $file["file_name"]; ?>" target="_blank"><div class="pdf_small_thumb"><?php echo $file["file_name"]; ?><br><em>click to view</em></div></a>
                 </div>
             <?php } ?>
     </div>
-    <div style="text-align:center">
-        <br>
-        <form action="/addEventFile.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
-            <label>only pdf is allowed</label>
-            <input type="file" name="file" id="file"><br><br>
-            <input class="button gray small" type="submit" name="submit" value="Upload File"><br><br>
-        </form>
-    </div>
+    <?php if($piked){ ?>
+        <div style="text-align:center">
+            <br>
+            <form action="/addEventFile.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
+                <label>only pdf is allowed</label>
+                <input type="file" name="file" id="file"><br><br>
+                <input class="button gray small" type="submit" name="submit" value="Upload File"><br><br>
+            </form>
+        </div>
+        <?php } ?>
 </div>
 
                 
@@ -460,6 +470,8 @@ $sessionUser = $_SESSION['usr_id'];?>
                                 FROM  friends 
                                 JOIN userapps U ON U.Facebook_ID = friends.user_other
                                 WHERE user_me = $sessionUser and friends.user_other NOT IN (SELECT notification_user from notification where event_id = $event_id)
+                                and friends.user_other NOT IN (SELECT joinevents.usr_id from joinevents where event_id = $event_id)
+
                             ");
 
                             while($invitation = $invitations_query->fetch()){
@@ -627,7 +639,7 @@ $sessionUser = $_SESSION['usr_id'];?>
         <!-- BEGIN WIDGET -->
         <div class="widget tab_wrapper white_box" id="tab_wrapper_tab_widget-2">
             
-            <ul class="tab_menu"><li class="tab_post"><a href="#post_tab">Notifs</a></li><li  class="tab_comment"><a href="#comment_tab">Contacts</a></li><li class="tab_tag"><a href="#tag_tab">your pikes</a></li></ul>
+            <ul class="tab_menu"><li class="tab_post"><a href="#post_tab">Notifs</a></li><li  class="tab_comment"><a href="#comment_tab">Friends</a></li><li class="tab_tag"><a href="#tag_tab">Pikes</a></li></ul>
             <div class="clear"></div>
             <div class="tabs_container">
             <div id="post_tab" class="tab_content recent_posts">

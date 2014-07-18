@@ -227,8 +227,6 @@ $sessionUser = $_SESSION['usr_id'];
 
                                                         <?php } ?>
 
-                                                        <a href="#" class="button blue">Invite</a>
-
                                                     <?php
                                                         }
                                                     ?>
@@ -418,7 +416,7 @@ $sessionUser = $_SESSION['usr_id'];
         <!-- BEGIN WIDGET -->
         <div class="widget tab_wrapper white_box" id="tab_wrapper_tab_widget-2">
             
-            <ul class="tab_menu"><li class="tab_post"><a href="#post_tab">Notifs</a></li><li  class="tab_comment"><a href="#comment_tab">Contacts</a></li><li class="tab_tag"><a href="#tag_tab">your pikes</a></li></ul>
+            <ul class="tab_menu"><li class="tab_post"><a href="#post_tab">Notifs</a></li><li  class="tab_comment"><a href="#comment_tab">Friends</a></li><li class="tab_tag"><a href="#tag_tab">Pikes</a></li></ul>
             <div class="clear"></div>
             <div class="tabs_container">
             <div id="post_tab" class="tab_content recent_posts">
