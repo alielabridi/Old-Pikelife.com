@@ -164,20 +164,26 @@
                                             LEFT JOIN interests I ON I.interest_id = events.event_cat
                                             WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
                                             and event_cat = ". $inter ."
+                                            and (events.usr_create In(   SELECT friends.user_other 
+                                                                        FROM  friends 
+                                                                        WHERE user_me = $sessionUser)
+                                                OR events.usr_create = $sessionUser)
                                             ORDER BY event_time Asc
 
                                         "); 
                                         }                                  
                                     else{
                                         $events_query = $connect->query("
-
                                             SELECT *
                                             FROM events
                                             JOIN userapps U ON U.Facebook_ID = events.usr_create
                                             LEFT JOIN interests I ON I.interest_id = events.event_cat
                                             WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
+                                            AND (events.usr_create In(SELECT friends.user_other 
+                                                                      FROM  friends 
+                                                                      WHERE user_me = $sessionUser)
+                                                OR events.usr_create = $sessionUser)
                                             ORDER BY event_time Asc
-
                                         "); 
                                 }
 
@@ -222,18 +228,18 @@
                                                             ");
 
                                                             if($participanted = $participated_query->fetch()){
-                                                                if($participanted["participanted"] > 0){                                                        
-                                                        ?>
-                                                            <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
-                                                            
-                                                        <?php }}}elseif($event["usr_create"] == $sessionUser) { ?>
-                                                           <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
-                                                            <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">End it</a>
-                                                        <?php }else{ ?>
-                                                                <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
-                                                        <?php } ?>
+                                                                if($participanted["participanted"] > 0){?>
+                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
+                                                                <?php }else{ ?>
+                                                                    <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
+                                                            <?php }
+                                                                }
+                                                            }else{ ?>
+                                                                <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
+                                                                <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">End it</a>
+                                                        
 
-                                                    <?php } ?>                                            
+                                                            <?php } }?>                                            
                                                 </div>
                                         
                                         </div>
@@ -614,7 +620,7 @@
                             $interests_query = $connect->query("
                                 SELECT *
                                 FROM interests
-                                ORDER BY interest_name Asc
+                                ORDER BY interest_score DESC, interest_name ASC
                             ");
 
                             while($interest = $interests_query->fetch()){

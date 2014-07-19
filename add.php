@@ -243,6 +243,16 @@ $sessionUser = $_SESSION['usr_id'];
 
                                 ");
 
+                                require_once('connect.php');
+
+                                $query = $connect->query("
+
+                                    UPDATE interests 
+                                    SET interest_score = interest_score+1
+                                    WHERE interest_id = $event_cat
+
+                                ");
+
                                 header( "Location: /events.php");
 
                               }

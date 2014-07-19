@@ -900,7 +900,7 @@
                             $interests_query = $connect->query("
                                 SELECT *
                                 FROM interests
-                                ORDER BY interest_name Asc
+                                ORDER BY interest_score DESC, interest_name ASC
                             ");
 
                             while($interest = $interests_query->fetch()){
