@@ -30,23 +30,20 @@
                     "img/upload/files/" . $file_link);
                     $file_name = $_FILES["file"]["name"];
                 }
+
+                function test_input($data) {
+                    $data = trim($data);
+                    $data = stripslashes($data);
+                    $data = htmlspecialchars($data);
+                    return $data;
+                }
+
+                $query = $connect->query("
+                    INSERT INTO files(file_event_id, file_name, file_link, usr_upload) VALUES ($event_id, '$file_name', '$file_link', $sessionUser)
+                ");
+
+                
+                }
             }
-
-        else {
-            $Error = "File is not of the following format {pdf, doc, txt, ppt}";
-        }
-
-        function test_input($data) {
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
-            return $data;
-        }
-
-        $query = $connect->query("
-            INSERT INTO files(file_event_id, file_name, file_link, usr_upload) VALUES ($event_id, '$file_name', '$file_link', $sessionUser)
-        ");
-
-        header( "Location: /view.php?event_id=$event_id") ;
-        }
+        header( "Location: /view.php?event_id=$event_id#Files") ;
 ?>

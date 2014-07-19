@@ -18,6 +18,7 @@
               FROM  friends 
               JOIN userapps U ON U.Facebook_ID = friends.user_other
               WHERE user_me = $sessionUser and usr_lname LIKE '%$q%'
+              ORDER BY last_chat DESC
           ");
 
            while($contact = $contact_query->fetch()){
@@ -26,7 +27,13 @@
               $usr_id = $contact["user_other"];
               $picture_link = $contact["picture_link"];
 
-              $hint = $hint . "<li ><img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
+              if($contact['sent_chat'] == "yes"){
+                $hint = $hint . "<li style='background-color:rgb(255, 226, 226)'>";
+              }else{
+                $hint = $hint . "<li>";
+              }
+
+              $hint = $hint . "<img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
               $hint = $hint . "<p><cite>$usr_lname $usr_fname</cite><br>";
               $hint = $hint . "<em style='cursor:pointer' onclick='chatResult($usr_id)'>click to view conversation</em></p><div class='clear'></div></li>";
             }
@@ -38,6 +45,7 @@
               FROM  friends 
               JOIN userapps U ON U.Facebook_ID = friends.user_other
               WHERE user_me =$sessionUser
+              ORDER BY last_chat DESC
           ");
 
            while($contact = $contact_query->fetch()){
@@ -46,7 +54,14 @@
               $usr_id = $contact["user_other"];
               $picture_link = $contact["picture_link"];
 
-              $hint = $hint . "<li ><img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
+              if($contact['sent_chat'] == "yes"){
+                $hint = $hint . "<li style='background-color:rgb(255, 226, 226)'>";
+              }else{
+                $hint = $hint . "<li>";
+              }
+              
+
+              $hint = $hint . "<img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
               $hint = $hint . "<p><cite>$usr_lname $usr_fname</cite><br>";
               $hint = $hint . "<em style='cursor:pointer' onclick='chatResult($usr_id)'>click to view conversation</em></p><div class='clear'></div></li>";
             }

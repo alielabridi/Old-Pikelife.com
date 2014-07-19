@@ -44,12 +44,12 @@
                 }
 
                 $query = $connect->query("
-                    INSERT INTO picture(event_id, picture_link, usr_upload) VALUES ($event_id, '$picture_name', $sessionUser)
+                    INSERT INTO picture(event_id, pic_link, usr_upload) VALUES ($event_id, '$picture_name', $sessionUser)
                 ");
             }
 
         
 
-        header( "Location: /view.php?event_id=$event_id") ;
+        header( "Location: /view.php?event_id=$event_id#Pictures") ;
         }
 ?>

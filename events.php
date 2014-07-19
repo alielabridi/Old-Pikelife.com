@@ -118,7 +118,7 @@
 
 <div id="header">
         <div class="container clearfix">
-            <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="Place" /></a></h1>
+            <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="PikeLife" /></a></h1>
         </div>  
     </div>
 

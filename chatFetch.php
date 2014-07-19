@@ -43,6 +43,14 @@
               $hint = $hint . "<em>$chat_time</em><br/>";
               $hint = $hint . "$chat_message</p><div class='clear'></div></li>";
             }
+
+            require_once('connect.php');
+            
+            $contact_query = $connect->query("
+              UPDATE friends 
+              SET sent_chat= 'no' 
+              WHERE user_me = $sessionUser and user_other = $q
+          ");
       }     
 
     // Set output to "no suggestion" if no hint were found

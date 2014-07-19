@@ -14,9 +14,26 @@
     //lookup all links from the xml file if length of q>0
     if (strlen($post)>0) {
           $query = $connect->query("
-			INSERT INTO  chat (  chat_user_sender ,  chat_user_receiver ,  chat_message) 
-			VALUES ( $sessionUser, $q,  '$post' )
-		");
+      			INSERT INTO  chat (  chat_user_sender ,  chat_user_receiver ,  chat_message) 
+      			VALUES ( $sessionUser, $q,  '$post' )
+      		");
+
+          require_once('connect.php');
+          
+          $contact_query = $connect->query("
+            UPDATE friends 
+            SET sent_chat = 'yes',
+                last_chat = CURRENT_TIMESTAMP()
+            WHERE user_me = $q and user_other = $sessionUser
+          ");
+
+          require_once('connect.php');
+          
+          $contact_query = $connect->query("
+            UPDATE friends 
+            SET last_chat = CURRENT_TIMESTAMP()
+            WHERE user_me = $sessionUser and user_other = $q
+          ");
       }
 
       //lookup all links from the xml file if length of q>0
