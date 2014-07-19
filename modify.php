@@ -214,7 +214,9 @@ $sessionUser = $_SESSION['usr_id'];
                                       $file_name = $_FILES["file"]["name"];
                                 }
 
-                                print_r("heey");
+                            
+                            }
+                           
 
                             function test_input($data) {
                                $data = trim($data);
@@ -258,12 +260,7 @@ $sessionUser = $_SESSION['usr_id'];
                                             WHERE event_id = $event_id 
                                         "); 
                                   header( "Location: /view.php?event_id=$event_id") ;
-                              }
-                            }else {
-                              $Error = "it is not of the following format {jpeg, jpg, pjpeg,x-png,png}";
-                            }
-
-                            
+                           }  
                         }
                     ?>
 
@@ -323,13 +320,8 @@ $sessionUser = $_SESSION['usr_id'];
 
 
         <div id="sidebar">
+  
 
-
-
-        
-     
-
-        
         <script type="text/javascript">
         jQuery(document).ready(function($){ 
             $('#tab_wrapper_tab_widget-2').each(function() {
@@ -421,8 +413,8 @@ $sessionUser = $_SESSION['usr_id'];
                 $('#chatBox').hide();
                 $('#chatBoxForm').hide();
             });
-            function chatResult(user_sender) {
-                    userSender = user_sender;
+
+            function TabsUpdate(){
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp=new XMLHttpRequest();
@@ -432,18 +424,39 @@ $sessionUser = $_SESSION['usr_id'];
                       
                     xmlhttp.onreadystatechange=function() {
                         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-                            document.getElementById("chatBox").innerHTML=xmlhttp.responseText;
+                            document.getElementById("chatTabUptdate").innerHTML=xmlhttp.responseText;
                         }
                     }
               
+                    xmlhttp.open("GET","tabUpdate.php",true);
+                    xmlhttp.send();
+
+            }
+            function chatResult(user_sender) {
+                    userSender = user_sender;
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+
+                    } else {  // code for IE6, IE5
+                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                      
+                    xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                                document.getElementById("chatBox").innerHTML=xmlhttp.responseText;
+                                TabsUpdate();
+                            }
+                        }
+                    
                     xmlhttp.open("GET","chatFetch.php?q="+user_sender,true);
                     xmlhttp.send();
 
                     jQuery(document).ready(function($){ 
                         $('#contactSearch').hide();
                         $('#contactSearchForm').hide();
-                        $('#chatBox').show( "slow" );
-                        $('#chatBoxForm').show( "slow" );
+                        $('#chatBox').show();
+                        $('#chatBoxForm').show(); 
                      });            
             }
 
@@ -459,8 +472,9 @@ $sessionUser = $_SESSION['usr_id'];
                     xmlhttp.onreadystatechange=function() {
                         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
                             document.getElementById("chatBox").innerHTML=xmlhttp.responseText;
+                            TabsUpdate();
                         }
-                        element.value = ''
+                        element.value = '';
                     }
                       
                     xmlhttp.open("GET","chatSend.php?q="+userSender+"&post="+element.value,true);
@@ -469,20 +483,102 @@ $sessionUser = $_SESSION['usr_id'];
             }
 
             function returnContact(){
-                jQuery(document).ready(function($){ 
+                jQuery(document).ready(function($){
+                    contactResult("");
                     $('#chatBoxForm').hide();
                     $('#chatBox').hide();
-                    $('#contactSearchForm').show( "slow" );
-                    $('#contactSearch').show( "slow" );
+                    $('#contactSearchForm').show();
+                    $('#contactSearch').show();
                 });
             }
             
         </script>
+
+        <div class="widget widget_invitations white_box">
+            <div id="chatTabUptdate"><?php
+                require_once('connect.php');
+                $newUpdate_query = $connect->query("
+                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser
+                ");
+
+                if($newUpdate = $newUpdate_query->fetch()){ 
+                        if($newUpdate["new_chat"] > 0){
+                    ?>
+                        <h3 class="widget_title">Chats<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_chat"] ?></span></a></h3>
+                <?php }else{ ?>
+                        <h3 class="widget_title"><a href="#comment_tab" id="notif_tab">Chats</a></h3>
+                <?php }} ?>
+            </div>
+                    <form id="contactSearchForm">
+                            <input type="text" placeholder="Search Contacts by Last Name ..." onkeyup="contactResult(this.value)">
+                    </form>
+
+                    <div id='chatBoxForm'>
+                        <a class='button red full' onclick='returnContact()'>Return to contacts</a>
+                        <textarea placeholder='send your message here' onkeydown='sendChat(this)'></textarea>
+                    </div>
+
+                    <ul style="overflow: scroll;height: 450px;" id="contactSearch">
+                        
+                        <?php      
+                            require_once('connect.php');
+
+                            $contact_query = $connect->query("
+                                SELECT * 
+                                FROM  friends 
+                                JOIN userapps U ON U.Facebook_ID = friends.user_other
+                                WHERE user_me =$sessionUser
+                                ORDER BY last_chat DESC
+                            ");
+
+                            while($contact = $contact_query->fetch()){
+                            ?>
+                             <?php if($contact['sent_chat'] == "yes"){ ?>
+                                <li style="background-color:rgb(255, 226, 226)">
+                            <?php }else{ ?>
+                                <li >
+                            <?php } ?>
+                                    <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
+                                    <p>
+                                        <cite><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></cite><br>
+                                        <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
+                                    </p>
+                                    <div class="clear"></div>
+                                </li> 
+
+                            <?php } ?>
+                    </ul>
+                    <ul style="overflow: scroll;height: 450px;"  id="chatBox">
+                        
+                    </ul>                          
+
+        </div>
+
+        
         
         <!-- BEGIN WIDGET -->
         <div class="widget tab_wrapper white_box" id="tab_wrapper_tab_widget-2">
-            
-            <ul class="tab_menu"><li class="tab_post"><a href="#post_tab">Notifs</a></li><li  class="tab_comment"><a href="#comment_tab">Contacts</a></li><li class="tab_tag"><a href="#tag_tab">your pikes</a></li></ul>
+            <?php 
+                require_once('connect.php');
+                $newUpdate_query = $connect->query("
+                    SELECT count(*) as new_notif from notification where notification_status = 'new'
+                ");
+            ?>
+
+            <ul class="tab_menu">
+                <?php if($newUpdate = $newUpdate_query->fetch()){ 
+                        if($newUpdate["new_notif"] > 0){
+                    ?>
+                        <li class="tab_post" >
+                            <a href="#post_tab" id="notif_tab">Notifications<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
+                        </li>
+                    <?php }else{ ?>
+                        <li class="tab_post">
+                            <a href="#post_tab" id="notif_tab">Notifications</a>
+                        </li>
+                <?php }} ?>
+                
+                    <li class="tab_tag"><a href="#tag_tab">Pikes</a></li></ul>
             <div class="clear"></div>
             <div class="tabs_container">
             <div id="post_tab" class="tab_content recent_posts">
@@ -500,73 +596,23 @@ $sessionUser = $_SESSION['usr_id'];
                             ");
 
                             while($notification = $notification_query->fetch()){
-                        ?>
-                            <li>
-                                <?php if( $notification['notification_type'] == "invitation") {?>
-                                     <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
-                                        <img src="images/notif_images/<?php echo $notification['notification_image'] ?>" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
-                                    </a>
-                                    <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
-                                    </a> 
-                                <?php }elseif ($notification['notification_type'] == "chat") { ?>
-                                    <a href="#" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
-                                        <img src="images/notif_images/<?php echo $notification['notification_image'] ?>" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
-                                    </a>
-                                    <a href="#" title="Praesent Et Urna Turpis Sadips" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
-                                    </a> 
-                                <?php }else{ ?> 
-                                <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="small_thumb">
-                                        <img src="images/notif_images/<?php echo $notification['notification_image'] ?>" width="50" height="50" alt="Praesent Et Urna Turpis Sadips">
-                                    </a>
-                                    <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" title="Praesent Et Urna Turpis Sadips" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
-                                    </a> 
+                                if($notification['notification_status'] == "new"){ ?>
+                                    <li style="background-color:rgb(255, 226, 226)">
+                                <?php }else{ ?>
+                                    <li>
                                 <?php } ?>
-                            </li>
-                        <?php } ?>
+                                    <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                        <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                    </a>
+                                    <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                    </a> 
+                                    </li>
+                            <?php } ?>
                         
                     </ul>                         
                 </div>
                                 
-                <div id="comment_tab" class="tab_content recent_comments" >
-                     <form id="contactSearchForm">
-                            <input type="text" placeholder="Search Contacts by Last Name ..." onkeyup="contactResult(this.value)">
-                    </form>
-
-                    <div id='chatBoxForm'>
-                        <a class='button red full' onclick='returnContact()'>Return to contacts</a>
-                        <textarea placeholder='send your message here' onkeydown='sendChat(this)'></textarea>
-                    </div>
-
-                    <ul id="contactSearch">
-                        
-                        <?php      
-                            require_once('connect.php');
-
-                            $contact_query = $connect->query("
-                                SELECT * 
-                                FROM  friends 
-                                JOIN userapps U ON U.Facebook_ID = friends.user_other
-                                WHERE user_me =$sessionUser
-                            ");
-
-                            while($contact = $contact_query->fetch()){
-                            ?>
-                                <li >
-                                    <img alt='' src='http://1.gravatar.com/avatar/5bea567fcf9dd1022d9224e07bf194a5?s=50&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D50&amp;r=G' class='avatar avatar-50 photo' height='50' width='50' />
-                                    <p>
-                                        <cite><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></cite><br>
-                                        <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
-                                    </p>
-                                    <div class="clear"></div>
-                                </li> 
-
-                            <?php } ?>
-                    </ul>
-                    <ul id="chatBox">
-                        
-                    </ul>                          
-  
-                </div>
+    
                                 
                   <div id="tag_tab" class="tab_content recent_posts">
 
@@ -631,7 +677,7 @@ $sessionUser = $_SESSION['usr_id'];
 
             function showTextBox() {
                 jQuery(document).ready(function($){ 
-                    $('#interestsForm').show( "slow" );
+                    $('#interestsForm').show();
                     $('#createButton').hide();
                 });
             }
@@ -656,7 +702,7 @@ $sessionUser = $_SESSION['usr_id'];
                     xmlhttp.send();
 
                     jQuery(document).ready(function($){ 
-                        $('#createButton').show( "slow" );
+                        $('#createButton').show();
                         $('#interestsForm').hide();
                       });
                 }
@@ -668,9 +714,6 @@ $sessionUser = $_SESSION['usr_id'];
             <form>
                 <input type="text" placeholder="click here to start searching in communities" onkeyup="showResult(this.value)">
             </form> 
-
-            
-
                     <ul style="overflow: scroll;height: 450px;" id="categorySearch">
                         <?php      
                             require_once('connect.php');
@@ -678,7 +721,7 @@ $sessionUser = $_SESSION['usr_id'];
                             $interests_query = $connect->query("
                                 SELECT *
                                 FROM interests
-                                ORDER BY interest_name Asc
+                                ORDER BY interest_score DESC, interest_name ASC
                             ");
 
                             while($interest = $interests_query->fetch()){
@@ -693,7 +736,50 @@ $sessionUser = $_SESSION['usr_id'];
                     </div>
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>
+        
+        <script type="text/javascript">
+            jQuery(function($){
 
+                $('.month').hide();
+                var current = parseInt("<?php echo $qmonth; ?>");
+                $('#month'+current).show();
+                $('#Month'+current).show();
+
+                    $('#monthPrev').click(function(){
+                        if(current > 1){
+                            console.log(current)
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current - 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        
+                    });
+
+                    $('#monthNext').click(function(){
+                        if(current < 12){
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current + 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+
+                    });
+            });
+        </script>
         <div id="calendar-2" class="widget widget_calendar white_box">
 
             <h3 class="widget_title">Calendar</h3>

@@ -916,6 +916,49 @@
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>
 
+        <script type="text/javascript">
+            jQuery(function($){
+
+                $('.month').hide();
+                var current = parseInt("<?php echo $qmonth; ?>");
+                $('#month'+current).show();
+                $('#Month'+current).show();
+
+                    $('#monthPrev').click(function(){
+                        if(current > 1){
+                            console.log(current)
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current - 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        
+                    });
+
+                    $('#monthNext').click(function(){
+                        if(current < 12){
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current + 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+
+                    });
+            });
+        </script>
         <div id="calendar-2" class="widget widget_calendar white_box">
 
             <h3 class="widget_title">Calendar</h3>
