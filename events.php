@@ -72,13 +72,44 @@
                     $day = date('d');
                     $dates = $date->getAll($year);
                 ?>  
-
+        
+        <script>
+         
+            function overallSearchResult(str) {
+                  
+             if (window.XMLHttpRequest) {
+                         // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+                  } else {  // code for IE6, IE5
+                         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                  }
+                  
+                  xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                          document.getElementById("overallSearchInput").innerHTML=xmlhttp.responseText;
+                        }
+                  }
+                  
+                  xmlhttp.open("GET","overallSearch.php?q="+str,true);
+                  xmlhttp.send();
+                }
+        </script>
 
 <div id="header">
         <div class="container clearfix">
             <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="PikeLife" /></a></h1>
+            <div class="header_search">
+            
+                <div class="search_zoom search_btn" onclick="overallSearchResult('')"></div> 
+                <input type="text" placeholder="Type &amp; Search for Pikes and Friends" class="search_box" onkeyup="overallSearchResult(this.value)">
+                <div style="position:inherit; ; left:0px; top:36px; width:63%; border-color: rgb(10, 10, 10);box-shadow: 4px 4px 4px #888888;" class="tab_content search_results">
+                    <ul id="overallSearchInput" style="background-color:white">
+                        
+                    </ul>
+                </div>
+            </div>
         </div>  
-    </div>
+</div>
 
     <div id="main">
         <div class="container clearfix">
@@ -481,9 +512,9 @@
                 <?php }} ?>
                 
                     <li class="tab_tag"><a href="#tag_tab">Pikes</a></li></ul>
-            <div class="clear"></div>
-            <div class="tabs_container">
-            <div id="post_tab" class="tab_content recent_posts">
+                    <div class="clear"></div>
+                    <div class="tabs_container">
+                    <div id="post_tab" class="tab_content recent_posts">
                     <form>
                         <input type="text" placeholder="Click to search in your notifications ..." onkeyup="notifsResult(this.value)">
                     </form>

@@ -189,6 +189,9 @@ $sessionUser = $_SESSION['usr_id'];
                             $event_place = $event["event_place"];
                             $event_date = $event["event_date"];
                             $event_time = $event["event_time"];
+                            $event_cat = $event["event_cat"];
+                            $event_cat_prev = $event_cat;
+                            $event_type = $event["event_type"];
                         }
 
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -248,18 +251,31 @@ $sessionUser = $_SESSION['usr_id'];
 
                                   $query = $connect->query("
                                     
-                                            UPDATE EVENTS 
-                                            SET event_name =  '$event_name',
-                                                event_time =  '$event_time',
-                                                event_date =  '$event_date',
-                                                event_place =  '$event_place',
-                                                event_pic = '$event_id.jpg',
-                                                event_description =  '$event_description',
-                                                event_cat = $event_cat,
-                                                event_type =  '$event_type' 
-                                            WHERE event_id = $event_id 
-                                        "); 
-                                  header( "Location: /view.php?event_id=$event_id") ;
+                                    UPDATE EVENTS 
+                                    SET event_name =  '$event_name',
+                                        event_time =  '$event_time',
+                                        event_date =  '$event_date',
+                                        event_place =  '$event_place',
+                                        event_pic = '$event_id.jpg',
+                                        event_description =  '$event_description',
+                                        event_cat = $event_cat,
+                                        event_type =  '$event_type' 
+                                    WHERE event_id = $event_id 
+                                "); 
+
+                                  if($event_cat != $event_cat_prev){
+                                    require_once('connect.php');
+
+                                    $query = $connect->query("
+
+                                        UPDATE interests 
+                                        SET interest_score = interest_score+1
+                                        WHERE interest_id = $event_cat
+
+                                    ");
+                                  }
+                                
+                                header( "Location: /view.php?event_id=$event_id") ;
                            }  
                         }
                     ?>
@@ -287,14 +303,14 @@ $sessionUser = $_SESSION['usr_id'];
                                     while($interest = $interests_query->fetch()){
                                         ?>
                                 
-                                        <option value="<?php echo $interest['interest_id'] ?>"><?php echo $interest['interest_name'] ?></option>
+                                        <option value="<?php echo $interest['interest_id'] ?>" <?php if($event_cat == $interest['interest_id']) echo "Selected" ?>><?php echo $interest['interest_name'] ?></option>
                                     <?php } ?>
                                 </select><br><br>
                                 <textarea name="event_description" placeholder="inform us of what all would be about"><?php echo $event_description; ?></textarea><br><br>
                                 <select name="event_type">
-                                    <option value="Private">Private</option>
-                                    <option value="Public">Public</option>
-                                    <option value="Secret">Secret</option>
+                                    <option value="Private" <?php if($event_type == "Private") echo "Selected" ?>>Private</option>
+                                    <option value="Public" <?php if($event_type == "Public") echo "Selected" ?>>Public</option>
+                                    <option value="Secret" <?php if($event_type == "Secret") echo "Selected" ?>>Secret</option>
                                 </select><br><br>
                                 <label>select picture of your event<br>Your picture should not exceed 2Mb</label>
                                 <input type="file" name="file" id="file"><br><br><br>

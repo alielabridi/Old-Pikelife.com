@@ -210,12 +210,22 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 		line-height:normal; border-radius: 2px; -moz-box-shadow: 0px 1px 1px rgba(0,0,0,0.3);
 		-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,0.3);
 		box-shadow: 0px 1px 1px rgba(0,0,0,0.3);
+		margin-right: 265px;
 	}
 	.header_search .search_zoom.close{
 		background-image:url(images/search_btn_close.png);
-	} 
+	}
+
+	.pike_notification { 
+		float:right; width:36px; height:36px; cursor:pointer; 
+		background: #804343 url(images/notification_button.png) 50% 50% no-repeat; 
+		line-height:normal; border-radius: 2px; -moz-box-shadow: 0px 1px 1px rgba(0,0,0,0.3);
+		-webkit-box-shadow: 0px 1px 1px rgba(0,0,0,0.3);
+		box-shadow: 0px 1px 1px rgba(0,0,0,0.3);
+	}
+
 	.header_search input.search_box { 
-		line-height:32px; height:36px; width:200px; padding:0 10px; 
+		line-height:32px; height:36px; width:530px; padding:0 10px; 
 		margin:0; float:right; margin-right:10px; display:none;
 	}
 	.header_search input.search_box.show { display:inline-block}
@@ -734,6 +744,8 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 		border-bottom-right-radius: 4px;
 		border-bottom-left-radius: 4px;
 	}
+
+	
 	
 	/** Recent posts **/
 	.recent_posts{ overflow:scroll; height: 450px;}
@@ -745,6 +757,22 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 	.recent_posts .small_thumb { float:left; margin-right:15px;  }
 	.recent_posts .pdf_small_thumb { float:left; margin-right:15px;  }
 	.recent_posts img { float:left; display:block;}
+
+	.search_results li { padding:15px 20px; border-bottom:1px solid #eee;}
+	.search_results li:hover { background-color: #f9f9f9;}
+	.search_results li:last-child { border:none;
+		-webkit-border-bottom-right-radius: 4px;
+		-webkit-border-bottom-left-radius: 4px;
+		-moz-border-radius-bottomright: 4px;
+		-moz-border-radius-bottomleft: 4px;
+		border-bottom-right-radius: 4px;
+		border-bottom-left-radius: 4px;
+	}
+	.search_results li em { color: #999; display: block; font-size:11px;}
+	.search_results a.title{ font-weight:bold; line-height:normal; display:block; margin-bottom:5px;}
+	.search_results .small_thumb { float:left; margin-right:15px;  }
+	.search_results .pdf_small_thumb { float:left; margin-right:15px;  }
+	.search_results img { float:left; display:block;}
 	
 	/** Recent comments **/
 	.recent_comments li { padding:20px;}

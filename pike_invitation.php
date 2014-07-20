@@ -27,8 +27,8 @@
 
 	          $query = $connect->query("
 				       INSERT INTO notification
-				       (notification_title, notification_user, notification_image, event_id, notification_type) 
-				       VALUES ('". $event["usr_lname"] . " ". $event["usr_fname"] ." invited you to pike ". $event['event_name'] ."',$user_invited,'". $event["event_pic"] ."',$event_id,'invitation')
+				       (notification_title, notification_user, notification_image, event_id) 
+				       VALUES ('". $event["usr_lname"] . " ". $event["usr_fname"] ." invited you to pike ". $event['event_name'] ."',$user_invited,'". $event["event_pic"] ."',$event_id)
 			      ");
 	      	}
       }
