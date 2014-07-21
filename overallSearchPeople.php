@@ -1,13 +1,7 @@
 <?php
-        
-    session_start();
-    $sessionUser = $_SESSION['usr_id'];
 
-    if(isset($_GET['interest'])){
-        $interest = $_GET['interest'];
-    }else{
-        $interest = -1;
-    }
+session_start();
+$sessionUser = $_SESSION['usr_id'];
 
 /**
  *
@@ -39,11 +33,7 @@
     <meta name="author" content="PressLayer">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-
-    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
-        <style type="text/css">
+    <style type="text/css">
             .ul_scrolling{
                 overflow-x:hidden;
                 height: 450px;
@@ -55,17 +45,64 @@
 
         </style>
         
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
+        
+        <script type="text/javascript">
+            jQuery(function($){
+
+                $('.month').hide();
+                var current = 6;
+                $('#month'+current).show();
+                $('#Month'+current).show();
+
+                    $('#monthPrev').click(function(){
+                        if(current > 1){
+                            console.log(current)
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current - 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        
+                    });
+
+                    $('#monthNext').click(function(){
+                        if(current < 12){
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current + 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+
+                    });
+            });
+        </script>
         <script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
 
 
-		<link rel="stylesheet" type="text/css" href="/css/reset.css" />
-		<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
-		<link rel="stylesheet" type="text/css" href="/css/flexslider.css" />
+        <link rel="stylesheet" type="text/css" href="/css/reset.css" />
+        <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/flexslider.css" />
         <link rel="stylesheet" type="text/css" href="/css/superfish.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
         <link rel="stylesheet" type="text/css" href="/css/jquery.fancybox-1.3.4.css" />
 
-		<script type="text/javascript" src="/js/jquery.js"></script>
+        <script type="text/javascript" src="/js/jquery.js"></script>
         <script type="text/javascript" src="/js/jquery.masonry.min.js"></script>
         <script type="text/javascript" src="/js/jquery.imagesloaded.min.js"></script>
         <script type="text/javascript" src="/js/jquery.infinitescroll.min.js"></script>
@@ -80,16 +117,32 @@
 </head>
 <body>
 
+      <?php
+            require('date.php');
+            $date = new Date();
+            $year = date('Y');
+            $month = date('n');
+            $day = date('d');
+            $dates = $date->getAll($year);
+?>  
 
-                <?php
-                    require('date.php');
-                    $date = new Date();
-                    $year = date('Y');
-                    $month = date('n');
-                    $day = date('d');
-                    $dates = $date->getAll($year);
-                ?>  
-        
+ <?php
+
+                    if(isset($_GET['$year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                    {
+
+                        $qyear = $_GET['$year'];
+                        $qmonth = $_GET['month'];
+                        $qday = $_GET['day'];
+                    }else{
+                        $qyear = $year;
+                        $qmonth = $month;
+                        $qday = $day;
+                    }
+                ?>
+
+
+
         <script>
          
             function overallSearchResult(str) {
@@ -121,6 +174,7 @@
                 <input type="text" placeholder="Type &amp; Search for Pikes and Friends" class="search_box" onkeyup="overallSearchResult(this.value)">
                 <div style="position:inherit; ; left:0px; top:36px; width:63%; border-color: rgb(10, 10, 10);box-shadow: 4px 4px 4px #888888;" class="tab_content search_results">
                     <ul id="overallSearchInput" style="background-color:white">
+                        
                     </ul>
                 </div>
             </div>
@@ -132,10 +186,14 @@
             <div id="leftContent">
                 <div class="inner">
                     
-                    <div id="post_grids" class="post_content clearfix">
 
-                <!-- STARTING THE PHP OPERATION TO GENERATES EVENTS -->
+
+                    <div class="post_item post_single white_box">
+
+                    <div class="post_single_inner">
+
                         <?php
+
                             $todyear = date('Y');
                             $todmonth = date('m');
                             $todday = date('d');
@@ -155,181 +213,137 @@
                         ?>
 
                         <?php
-                            require_once('connect.php');
-                                if(isset($_GET['interest'])){
-                                        $inter = $_GET['interest'];
-                                        $events_query = $connect->query("
-                                            SELECT COUNT(*) AS event_num
-                                            FROM events
-                                            WHERE event_cat = $inter
-                                            and (events.usr_create In(   SELECT friends.user_other 
-                                                                        FROM  friends 
-                                                                        WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type == 'Secret' and usr_id == $sessionUser)
-                                        ");
-                                    }                                  
-                                    else{
-                                        $events_query = $connect->query("
-                                            SELECT COUNT(*) AS event_num
-                                            FROM events
-                                            WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
-                                            AND (events.usr_create In(SELECT friends.user_other 
-                                                                      FROM  friends 
-                                                                      WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type = 'Secret' and usr_create = $sessionUser)
-                                        "); 
-                                }
 
-                            $event = $events_query->fetch();
+                        require_once('connect.php');
 
-                            $event_num = $event["event_num"];
-                        ?>
+                        
 
-                        <script type="text/javascript">
-                            $(document).ready(function(){
-                                $('#infscr-loading').hide();                                
+                         // define variables and set to empty values
+                        $Error = "";
+                        $event_name = $event_description = $event_place = $event_date = $event_time = $file_name = $event_type="";
 
-                                var nbr = "<?php echo $event_num; ?>";
-                                var load = 0;
-                                var interest = "<?php echo $interest; ?>";
-                                var year = "<?php echo $qyear; ?>";
-                                var month = "<?php echo $qmonth; ?>";
-                                var day = "<?php echo $qday; ?>";
+                        if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-                                    $(window).scroll(function(){
-                                        if($(window).scrollTop() == $(document).height() - $(window).height()){
+                            $allowedExts = array("jpeg", "jpg", "png");
+                            $temp = explode(".", $_FILES["file"]["name"]);
+                            $extension = end($temp);
 
-                                            $('#infscr-loading').show();
-                                            $('#infscr-loading img').show(); 
-                                            $('#infscr-loading div').hide();
+                            if ((($_FILES["file"]["type"] == "image/gif")
+                            || ($_FILES["file"]["type"] == "image/jpeg")
+                            || ($_FILES["file"]["type"] == "image/jpg")
+                            || ($_FILES["file"]["type"] == "image/pjpeg")
+                            || ($_FILES["file"]["type"] == "image/x-png")
+                            || ($_FILES["file"]["type"] == "image/png"))
+                            && ($_FILES["file"]["size"] < 20000)
+                            && in_array($extension, $allowedExts)) 
+                            {
+                                    $query = $connect->query("SELECT MAX(event_id) AS Last_id FROM events;");
+                                    $event_id = $query->fetch();
+                                    $_FILES["file"]["name"] = ($event_id["Last_id"]+1) . '.' . $extension;
 
-                                            load++;
-                                            if(load * 10 > nbr){
-                                                $('#infscr-loading').show();
-                                                $('#infscr-loading img').hide(); 
-                                                $('#infscr-loading div').show();
-                                            }else{
-                                            $.post("eventsInfiniteScroll.php",{load:load, interest:interest, year:year, month:month, day:day},function(data){
-                                                $('#post_grids').append(data);
-                                                $('#infscr-loading').hide(); 
-                                            });
-                                            }
+                                  if ($_FILES["file"]["error"] > 0) {
+                                    echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
+                                  } else {
+                                        if (file_exists("img/upload/events/" . $_FILES["file"]["name"])) {
+                                            $Error = $_FILES["file"]["name"] . " already exists. ";
+                                        } else {
+                                          move_uploaded_file($_FILES["file"]["tmp_name"],
+                                          "img/upload/events/" . $_FILES["file"]["name"]);
+                                          $file_name = $_FILES["file"]["name"];
                                         }
-                                    });
-                            });
-                        </script>
+                                    }
 
-                         
-                         <?php
+                                function test_input($data) {
+                               $data = trim($data);
+                               $data = stripslashes($data);
+                               $data = htmlspecialchars($data);
+                               return $data;
+                             }
+
+                              if (empty($_POST["event_name"]) || empty($_POST["event_description"]) || empty($_POST["event_place"]) ) {
+                                $Error = "missing fields";
+                              } else {
+                                $event_name = test_input($_POST["event_name"]);
+                                $event_description = test_input($_POST["event_description"]);
+                                $event_place = test_input($_POST["event_place"]);
+                              }
+
+                              if (!empty($_POST["event_date"]) && !empty($_POST["event_time"]) && !empty($_POST["event_type"])) {
+                                    $event_date = test_input($_POST["event_date"]);
+                                    $event_time = test_input($_POST["event_time"]);
+                                    $event_type = test_input($_POST["event_type"]);
+                                    $event_cat = test_input($_POST["event_cat"]);
+                              }else{
+                                    $Error = "missing fields";
+                              }
+
+                              if(!empty($_POST["event_date"]) && !empty($_POST["event_time"]) && !empty($_POST["event_type"]) && !empty($_POST["event_name"]) && !empty($_POST["event_description"]) && !empty($_POST["event_place"])){
+                                $query = $connect->query("
+
+                                    INSERT INTO events
+                                    (event_name, event_time, event_date, usr_create, event_place, event_pic, event_description, event_cat, event_type)
+                                    VALUES ('$event_name','$event_time','$event_date',$sessionUser,'$event_place','$file_name','$event_description',$event_cat,'$event_type')
+
+                                ");
 
                                 require_once('connect.php');
-                                if(isset($_GET['interest'])){
-                                        $inter = $_GET['interest'];
 
-                                        $events_query = $connect->query("
-                                            SELECT *
-                                            FROM events
-                                            JOIN userapps U ON U.Facebook_ID = events.usr_create
-                                            LEFT JOIN interests I ON I.interest_id = events.event_cat
-                                            WHERE event_cat = $inter
-                                            and (events.usr_create In(   SELECT friends.user_other 
-                                                                        FROM  friends 
-                                                                        WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type = 'Secret' and usr_create = $sessionUser)
+                                $query = $connect->query("
 
-                                            ORDER BY event_date, event_time DESC
-                                            LIMIT 0, 10
+                                    UPDATE interests 
+                                    SET interest_score = interest_score+1
+                                    WHERE interest_id = $event_cat
 
-                                        ");
-                                    }                                  
-                                    else{
-                                        $events_query = $connect->query("
-                                            SELECT *
-                                            FROM events
-                                            JOIN userapps U ON U.Facebook_ID = events.usr_create
-                                            LEFT JOIN interests I ON I.interest_id = events.event_cat
-                                            WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
-                                            AND (events.usr_create In(SELECT friends.user_other 
-                                                                      FROM  friends 
-                                                                      WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type = 'Secret' and usr_create = $sessionUser)
+                                ");
 
-                                            ORDER BY event_date, event_time DESC
+                                header( "Location: /events.php");
 
-                                            LIMIT 0, 10
-                                        "); 
-                                }
+                              }
+                            }else {
+                              $Error = "File exceeds 2Mb or it is not of the following format {jpeg, jpg, pjpeg, x-png, png}";
+                            }     
+                          }
+                    ?>
+                    
+                    <div class="post_entry" style="text-align: center">
+                        <h1 style="color:#C53434; font-weight:bold;">New Pike?</h1>
+                        <p><span style="color:#C53434;"><?php echo $Error;?><span></span><br><form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post"
+                            enctype="multipart/form-data">
+                                <input type="text" name="event_name" placeholder="your activity name" value="<?php echo $event_name;?>"><br><br>
+                                <label>Date : <input type="date" name="event_date" value="<?php echo $event_date; ?>"></label><br>
+                                <label>Time : <input type="time" name="event_time" value="<?php echo $event_time ?>"></label><br>
+                                <input type="text" name="event_place" placeholder="where would it be" value="<?php echo $event_place ?>"><br><br>
+                                <select name="event_cat">
+                                <?php
+                                    require_once('connect.php');
 
+                                      $interests_query = $connect->query("
+                                          SELECT *
+                                          FROM interests
+                                          ORDER BY interest_name Asc 
+                                    ");
+                                    while($interest = $interests_query->fetch()){
+                                        ?>
                                 
-                                while(!is_null($events_query) && $event = $events_query->fetch()){ ?>                                                                                    
-                                        <div class="post_col">
-                                            <div class="post_item white_box">
-                                                <div class="large_thumb thumb_hover">
-                                                    
-                                                        <div class="icon_bar for_link">
-                                                            <a href="single.html" class="icon link"></a> 
-                                                        </div>
-                                                        <div class="icon_bar for_view">
-                                                            <a href="/img/upload/events/<?php echo $event['event_pic']; ?>" class="icon view fancybox"></a> 
-                                                        </div>
-                                                        
-                                                        <div class="img_wrapper"><img src="/img/upload/events/<?php echo $event['event_pic']; ?>"></div>
-                                                </div>
-                                            
-                                                                        
-                                                <h3 class="post_item_title "> <a href="/view.php?event_id=<?php echo $event['event_id']; ?>"><?php echo $event['event_name']; ?></a></h3>
-                                                
-                                                <div class="post_item_inner">
+                                        <option value="<?php echo $interest['interest_id'] ?>"><?php echo $interest['interest_name'] ?></option>
+                                    <?php } ?>
+                                </select><br><br>
+                                <textarea name="event_description" placeholder="inform us of what all would be about"><?php echo $event_description; ?></textarea><br><br>
+                                <select name="event_type">
+                                    <option value="Private">Private</option>
+                                    <option value="Public">Public</option>
+                                    <option value="Secret">Secret</option>
+                                </select><br><br>
+                                <label>select a picture for your event</label>
+                                <input type="file" name="file" id="file"><br><br><br>
+                                <input type="submit" name="submit" value="Submit">
+                            </form>
+                        </p>
 
-                                                    <div class="post_meta">
-                                                        <span class="user">by <a href="#"><?php echo $event['usr_lname'] . ' '. $event['usr_fname']; ?></a></span> 
-                                                        <span class="date"><?php echo $event['event_date']; ?></span><br><br>
-                                                        <span class="time"><?php echo $event['event_time']; ?></span>
-                                                        <span class="cats"><?php echo $event['interest_name']; ?></span><br><br>
-                                                        <span class="place"><?php echo $event['event_place']; ?> </span>
-                                                        
-                                                    </div>
-
-                                                    <p></p>
-                                                    <?php if($event['event_type'] != "Private" || ($event['event_type'] == "Private" && $event['usr_create'] == $sessionUser)){
-                                                        if($event['Facebook_ID'] != $sessionUser){
-                                                            $participated_query = $connect->query("
-                                                                SELECT count(*) AS participanted FROM joinevents
-                                                                where event_id = ".$event['event_id']." and usr_ID = ". $sessionUser . "
-                                                            ");
-
-                                                            if($participanted = $participated_query->fetch()){
-                                                                if($participanted["participanted"] > 0){?>
-                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
-                                                                <?php }else{ ?>
-                                                                    <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
-                                                            <?php }
-                                                                }
-                                                            }else{ ?>
-                                                                <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
-                                                                <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">End it</a>
-                                                        
-
-                                                            <?php } }?>                                            
-                                                </div>
-                                        
-                                        </div>
-                                    </div>
-                            <?php } ?>
-                            <div id="infscr-loading">
-                                <img alt="Loading..." src="http://i.imgur.com/6RMhx.gif">
-                                <div style="opacity: 1;">No more Pikes to load.</div>
-                            </div>
-                    <!-- end of php -->
+                    </div>
                 </div>
+            </div>
+
                 
                 
                 <script type="text/javascript">
@@ -343,7 +357,7 @@
         </div>
 
 
-        <div id="sidebar">
+ <div id="sidebar">
   
 
         <script type="text/javascript">
@@ -955,8 +969,6 @@
     </div>
 </div><!-- #main -->
     
-
-    <!-- #footer -->
 <div id="toTop"><a href="#">TOP</a></div>   
 </body>
 </html>

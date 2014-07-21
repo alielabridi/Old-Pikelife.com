@@ -58,6 +58,8 @@
               $hint = $hint . "</li>";
             }
 
+            $hint = $hint . "<li style='text-align:center'><a href='/overallSearchPikes.php?search_query=$q' class='title'>Search more Pikes with '$q'</a><div class='clear'></div></a></li>";
+            $hint = $hint . "<li style='text-align:center'><a href='/overallSearchPeople.php?search_query=$q' class='title'>Search more People with '$q'</a><div class='clear'></div></a></li>";
             // Set output to "no suggestion" if no hint were found
               // or to the correct values
               if ($hint=="") {

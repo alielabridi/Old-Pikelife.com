@@ -129,7 +129,6 @@ else {
 <style>
 body 
 {
-	background:url('images/Wall.jpg') no-repeat;	
 	background-color: #c53334;
 }
 .top_banner{
@@ -165,12 +164,12 @@ img{
 .face_book{
 	text-align: center;
 	background-color:rgba(0, 0, 0, 0.5);
-	width: 300px;
+	width: 800px;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size: 20px;
 	position: absolute;
-	top: 100px;
-	left: 930px;
+	top: 80px;
+	left: 300px;
 	color: white;
 	padding: 15px 20px 20px 20px;
 	border-radius: 40px 40px 40px 40px;
@@ -212,18 +211,18 @@ img{
             color:    #fff;
             opacity:  1;
             font-size: 15px;
-          font-weight: bold;
+            font-weight: bold;
         }
         ::-moz-placeholder { /* Mozilla Firefox 19+ */
             color:    #fff;
             opacity:  1;
             font-size: 15px;
-          font-weight: bold;
+            font-weight: bold;
         }
         :-ms-input-placeholder { /* Internet Explorer 10+ */
             color:    #fff;
             font-size: 15px;
-          font-weight: bold;
+            font-weight: bold;
         }
 
 </style>
@@ -238,21 +237,18 @@ img{
 
 <body>
 	<div class='top_banner'><img src="images/logo_home.png"></div>
-	<div class="text_adver">
-	      <h3>The best experiences of life, only happen once with friends.</h3>
-	      PikeLife gives you the opportunity to create small activities, gather your friends, and have everyone share pictures, documents and feedbacks of your events.
-	</div>
 	<div class="face_book">
-      <h3>Start Now</h3>
+      <h3>Registration</h3>
     <form action="demo_form.asp">
-        <input class = "textfield_css" type="text" name="FirstName" placeholder="Email"><br><br>
-        <input class = "textfield_css" type="password" name="LastName" placeholder="Password"><br><br>
-        <input class="btn btn-default" type="submit" value="login">
+        <input style="width:450px" class = "textfield_css" type="text" name="Email" placeholder="Email"><br><br>
+        <input style="width:210px" class = "textfield_css" type="text" name="FirstName" placeholder="FirstName">
+        <input style="width:210px" class = "textfield_css" type="text" name="LastName" placeholder="LastName"><br><br>
+        <input style="width:450px" class = "textfield_css" type="password" name="LastName" placeholder="Password"><br><br>
+        Your profile picture: <input class = "textfield_css" type="file" name="file" placeholder="User Profile Picture"><br><br>
+        <input class="btn btn-default" type="submit" value="Sign up">
     </form>
-	      <h5><em>Or</em></h5>
+	      <br><em>Or</em>
 	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>
-        Not yet member?
-        <em><a style="text-decoration: none; color:red" href="Register.php">Register</a></em>
 	      
 	</div>
 	<div id="fb-root"></div>

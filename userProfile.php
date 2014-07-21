@@ -1,33 +1,12 @@
-<?php
-        
-    session_start();
-    $sessionUser = $_SESSION['usr_id'];
+<?php   session_start(); 
 
-    if(isset($_GET['interest'])){
-        $interest = $_GET['interest'];
-    }else{
-        $interest = -1;
-    }
+        $user_id = $_GET['user_id'];
 
-/**
- *
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.View.Layouts
- * @since         CakePHP(tm) v 0.10.0.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- * @author        Said Alaoui Idriss
- */
+        require_once('connect.php');
 
+        $sessionUser = $_SESSION['usr_id'];
 ?>
+
 <!DOCTYPE html>
 <html>
 <!--<![endif]-->
@@ -40,10 +19,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
-        <style type="text/css">
+    <style type="text/css">
             .ul_scrolling{
                 overflow-x:hidden;
                 height: 450px;
@@ -53,19 +31,93 @@
 
             }
 
+            #participants_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #discussions_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #pictures_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #files_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+
         </style>
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
         
+        <script type="text/javascript">
+            jQuery(function($){
+
+                $('.month').hide();
+                var current = 6;
+                $('#month'+current).show();
+                $('#Month'+current).show();
+
+                    $('#monthPrev').click(function(){
+                        if(current > 1){
+                            console.log(current)
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current - 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        
+                    });
+
+                    $('#monthNext').click(function(){
+                        if(current < 12){
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current + 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+
+                    });
+            });
+        </script>
         <script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
 
 
-		<link rel="stylesheet" type="text/css" href="/css/reset.css" />
-		<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
-		<link rel="stylesheet" type="text/css" href="/css/flexslider.css" />
+        <link rel="stylesheet" type="text/css" href="/css/reset.css" />
+        <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/flexslider.css" />
         <link rel="stylesheet" type="text/css" href="/css/superfish.css" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
         <link rel="stylesheet" type="text/css" href="/css/jquery.fancybox-1.3.4.css" />
 
-		<script type="text/javascript" src="/js/jquery.js"></script>
+        <script type="text/javascript" src="/js/jquery.js"></script>
         <script type="text/javascript" src="/js/jquery.masonry.min.js"></script>
         <script type="text/javascript" src="/js/jquery.imagesloaded.min.js"></script>
         <script type="text/javascript" src="/js/jquery.infinitescroll.min.js"></script>
@@ -80,17 +132,52 @@
 </head>
 <body>
 
+<!-- Facebook share button start -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/fr_FR/sdk.js#xfbml=1&appId=563460800438057&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- Facebook share button end -->
 
-                <?php
-                    require('date.php');
-                    $date = new Date();
-                    $year = date('Y');
-                    $month = date('n');
-                    $day = date('d');
-                    $dates = $date->getAll($year);
-                ?>  
-        
-        <script>
+<!-- Facebook send button start -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/fr_FR/sdk.js#xfbml=1&appId=563460800438057&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- Facebook send button end -->
+      <?php
+            require('date.php');
+            $date = new Date();
+            $year = date('Y');
+            $month = date('n');
+            $day = date('d');
+            $dates = $date->getAll($year);
+?>  
+
+ <?php
+
+                    if(isset($_GET['$year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                    {
+
+                        $qyear = $_GET['$year'];
+                        $qmonth = $_GET['month'];
+                        $qday = $_GET['day'];
+                    }else{
+                        $qyear = $year;
+                        $qmonth = $month;
+                        $qday = $day;
+                    }
+                ?>
+
+<script>
          
             function overallSearchResult(str) {
                   
@@ -114,28 +201,27 @@
 
 <div id="header">
         <div class="container clearfix">
-            <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="PikeLife" /></a></h1>
+            <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="Place" /></a></h1>
             <div class="header_search">
             
                 <div class="search_zoom search_btn" onclick="overallSearchResult('')"></div> 
                 <input type="text" placeholder="Type &amp; Search for Pikes and Friends" class="search_box" onkeyup="overallSearchResult(this.value)">
                 <div style="position:inherit; ; left:0px; top:36px; width:63%; border-color: rgb(10, 10, 10);box-shadow: 4px 4px 4px #888888;" class="tab_content search_results">
                     <ul id="overallSearchInput" style="background-color:white">
+                        
                     </ul>
                 </div>
             </div>
         </div>  
-</div>
+    </div>
 
     <div id="main">
         <div class="container clearfix">
             <div id="leftContent">
                 <div class="inner">
-                    
-                    <div id="post_grids" class="post_content clearfix">
+                
+                           <?php
 
-                <!-- STARTING THE PHP OPERATION TO GENERATES EVENTS -->
-                        <?php
                             $todyear = date('Y');
                             $todmonth = date('m');
                             $todday = date('d');
@@ -153,184 +239,181 @@
                                 $qday = $todday;
                             }
                         ?>
+                    
 
-                        <?php
-                            require_once('connect.php');
-                                if(isset($_GET['interest'])){
-                                        $inter = $_GET['interest'];
-                                        $events_query = $connect->query("
-                                            SELECT COUNT(*) AS event_num
-                                            FROM events
-                                            WHERE event_cat = $inter
-                                            and (events.usr_create In(   SELECT friends.user_other 
-                                                                        FROM  friends 
-                                                                        WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type == 'Secret' and usr_id == $sessionUser)
-                                        ");
-                                    }                                  
-                                    else{
-                                        $events_query = $connect->query("
-                                            SELECT COUNT(*) AS event_num
-                                            FROM events
-                                            WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
-                                            AND (events.usr_create In(SELECT friends.user_other 
-                                                                      FROM  friends 
-                                                                      WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type = 'Secret' and usr_create = $sessionUser)
-                                        "); 
-                                }
-
-                            $event = $events_query->fetch();
-
-                            $event_num = $event["event_num"];
-                        ?>
-
-                        <script type="text/javascript">
-                            $(document).ready(function(){
-                                $('#infscr-loading').hide();                                
-
-                                var nbr = "<?php echo $event_num; ?>";
-                                var load = 0;
-                                var interest = "<?php echo $interest; ?>";
-                                var year = "<?php echo $qyear; ?>";
-                                var month = "<?php echo $qmonth; ?>";
-                                var day = "<?php echo $qday; ?>";
-
-                                    $(window).scroll(function(){
-                                        if($(window).scrollTop() == $(document).height() - $(window).height()){
-
-                                            $('#infscr-loading').show();
-                                            $('#infscr-loading img').show(); 
-                                            $('#infscr-loading div').hide();
-
-                                            load++;
-                                            if(load * 10 > nbr){
-                                                $('#infscr-loading').show();
-                                                $('#infscr-loading img').hide(); 
-                                                $('#infscr-loading div').show();
-                                            }else{
-                                            $.post("eventsInfiniteScroll.php",{load:load, interest:interest, year:year, month:month, day:day},function(data){
-                                                $('#post_grids').append(data);
-                                                $('#infscr-loading').hide(); 
-                                            });
-                                            }
-                                        }
-                                    });
-                            });
-                        </script>
-
-                         
-                         <?php
-
+                    <!-- start PHP OPERATION FOR LODING SPECIFIC INFORMATION OF A EVENT -->
+                    <?php                  
                                 require_once('connect.php');
-                                if(isset($_GET['interest'])){
-                                        $inter = $_GET['interest'];
 
-                                        $events_query = $connect->query("
-                                            SELECT *
-                                            FROM events
-                                            JOIN userapps U ON U.Facebook_ID = events.usr_create
-                                            LEFT JOIN interests I ON I.interest_id = events.event_cat
-                                            WHERE event_cat = $inter
-                                            and (events.usr_create In(   SELECT friends.user_other 
-                                                                        FROM  friends 
-                                                                        WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type = 'Secret' and usr_create = $sessionUser)
+                                $users_query = $connect->query("
 
-                                            ORDER BY event_date, event_time DESC
-                                            LIMIT 0, 10
-
-                                        ");
-                                    }                                  
-                                    else{
-                                        $events_query = $connect->query("
-                                            SELECT *
-                                            FROM events
-                                            JOIN userapps U ON U.Facebook_ID = events.usr_create
-                                            LEFT JOIN interests I ON I.interest_id = events.event_cat
-                                            WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
-                                            AND (events.usr_create In(SELECT friends.user_other 
-                                                                      FROM  friends 
-                                                                      WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type = 'Secret' and usr_create = $sessionUser)
-
-                                            ORDER BY event_date, event_time DESC
-
-                                            LIMIT 0, 10
-                                        "); 
-                                }
+                                    SELECT *
+                                    FROM userapps
+                                    WHERE Facebook_ID = $user_id
+                                ");
 
                                 
-                                while(!is_null($events_query) && $event = $events_query->fetch()){ ?>                                                                                    
-                                        <div class="post_col">
-                                            <div class="post_item white_box">
-                                                <div class="large_thumb thumb_hover">
-                                                    
-                                                        <div class="icon_bar for_link">
-                                                            <a href="single.html" class="icon link"></a> 
-                                                        </div>
-                                                        <div class="icon_bar for_view">
-                                                            <a href="/img/upload/events/<?php echo $event['event_pic']; ?>" class="icon view fancybox"></a> 
-                                                        </div>
-                                                        
-                                                        <div class="img_wrapper"><img src="/img/upload/events/<?php echo $event['event_pic']; ?>"></div>
-                                                </div>
-                                            
-                                                                        
-                                                <h3 class="post_item_title "> <a href="/view.php?event_id=<?php echo $event['event_id']; ?>"><?php echo $event['event_name']; ?></a></h3>
-                                                
-                                                <div class="post_item_inner">
+                                if($user = $users_query->fetch()){ ?>
 
-                                                    <div class="post_meta">
-                                                        <span class="user">by <a href="#"><?php echo $event['usr_lname'] . ' '. $event['usr_fname']; ?></a></span> 
-                                                        <span class="date"><?php echo $event['event_date']; ?></span><br><br>
-                                                        <span class="time"><?php echo $event['event_time']; ?></span>
-                                                        <span class="cats"><?php echo $event['interest_name']; ?></span><br><br>
-                                                        <span class="place"><?php echo $event['event_place']; ?> </span>
-                                                        
-                                                    </div>
+                                    <div class="post_item post_single white_box">
+                                            <img src="/include/Profil_pictures/<?php echo $user['picture_link']; ?>" class="post_top_element single_thumb" />                            
+                                        <div class="post_single_inner">
 
-                                                    <p></p>
-                                                    <?php if($event['event_type'] != "Private" || ($event['event_type'] == "Private" && $event['usr_create'] == $sessionUser)){
-                                                        if($event['Facebook_ID'] != $sessionUser){
-                                                            $participated_query = $connect->query("
-                                                                SELECT count(*) AS participanted FROM joinevents
-                                                                where event_id = ".$event['event_id']." and usr_ID = ". $sessionUser . "
-                                                            ");
 
-                                                            if($participanted = $participated_query->fetch()){
-                                                                if($participanted["participanted"] > 0){?>
-                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
-                                                                <?php }else{ ?>
-                                                                    <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
-                                                            <?php }
-                                                                }
-                                                            }else{ ?>
-                                                                <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
-                                                                <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">End it</a>
-                                                        
-
-                                                            <?php } }?>                                            
-                                                </div>
-                                        
-                                        </div>
+                                    <h1><?php echo $user['usr_lname']; ?> <?php echo $user['usr_fname']; ?></h1>
+                                    
+                                    <div class="post_meta">
+                                        joined pikelife on <span class="date"><?php echo $user['usr_created']; ?></span><br><br>
+                                        lives in <span class="place"><?php echo $user['location']; ?></span>                                    
                                     </div>
-                            <?php } ?>
-                            <div id="infscr-loading">
-                                <img alt="Loading..." src="http://i.imgur.com/6RMhx.gif">
-                                <div style="opacity: 1;">No more Pikes to load.</div>
-                            </div>
-                    <!-- end of php -->
-                </div>
+                                    <div class="post_entry">
+                                    <p>
+                                        Email: <?php echo $user['usr_email']; ?>
+                                    </p>
+                                    </div>                 
+                                <?php } ?>
+
+                                <div class="post_single_bottom_wrapper">
+                                        <?php 
+                                            $participated_query = $connect->query("
+                                                SELECT friend_request FROM friends
+                                                where user_me = $user_id and user_other = $sessionUser
+                                            ");
+
+                                                if($participanted = $participated_query->fetch()){
+                                                    if($participanted["friend_request"] == "Friends"){ 
+                                                ?>
+                                                    <span style="color:blue;border:2px solid blue;padding:10px 10px 10px 10px">Friend</span>
+                                                <?php } elseif($participanted["friend_request"] == "Request") {?>
+                                                    <a href="/addFriend.php?user_id=<?php echo $user_id; ?>" class="button blue">Accept Friend</a>
+                                                    <a href="/deleteFriendRequest.php?user_id=<?php echo $user_id; ?>" class="button red">reject Friend</a>
+                                                <?php} 
+                                            }else{
+                                                $participated_query = $connect->query("
+                                                    SELECT friend_request FROM friends
+                                                    where user_me = $sessionUser and user_other = $user_id
+                                                ");
+
+                                                if($participanted = $participated_query->fetch()){
+                                                    if($participanted["friend_request"] == "Request"){?>
+                                                        <span style="color:blue;border:2px solid blue;padding:10px 10px 10px 10px">Friend Request Sent</span>
+                                                    <?php }else{?>
+                                                       <a href="/sendFriendRequest.php?user_id=<?php echo $user_id; ?>" class="button blue">send Friend Request</a>
+                                                <?php } } } ?>
+                                            </div>
+                    <div class="clear"></div>
+                    </div>  
                 
+                </div><!-- post item -->
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                var participants_load = 0;
+                var discussions_load = 0;
+                var images_load = 0;
+                var files_load = 0;
+                var event_id = "<?php echo $event_id; ?>"
+
+                $('#participants_view').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        participants_load++;
+                        $.post("participantsInfiniteScroll.php",{participants_load:participants_load, event_id:event_id},function(data){
+                            $('#participants_view').append(data);
+                        });
+                   }
+                });
+
+                $('#images_load').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        images_load++;
+                        $.post("picturesInfiniteScroll.php",{images_load:images_load, event_id:event_id},function(data){
+                            $('#images_load').append(data);
+                        });
+                   }
+                });
+            });
+        </script>
+<div class="related_posts white_box">
+    <a id="Participants"><h3 class="rp_title">Friends</h3></a>
+    <div class="rp_col_wrapper clearfix" id="participants_view">
+        
+        <?php 
+
+            $participants_query = $connect->query("
+                SELECT * 
+                FROM  friends 
+                JOIN userapps U ON U.Facebook_ID = friends.user_other
+                WHERE user_me = $user_id
+                ORDER BY usr_lname DESC
+                LIMIT 0, 20
+            ");
+
+            while($participant = $participants_query->fetch()){ ?>
+
+            <div class="rp_col">
+                <a href="/userProfile.php?user_id=<?php echo $participant["Facebook_ID"]; ?>"></a><div class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div>
+            </div>
+
+        <?php } ?>
+        
+
+    </div>
+</div>  
+
+<script type="text/javascript">
+
+            function addFeedback(element, event_id) {
+                if(window.event.keyCode == 13){
+                    if (window.XMLHttpRequest) {
+                        // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+                    } else {  // code for IE6, IE5
+                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+
+                    xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                            document.getElementById("feedbackSearch").innerHTML=xmlhttp.responseText;
+                            element.value = '';
+                        }
+                    }
+                      
+                    xmlhttp.open("GET","feedbackAdd.php?q="+element.value+"&event_id="+event_id,true);
+                    xmlhttp.send();
+                }
+            }
+
+        </script>
+
+<div class="related_posts white_box">
+    <a id="Pictures"><h3 class="rp_title">Pikes</h3></a>
+    <div class="rp_col_wrapper clearfix" id="picturers_view">
+        <?php 
+
+            $pictures_query = $connect->query("
+                SELECT E.event_id ,E.event_pic,E.event_name,E.event_date, E.event_time, usr_lname, usr_fname  FROM  joinevents
+                JOIN EVENTS E ON E.event_id = joinevents.event_id
+                JOIN userapps U ON U.Facebook_ID = E.usr_create
+                WHERE usr_id =$user_id
+                UNION
+                SELECT event_id,event_pic,event_name,event_date, event_time, usr_lname, usr_fname  FROM  events
+                JOIN userapps U ON U.Facebook_ID = usr_create
+                WHERE usr_create =$user_id
+                ORDER BY event_date, event_time DESC
+
+                LIMIT 0, 20
+            ");
+
+            while($picture = $pictures_query->fetch()){ ?>
+                <div class="rp_col">
+                    <div class="small_thumb" style="text-align:center"><a href="/view.php?event_id=<?php echo $picture["event_id"]; ?>"><img src="/img/upload/events/<?php echo $picture["event_pic"]; ?>"/></a><em>Created by<br><strong><?php echo $picture["usr_lname"] . ' '. $picture["usr_fname"]; ?></strong></em></div>
+                </div>
+            <?php } ?>
+
+    </div>
+</div>
+
                 
                 <script type="text/javascript">
                     $(document).ready(function() {
@@ -344,7 +427,6 @@
 
 
         <div id="sidebar">
-  
 
         <script type="text/javascript">
         jQuery(document).ready(function($){ 
@@ -952,11 +1034,11 @@
             <div class="clear"></div>
         </div>
     </div>
+    
     </div>
 </div><!-- #main -->
     
 
-    <!-- #footer -->
 <div id="toTop"><a href="#">TOP</a></div>   
 </body>
 </html>
