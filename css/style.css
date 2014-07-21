@@ -748,8 +748,6 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 	
 	
 	/** Recent posts **/
-	.recent_posts{ overflow:scroll; height: 450px;}
-	.recent_comments{ overflow:scroll; height: 450px;}
 
 	.recent_posts li{ padding: 20px;}
 	.recent_posts li em { color: #999; display: block; font-size:11px;}

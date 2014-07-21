@@ -55,6 +55,7 @@
               WHERE chat_user_sender =$q
               AND chat_user_receiver =$sessionUser
               ORDER BY chat_time DESC 
+              LIMIT 0, 10
           ");
 
            while($contact = $contact_query->fetch()){

@@ -28,7 +28,7 @@
           $interests_query = $connect->query("
               SELECT *
               FROM interests
-              ORDER BY interest_name Asc 
+              ORDER BY interest_name Asc
           ");
 
            while($interest = $interests_query->fetch()){

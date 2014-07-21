@@ -3,6 +3,12 @@
     session_start();
     $sessionUser = $_SESSION['usr_id'];
 
+    if(isset($_GET['interest'])){
+        $interest = $_GET['interest'];
+    }else{
+        $interest = -1;
+    }
+
 /**
  *
  *
@@ -37,7 +43,17 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
-        
+        <style type="text/css">
+            .ul_scrolling{
+                overflow-x:hidden;
+                height: 450px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+
+            }
+
+        </style>
         
         <script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
 
@@ -63,6 +79,7 @@
         <script type="text/javascript" src="/js/custom.js"></script>
 </head>
 <body>
+
 
                 <?php
                     require('date.php');
@@ -138,28 +155,101 @@
                             }
                         ?>
 
+                        <?php
+                            require_once('connect.php');
+                                if(isset($_GET['interest'])){
+                                        $inter = $_GET['interest'];
+//$event['event_type'] != "Secret" || ($event['event_type'] == "Secret" && $event['usr_id'] == $sessionUser)
+                                        $events_query = $connect->query("
+                                            SELECT COUNT(*) AS event_num
+                                            FROM events
+                                            WHERE event_cat = $inter
+                                            and (events.usr_create In(   SELECT friends.user_other 
+                                                                        FROM  friends 
+                                                                        WHERE user_me = $sessionUser)
+                                                OR events.usr_create = $sessionUser)
+                                            and event_type != 'Secret'
+                                            or (event_type == 'Secret' and usr_id == $sessionUser)
+                                        ");
+                                    }                                  
+                                    else{
+                                        $events_query = $connect->query("
+                                            SELECT COUNT(*) AS event_num
+                                            FROM events
+                                            WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
+                                            AND (events.usr_create In(SELECT friends.user_other 
+                                                                      FROM  friends 
+                                                                      WHERE user_me = $sessionUser)
+                                                OR events.usr_create = $sessionUser)
+                                            and event_type != 'Secret'
+                                            or (event_type = 'Secret' and usr_create = $sessionUser)
+                                        "); 
+                                }
+
+                            $event = $events_query->fetch();
+
+                            $event_num = $event["event_num"];
+                        ?>
+
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                $('#infscr-loading').hide();                                
+
+                                var nbr = "<?php echo $event_num; ?>";
+                                var load = 0;
+                                var interest = "<?php echo $interest; ?>";
+                                var year = "<?php echo $qyear; ?>";
+                                var month = "<?php echo $qmonth; ?>";
+                                var day = "<?php echo $qday; ?>";
+
+                                    $(window).scroll(function(){
+                                        if($(window).scrollTop() == $(document).height() - $(window).height()){
+
+                                            $('#infscr-loading').show();
+                                            $('#infscr-loading img').show(); 
+                                            $('#infscr-loading div').hide();
+
+                                            load++;
+                                            if(load * 10 > nbr){
+                                                $('#infscr-loading').show();
+                                                $('#infscr-loading img').hide(); 
+                                                $('#infscr-loading div').show();
+                                            }else{
+                                            $.post("eventsInfiniteScroll.php",{load:load, interest:interest, year:year, month:month, day:day},function(data){
+                                                $('#post_grids').append(data);
+                                                $('#infscr-loading').hide(); 
+                                            });
+                                            }
+                                        }
+                                    });
+                            });
+                        </script>
+
                          
                          <?php
 
                                 require_once('connect.php');
                                 if(isset($_GET['interest'])){
                                         $inter = $_GET['interest'];
-                                        $events_query = $connect->query("
 
+                                        $events_query = $connect->query("
                                             SELECT *
                                             FROM events
                                             JOIN userapps U ON U.Facebook_ID = events.usr_create
                                             LEFT JOIN interests I ON I.interest_id = events.event_cat
-                                            WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
-                                            and event_cat = ". $inter ."
+                                            WHERE event_cat = $inter
                                             and (events.usr_create In(   SELECT friends.user_other 
                                                                         FROM  friends 
                                                                         WHERE user_me = $sessionUser)
                                                 OR events.usr_create = $sessionUser)
-                                            ORDER BY event_time Asc
+                                            and event_type != 'Secret'
+                                            or (event_type = 'Secret' and usr_create = $sessionUser)
 
-                                        "); 
-                                        }                                  
+                                            ORDER BY event_date, event_time DESC
+                                            LIMIT 0, 10
+
+                                        ");
+                                    }                                  
                                     else{
                                         $events_query = $connect->query("
                                             SELECT *
@@ -171,14 +261,17 @@
                                                                       FROM  friends 
                                                                       WHERE user_me = $sessionUser)
                                                 OR events.usr_create = $sessionUser)
-                                            ORDER BY event_time Asc
+                                            and event_type != 'Secret'
+                                            or (event_type = 'Secret' and usr_create = $sessionUser)
+
+                                            ORDER BY event_date, event_time DESC
+
+                                            LIMIT 0, 10
                                         "); 
                                 }
 
                                 
-                                while(!is_null($events_query) && $event = $events_query->fetch()){                                    
-                                    if($event['event_type'] != "Secret" || ($event['event_type'] == "Secret" && $event['usr_id'] == $sessionUser)){
-                                    ?>                                                  
+                                while(!is_null($events_query) && $event = $events_query->fetch()){ ?>                                                                                    
                                         <div class="post_col">
                                             <div class="post_item white_box">
                                                 <div class="large_thumb thumb_hover">
@@ -232,11 +325,11 @@
                                         
                                         </div>
                                     </div>
-                                    <?php
-                                            }
-                                        }
-
-                                    ?>
+                            <?php } ?>
+                            <div id="infscr-loading">
+                                <img alt="Loading..." src="http://i.imgur.com/6RMhx.gif">
+                                <div style="opacity: 1;">No more Pikes to load.</div>
+                            </div>
                     <!-- end of php -->
                 </div>
                 
@@ -425,6 +518,30 @@
                 });
             }
             
+            $(document).ready(function(){
+
+                var chat_load = 0;
+                var contact_load = 0;
+
+                $('#contactSearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        contact_load++;
+                        $.post("contactInfiniteScroll.php",{contact_load:contact_load},function(data){
+                            $('#contactSearch').append(data);
+                        });
+                   }
+                });
+
+                $('#chatBox').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        chat_load++;
+                        console.log(userSender, chat_load);
+                        $.post("chatInfiniteScroll.php",{chat_load:chat_load, userSender: userSender},function(data){
+                            $('#chatBox').append(data);
+                        });
+                   }
+                });
+            });
         </script>
 
         <div class="widget widget_invitations white_box">
@@ -451,7 +568,7 @@
                         <textarea placeholder='send your message here' onkeydown='sendChat(this)'></textarea>
                     </div>
 
-                    <ul style="overflow: scroll;height: 450px;" id="contactSearch">
+                    <ul class="ul_scrolling" id="contactSearch">
                         
                         <?php      
                             require_once('connect.php');
@@ -462,6 +579,7 @@
                                 JOIN userapps U ON U.Facebook_ID = friends.user_other
                                 WHERE user_me =$sessionUser
                                 ORDER BY last_chat DESC
+                                LIMIT 0,5
                             ");
 
                             while($contact = $contact_query->fetch()){
@@ -473,7 +591,7 @@
                             <?php } ?>
                                     <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
-                                        <cite><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></cite><br>
+                                        <cite><a href=""><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
                                     </p>
                                     <div class="clear"></div>
@@ -481,11 +599,37 @@
 
                             <?php } ?>
                     </ul>
-                    <ul style="overflow: scroll;height: 450px;"  id="chatBox">
+                    <ul class="ul_scrolling"  id="chatBox">
                         
                     </ul>                          
 
         </div>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                var pikes_load = 0;
+                var notifications_load = 0;
+
+                $('#notifsSearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        notifications_load++;
+                        $.post("notificationInfiniteScroll.php",{notifications_load:notifications_load},function(data){
+                            $('#notifsSearch').append(data);
+                        });
+                   }
+                });
+
+                $('#PikesSearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        pikes_load++;
+                        $.post("pikesInfiniteScroll.php",{pikes_load:pikes_load},function(data){
+                            $('#PikesSearch').append(data);
+                        });
+                   }
+                });
+            });
+        </script>
 
         
         
@@ -518,7 +662,7 @@
                     <form>
                         <input type="text" placeholder="Click to search in your notifications ..." onkeyup="notifsResult(this.value)">
                     </form>
-                    <ul id="notifsSearch">
+                    <ul class="ul_scrolling" id="notifsSearch">
                         <?php      
                             require_once('connect.php');
 
@@ -526,6 +670,7 @@
                                 SELECT * 
                                 FROM  notification 
                                 WHERE notification_user =$sessionUser
+                                LIMIT 0, 5
                             ");
 
                             while($notification = $notification_query->fetch()){
@@ -552,7 +697,7 @@
                     <form>
                         <input type="text" placeholder="Click to search your pikes ..." onkeyup="pikesResult(this.value)">
                     </form>
-                    <ul id="PikesSearch">
+                    <ul id="PikesSearch" class="ul_scrolling">
                         <?php      
                             require_once('connect.php');
 
@@ -560,11 +705,13 @@
                                 SELECT E.event_id ,E.event_pic,E.event_name,E.event_date, E.event_time FROM  joinevents
                                     JOIN EVENTS E ON E.event_id = joinevents.event_id
                                     WHERE usr_id =$sessionUser
+
                                 UNION
 
                                 SELECT event_id,event_pic,event_name,event_date, event_time FROM  events
                                     WHERE usr_create =$sessionUser
                                 ORDER BY event_date, event_time DESC
+                                LIMIT 0, 5
                             ");
 
                             while($pike = $pikes_query->fetch()){
@@ -578,7 +725,7 @@
                                 </li>
                             <?php } ?>
                     </ul>  
-                    </div>       
+                </div>       
             </div>
             
         </div>
@@ -643,11 +790,25 @@
 
         </script>
 
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var load = 0;
+                $('#categorySearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        load++;
+                        $.post("interestInfiniteScroll.php",{load:load},function(data){
+                            $('#categorySearch').append(data);
+                        });
+                   }
+                });
+            });
+        </script>
+
         <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Interests</h3>
             <form>
                 <input type="text" placeholder="click here to start searching in communities" onkeyup="showResult(this.value)">
             </form> 
-                    <ul style="overflow: scroll;height: 450px;" id="categorySearch">
+                    <ul class="ul_scrolling" id="categorySearch">
                         <?php      
                             require_once('connect.php');
 
@@ -655,6 +816,7 @@
                                 SELECT *
                                 FROM interests
                                 ORDER BY interest_score DESC, interest_name ASC
+                                LIMIT 0, 10
                             ");
 
                             while($interest = $interests_query->fetch()){
@@ -786,16 +948,16 @@
              </table>
             </div>
         </div>
-    
-    </div>
-</div><!-- #main -->
-    
-<div id="footer">
+    <div id="footer">
         <div class="container clearfix">
-            <div style="text-align:center;">&copy; 2014 <a href="#">PikeLife</a></div>
+            <div style="text-align:center">&copy; 2014 <a href="/events.php">PikeLife</a> - <a href="/contactUs.php">Contact Us</a></div>
             <div class="clear"></div>
         </div>
     </div>
+    </div>
+</div><!-- #main -->
+    
+
     <!-- #footer -->
 <div id="toTop"><a href="#">TOP</a></div>   
 </body>

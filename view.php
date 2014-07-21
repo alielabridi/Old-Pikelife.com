@@ -36,6 +36,47 @@
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
+    <style type="text/css">
+            .ul_scrolling{
+                overflow-x:hidden;
+                height: 450px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+
+            }
+
+            #participants_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #discussions_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #pictures_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #files_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+
+        </style>
+
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
         
         <script type="text/javascript">
@@ -151,11 +192,41 @@
                     }
                 ?>
 
-
+<script>
+         
+            function overallSearchResult(str) {
+                  
+             if (window.XMLHttpRequest) {
+                         // code for IE7+, Firefox, Chrome, Opera, Safari
+                        xmlhttp=new XMLHttpRequest();
+                  } else {  // code for IE6, IE5
+                         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                  }
+                  
+                  xmlhttp.onreadystatechange=function() {
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                          document.getElementById("overallSearchInput").innerHTML=xmlhttp.responseText;
+                        }
+                  }
+                  
+                  xmlhttp.open("GET","overallSearch.php?q="+str,true);
+                  xmlhttp.send();
+                }
+        </script>
 
 <div id="header">
         <div class="container clearfix">
             <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="Place" /></a></h1>
+            <div class="header_search">
+            
+                <div class="search_zoom search_btn" onclick="overallSearchResult('')"></div> 
+                <input type="text" placeholder="Type &amp; Search for Pikes and Friends" class="search_box" onkeyup="overallSearchResult(this.value)">
+                <div style="position:inherit; ; left:0px; top:36px; width:63%; border-color: rgb(10, 10, 10);box-shadow: 4px 4px 4px #888888;" class="tab_content search_results">
+                    <ul id="overallSearchInput" style="background-color:white">
+                        
+                    </ul>
+                </div>
+            </div>
         </div>  
     </div>
 
@@ -294,9 +365,56 @@
                     </div>  
                 
                 </div><!-- post item -->
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                var participants_load = 0;
+                var discussions_load = 0;
+                var images_load = 0;
+                var files_load = 0;
+                var event_id = "<?php echo $event_id; ?>"
+
+                $('#participants_view').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        participants_load++;
+                        $.post("participantsInfiniteScroll.php",{participants_load:participants_load, event_id:event_id},function(data){
+                            $('#participants_view').append(data);
+                        });
+                   }
+                });
+
+                $('#discussions_view').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        discussions_load++;
+                        $.post("discussionsInfiniteScroll.php",{discussions_load:discussions_load, event_id:event_id},function(data){
+                            $('#feedbackSearch').append(data);
+                        });
+                   }
+                });
+
+                $('#images_load').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        images_load++;
+                        $.post("picturesInfiniteScroll.php",{images_load:images_load, event_id:event_id},function(data){
+                            $('#images_load').append(data);
+                        });
+                   }
+                });
+
+                $('#files_view').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        files_load++;
+                        $.post("filesInfiniteScroll.php",{files_load:files_load, event_id:event_id},function(data){
+                            $('#files_view').append(data);
+                        });
+                   }
+                });
+            });
+        </script>
 <div class="related_posts white_box">
     <a id="Participants"><h3 class="rp_title">Participants</h3></a>
-    <div class="rp_col_wrapper clearfix" style="overflow: scroll;height: 600px;">
+    <div class="rp_col_wrapper clearfix" id="participants_view">
         
         <?php 
 
@@ -304,6 +422,7 @@
                 SELECT * FROM joinevents
                 JOIN userapps U ON U.Facebook_ID = joinevents.usr_id
                 where event_id = ".$event_id."
+                LIMIT 0, 20
             ");
 
             while($participant = $participants_query->fetch()){ ?>
@@ -348,7 +467,7 @@
 
 <div class="related_posts white_box">
     <h3 class="rp_title">Discussions</h3>
-    <div class="rp_col_wrapper clearfix">
+    <div class="rp_col_wrapper clearfix" id="discussions_view">
             
         <div id="comment_tab" class="tab_content recent_comments" style="overflow: auto;">
                     <ul id="feedbackSearch">
@@ -358,6 +477,7 @@
                                 SELECT * FROM feedback
                                 JOIN userapps U ON U.Facebook_ID = feedback.feedback_user_id
                                 where feedback.feedback_event_id = ".$event_id."
+                                LIMIT 0, 10
                             ");
 
                             while($feedback = $feedbacks_query->fetch()){ ?>
@@ -380,13 +500,14 @@
 
 <div class="related_posts white_box">
     <a id="Pictures"><h3 class="rp_title">Pictures</h3></a>
-    <div class="rp_col_wrapper clearfix">
+    <div class="rp_col_wrapper clearfix" id="picturers_view">
         <?php 
 
             $pictures_query = $connect->query("
                 SELECT * FROM picture
                 left join userapps U on U.Facebook_ID = usr_upload
                 where event_id = ".$event_id."
+                LIMIT 0, 20
             ");
 
             while($picture = $pictures_query->fetch()){ ?>
@@ -410,7 +531,7 @@
 
 <div class="related_posts white_box">
     <a id="Files"><h3 class="rp_title">Files</h3></a>
-    <div class="rp_col_wrapper clearfix">
+    <div class="rp_col_wrapper clearfix" id="files_view">
 
         <?php 
 
@@ -418,6 +539,7 @@
                 SELECT * FROM files
                 left join userapps U on U.Facebook_ID = usr_upload
                 where file_event_id = ".$event_id."
+                LIMIT 0, 10
             ");
 
             while($file = $files_query->fetch()){ ?>
@@ -475,11 +597,29 @@
 
         </script>
 
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                var contact_load = 0;
+                var event_id = "<?php echo $event_id; ?>"
+
+                $('#invitationSearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        contact_load++;
+                        $.post("invitationInfiniteScroll.php",{contact_load:contact_load, event_id:event_id},function(data){
+                            $('#invitationSearch').append(data);
+                        });
+                   }
+                });
+            });
+
+        </script>
+
         <div class="widget widget_invitations white_box"><h3 class="widget_title">Send Invitations</h3>
             <form>
                 <input type="text" placeholder="click here to start searching in your contacts" onkeyup="showinvitations(this.value, <?php echo $event_id; ?>)">
             </form> 
-                    <ul style="overflow: scroll;height: 450px;" id="invitationSearch">
+                    <ul class="ul_scrolling" id="invitationSearch">
                         <?php      
                             require_once('connect.php');
 
@@ -489,7 +629,7 @@
                                 JOIN userapps U ON U.Facebook_ID = friends.user_other
                                 WHERE user_me = $sessionUser and friends.user_other NOT IN (SELECT notification_user from notification where event_id = $event_id)
                                 and friends.user_other NOT IN (SELECT joinevents.usr_id from joinevents where event_id = $event_id)
-
+                                LIMIT 0, 5
                             ");
 
                             while($invitation = $invitations_query->fetch()){
@@ -671,6 +811,30 @@
                 });
             }
             
+            $(document).ready(function(){
+
+                var chat_load = 0;
+                var contact_load = 0;
+
+                $('#contactSearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        contact_load++;
+                        $.post("contactInfiniteScroll.php",{contact_load:contact_load},function(data){
+                            $('#contactSearch').append(data);
+                        });
+                   }
+                });
+
+                $('#chatBox').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        chat_load++;
+                        console.log(userSender, chat_load);
+                        $.post("chatInfiniteScroll.php",{chat_load:chat_load, userSender: userSender},function(data){
+                            $('#chatBox').append(data);
+                        });
+                   }
+                });
+            });
         </script>
 
         <div class="widget widget_invitations white_box">
@@ -697,7 +861,7 @@
                         <textarea placeholder='send your message here' onkeydown='sendChat(this)'></textarea>
                     </div>
 
-                    <ul style="overflow: scroll;height: 450px;" id="contactSearch">
+                    <ul class="ul_scrolling" id="contactSearch">
                         
                         <?php      
                             require_once('connect.php');
@@ -708,6 +872,7 @@
                                 JOIN userapps U ON U.Facebook_ID = friends.user_other
                                 WHERE user_me =$sessionUser
                                 ORDER BY last_chat DESC
+                                LIMIT 0,5
                             ");
 
                             while($contact = $contact_query->fetch()){
@@ -719,7 +884,7 @@
                             <?php } ?>
                                     <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
-                                        <cite><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></cite><br>
+                                        <cite><a href=""><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
                                     </p>
                                     <div class="clear"></div>
@@ -727,11 +892,37 @@
 
                             <?php } ?>
                     </ul>
-                    <ul style="overflow: scroll;height: 450px;"  id="chatBox">
+                    <ul class="ul_scrolling"  id="chatBox">
                         
                     </ul>                          
 
         </div>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                var pikes_load = 0;
+                var notifications_load = 0;
+
+                $('#notifsSearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        notifications_load++;
+                        $.post("notificationInfiniteScroll.php",{notifications_load:notifications_load},function(data){
+                            $('#notifsSearch').append(data);
+                        });
+                   }
+                });
+
+                $('#PikesSearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        pikes_load++;
+                        $.post("pikesInfiniteScroll.php",{pikes_load:pikes_load},function(data){
+                            $('#PikesSearch').append(data);
+                        });
+                   }
+                });
+            });
+        </script>
 
         
         
@@ -758,13 +949,13 @@
                 <?php }} ?>
                 
                     <li class="tab_tag"><a href="#tag_tab">Pikes</a></li></ul>
-            <div class="clear"></div>
-            <div class="tabs_container">
-            <div id="post_tab" class="tab_content recent_posts">
+                    <div class="clear"></div>
+                    <div class="tabs_container">
+                    <div id="post_tab" class="tab_content recent_posts">
                     <form>
                         <input type="text" placeholder="Click to search in your notifications ..." onkeyup="notifsResult(this.value)">
                     </form>
-                    <ul id="notifsSearch">
+                    <ul class="ul_scrolling" id="notifsSearch">
                         <?php      
                             require_once('connect.php');
 
@@ -772,6 +963,7 @@
                                 SELECT * 
                                 FROM  notification 
                                 WHERE notification_user =$sessionUser
+                                LIMIT 0, 5
                             ");
 
                             while($notification = $notification_query->fetch()){
@@ -798,7 +990,7 @@
                     <form>
                         <input type="text" placeholder="Click to search your pikes ..." onkeyup="pikesResult(this.value)">
                     </form>
-                    <ul id="PikesSearch">
+                    <ul id="PikesSearch" class="ul_scrolling">
                         <?php      
                             require_once('connect.php');
 
@@ -806,11 +998,13 @@
                                 SELECT E.event_id ,E.event_pic,E.event_name,E.event_date, E.event_time FROM  joinevents
                                     JOIN EVENTS E ON E.event_id = joinevents.event_id
                                     WHERE usr_id =$sessionUser
+
                                 UNION
 
                                 SELECT event_id,event_pic,event_name,event_date, event_time FROM  events
                                     WHERE usr_create =$sessionUser
                                 ORDER BY event_date, event_time DESC
+                                LIMIT 0, 5
                             ");
 
                             while($pike = $pikes_query->fetch()){
@@ -824,7 +1018,7 @@
                                 </li>
                             <?php } ?>
                     </ul>  
-                    </div>       
+                </div>       
             </div>
             
         </div>
@@ -889,11 +1083,25 @@
 
         </script>
 
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var load = 0;
+                $('#categorySearch').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        load++;
+                        $.post("interestInfiniteScroll.php",{load:load},function(data){
+                            $('#categorySearch').append(data);
+                        });
+                   }
+                });
+            });
+        </script>
+
         <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Interests</h3>
             <form>
                 <input type="text" placeholder="click here to start searching in communities" onkeyup="showResult(this.value)">
             </form> 
-                    <ul style="overflow: scroll;height: 450px;" id="categorySearch">
+                    <ul class="ul_scrolling" id="categorySearch">
                         <?php      
                             require_once('connect.php');
 
@@ -901,6 +1109,7 @@
                                 SELECT *
                                 FROM interests
                                 ORDER BY interest_score DESC, interest_name ASC
+                                LIMIT 0, 10
                             ");
 
                             while($interest = $interests_query->fetch()){
@@ -915,7 +1124,7 @@
                     </div>
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>
-
+        
         <script type="text/javascript">
             jQuery(function($){
 
@@ -1032,17 +1241,17 @@
              </table>
             </div>
         </div>
+    <div id="footer">
+        <div class="container clearfix">
+            <div style="text-align:center">&copy; 2014 <a href="/events.php">PikeLife</a> - <a href="/contactUs.php">Contact Us</a></div>
+            <div class="clear"></div>
+        </div>
+    </div>
     
     </div>
 </div><!-- #main -->
     
-<div id="footer">
-        <div class="container clearfix">
-            <div class="ft_left">&copy; 2014 <a href="#">PikeLife</a></div>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <!-- #footer -->
+
 <div id="toTop"><a href="#">TOP</a></div>   
 </body>
 </html>

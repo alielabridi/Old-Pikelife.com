@@ -19,7 +19,6 @@
             FROM  notification 
             WHERE notification_user =$sessionUser and notification_title LIKE '%$q%'
             ORDER BY notification_time Asc
-            LIMIT 0,6
           ");
 
           while($notification = $notification_query->fetch()){
@@ -42,7 +41,6 @@
             FROM  notification 
             WHERE notification_user =$sessionUser
             ORDER BY notification_time Asc
-            LIMIT 0,6
           ");
 
           while($notification = $notification_query->fetch()){
