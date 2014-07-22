@@ -274,33 +274,49 @@
                                 <?php } ?>
 
                                 <div class="post_single_bottom_wrapper">
-                                        <?php 
-                                            $participated_query = $connect->query("
-                                                SELECT friend_request FROM friends
-                                                where user_me = $user_id and user_other = $sessionUser
-                                            ");
-
+                                    <?php 
+                                        $participated_query = $connect->query("
+                                            SELECT friend_request FROM friends
+                                            where user_me = $user_id and user_other = $sessionUser
+                                        ");
+                                                
                                                 if($participanted = $participated_query->fetch()){
-                                                    if($participanted["friend_request"] == "Friends"){ 
-                                                ?>
-                                                    <span style="color:blue;border:2px solid blue;padding:10px 10px 10px 10px">Friend</span>
-                                                <?php } elseif($participanted["friend_request"] == "Request") {?>
+                                                    if($participanted["friend_request"] == "Friends"){?>
+                                                        <span style="color:blue;border:2px solid blue;padding:10px 10px 10px 10px">Friend</span>
+                                                <?php } elseif($participanted["friend_request"] == "Request"){ ?>
                                                     <a href="/addFriend.php?user_id=<?php echo $user_id; ?>" class="button blue">Accept Friend</a>
                                                     <a href="/deleteFriendRequest.php?user_id=<?php echo $user_id; ?>" class="button red">reject Friend</a>
-                                                <?php} 
-                                            }else{
-                                                $participated_query = $connect->query("
-                                                    SELECT friend_request FROM friends
-                                                    where user_me = $sessionUser and user_other = $user_id
-                                                ");
+                                                <?php   }
+                                                    }else{
+                                                        
+                                                        $participated_query = $connect->query("
+                                                            SELECT friend_request FROM friends
+                                                            where user_me = $sessionUser and user_other = $user_id
+                                                        ");
+                                                        if($participanted = $participated_query->fetch()){
+                                                            if($participanted["friend_request"] == "Request"){
+                                                                print_r("<span style='color:blue;border:2px solid blue;padding:10px 10px 10px 10px'>Friend Request Sent</span>");
+                                                            }
+                                                        }else if($sessionUser != $user_id){
+                                                            print_r("<a href='/sendFriendRequest.php?user_id=$user_id' class='button blue'>send Friend Request</a>");
+                                                            $participated_query = $connect->query("
+                                                                    SELECT * FROM following
+                                                                    WHERE user_me = $sessionUser and following_user = $user_id
+                                                                ");
+                                                            if($participanted = $participated_query->fetch()){
+                                                                print_r("<span style='color:green;border:2px solid green;padding:10px 10px 10px 10px;'>Piked</span>");
+                                                                print_r("<a href='/deleteFollowing.php?user_id=$user_id' class='button gray'>Stop Piking</a>");
+                                                            }else{
+                                                                print_r("<a href='/addFollowing.php?user_id=$user_id' class='button green'>Pike</a>");
+                                                            }
+                                                        }
+                                                    }                                                
+                                                ?>
 
-                                                if($participanted = $participated_query->fetch()){
-                                                    if($participanted["friend_request"] == "Request"){?>
-                                                        <span style="color:blue;border:2px solid blue;padding:10px 10px 10px 10px">Friend Request Sent</span>
-                                                    <?php }else{?>
-                                                       <a href="/sendFriendRequest.php?user_id=<?php echo $user_id; ?>" class="button blue">send Friend Request</a>
-                                                <?php } } } ?>
-                                            </div>
+                                                <?php
+                                                    
+                                                ?>
+                                </div>
                     <div class="clear"></div>
                     </div>  
                 
@@ -344,7 +360,7 @@
                 SELECT * 
                 FROM  friends 
                 JOIN userapps U ON U.Facebook_ID = friends.user_other
-                WHERE user_me = $user_id
+                WHERE user_me = $user_id AND friend_request = 'Friends'
                 ORDER BY usr_lname DESC
                 LIMIT 0, 20
             ");
@@ -352,7 +368,7 @@
             while($participant = $participants_query->fetch()){ ?>
 
             <div class="rp_col">
-                <a href="/userProfile.php?user_id=<?php echo $participant["Facebook_ID"]; ?>"></a><div class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div>
+                <a href="/userProfile.php?user_id=<?php echo $participant["Facebook_ID"]; ?>"><div class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div></a>
             </div>
 
         <?php } ?>
@@ -628,7 +644,7 @@
             <div id="chatTabUptdate"><?php
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser
+                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser  AND friend_request = 'Friends'
                 ");
 
                 if($newUpdate = $newUpdate_query->fetch()){ 
@@ -656,7 +672,7 @@
                             $contact_query = $connect->query("
                                 SELECT * 
                                 FROM  friends 
-                                JOIN userapps U ON U.Facebook_ID = friends.user_other
+                                JOIN userapps U ON U.Facebook_ID = friends.user_other  AND friend_request = 'Friends'
                                 WHERE user_me =$sessionUser
                                 ORDER BY last_chat DESC
                                 LIMIT 0,5
@@ -671,7 +687,7 @@
                             <?php } ?>
                                     <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
-                                        <cite><a href=""><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
+                                        <cite><a href="/userProfile.php?user_id=<?php echo $contact["user_other"]; ?>"><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
                                     </p>
                                     <div class="clear"></div>

@@ -164,10 +164,10 @@
                                             WHERE event_cat = $inter
                                             and (events.usr_create In(   SELECT friends.user_other 
                                                                         FROM  friends 
-                                                                        WHERE user_me = $sessionUser)
+                                                                        WHERE user_me = $sessionUser  AND friend_request = 'Friends')
                                                 OR events.usr_create = $sessionUser)
                                             and event_type != 'Secret'
-                                            or (event_type == 'Secret' and usr_id == $sessionUser)
+                                            or (event_type = 'Secret' and usr_create = $sessionUser)
                                         ");
                                     }                                  
                                     else{
@@ -177,7 +177,7 @@
                                             WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
                                             AND (events.usr_create In(SELECT friends.user_other 
                                                                       FROM  friends 
-                                                                      WHERE user_me = $sessionUser)
+                                                                      WHERE user_me = $sessionUser  AND friend_request = 'Friends')
                                                 OR events.usr_create = $sessionUser)
                                             and event_type != 'Secret'
                                             or (event_type = 'Secret' and usr_create = $sessionUser)
@@ -236,9 +236,10 @@
                                             JOIN userapps U ON U.Facebook_ID = events.usr_create
                                             LEFT JOIN interests I ON I.interest_id = events.event_cat
                                             WHERE event_cat = $inter
+                                            AND event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
                                             and (events.usr_create In(   SELECT friends.user_other 
                                                                         FROM  friends 
-                                                                        WHERE user_me = $sessionUser)
+                                                                        WHERE user_me = $sessionUser  AND friend_request = 'Friends')
                                                 OR events.usr_create = $sessionUser)
                                             and event_type != 'Secret'
                                             or (event_type = 'Secret' and usr_create = $sessionUser)
@@ -257,10 +258,14 @@
                                             WHERE event_date = '". $qyear ."-". $qmonth ."-". $qday ."'
                                             AND (events.usr_create In(SELECT friends.user_other 
                                                                       FROM  friends 
+                                                                      WHERE user_me = $sessionUser AND friend_request = 'Friends')
+                                                OR events.usr_create = $sessionUser
+                                                OR events.usr_create In(SELECT following_user 
+                                                                      FROM  following 
                                                                       WHERE user_me = $sessionUser)
-                                                OR events.usr_create = $sessionUser)
-                                            and event_type != 'Secret'
-                                            or (event_type = 'Secret' and usr_create = $sessionUser)
+                                                )
+                                            AND event_type != 'Secret'
+                                            OR (event_type = 'Secret' and usr_create = $sessionUser)
 
                                             ORDER BY event_date, event_time DESC
 
@@ -290,7 +295,7 @@
                                                 <div class="post_item_inner">
 
                                                     <div class="post_meta">
-                                                        <span class="user">by <a href="#"><?php echo $event['usr_lname'] . ' '. $event['usr_fname']; ?></a></span> 
+                                                        <span class="user">by <a href="/userProfile.php?user_id=<?php echo $event["usr_create"]; ?>"><?php echo $event['usr_lname'] . ' '. $event['usr_fname']; ?></a></span> 
                                                         <span class="date"><?php echo $event['event_date']; ?></span><br><br>
                                                         <span class="time"><?php echo $event['event_time']; ?></span>
                                                         <span class="cats"><?php echo $event['interest_name']; ?></span><br><br>
@@ -309,8 +314,21 @@
                                                             if($participanted = $participated_query->fetch()){
                                                                 if($participanted["participanted"] > 0){?>
                                                                     <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
-                                                                <?php }else{ ?>
-                                                                    <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
+                                                                <?php }else{ 
+                                                                        $participated_query = $connect->query("
+                                                                            SELECT count(*) AS participanted FROM following
+                                                                            where following_user = ".$event['usr_create']." and user_me = ". $sessionUser . "
+                                                                        ");
+                                                                        if($follow = $participated_query->fetch()){
+                                                                            if($follow["participanted"] > 0){?>
+                                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Following</span>
+                                                                            <?php }else{ ?>
+                                                                                    <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
+                                                                            <?php }
+                                                                        }
+
+                                                                    ?>
+                                                                    
                                                             <?php }
                                                                 }
                                                             }else{ ?>
@@ -326,7 +344,7 @@
                             <?php } ?>
                             <div id="infscr-loading">
                                 <img alt="Loading..." src="http://i.imgur.com/6RMhx.gif">
-                                <div style="opacity: 1;">No more Pikes to load.</div>
+                                <div style="opacity: 1;">No more Pikes ...</div>
                             </div>
                     <!-- end of php -->
                 </div>
@@ -546,7 +564,7 @@
             <div id="chatTabUptdate"><?php
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser
+                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser  AND friend_request = 'Friends'
                 ");
 
                 if($newUpdate = $newUpdate_query->fetch()){ 
@@ -574,7 +592,7 @@
                             $contact_query = $connect->query("
                                 SELECT * 
                                 FROM  friends 
-                                JOIN userapps U ON U.Facebook_ID = friends.user_other
+                                JOIN userapps U ON U.Facebook_ID = friends.user_other  AND friend_request = 'Friends'
                                 WHERE user_me =$sessionUser
                                 ORDER BY last_chat DESC
                                 LIMIT 0,5
@@ -589,7 +607,7 @@
                             <?php } ?>
                                     <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
-                                        <cite><a href=""><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
+                                        <cite><a href="/userProfile.php?user_id=<?php echo $contact["user_other"]; ?>"><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
                                     </p>
                                     <div class="clear"></div>

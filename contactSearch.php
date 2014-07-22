@@ -17,7 +17,7 @@
               SELECT * 
               FROM  friends 
               JOIN userapps U ON U.Facebook_ID = friends.user_other
-              WHERE user_me = $sessionUser and usr_lname LIKE '%$q%'
+              WHERE user_me = $sessionUser and usr_lname LIKE '%$q%' AND friend_request = 'Friends'
               ORDER BY last_chat DESC
           ");
 
@@ -33,8 +33,8 @@
                 $hint = $hint . "<li>";
               }
 
-              $hint = $hint . "<img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
-              $hint = $hint . "<p><cite>$usr_lname $usr_fname</cite><br>";
+              $hint = $hint . "<img src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
+              $hint = $hint . "<a href='/userProfile.php?user_id=$usr_id'><p><cite>$usr_lname $usr_fname</cite><br></a>";
               $hint = $hint . "<em style='cursor:pointer' onclick='chatResult($usr_id)'>click to view conversation</em></p><div class='clear'></div></li>";
             }
       }else{
@@ -44,7 +44,7 @@
               SELECT * 
               FROM  friends 
               JOIN userapps U ON U.Facebook_ID = friends.user_other
-              WHERE user_me =$sessionUser
+              WHERE user_me =$sessionUser  AND friend_request = 'Friends'
               ORDER BY last_chat DESC
           ");
 
@@ -62,7 +62,7 @@
               
 
               $hint = $hint . "<img alt='' src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' />";
-              $hint = $hint . "<p><cite>$usr_lname $usr_fname</cite><br>";
+              $hint = $hint . "<a href='/userProfile.php?user_id=$usr_id'><p><cite>$usr_lname $usr_fname</cite><br></a>";
               $hint = $hint . "<em style='cursor:pointer' onclick='chatResult($usr_id)'>click to view conversation</em></p><div class='clear'></div></li>";
             }
       }      

@@ -313,29 +313,39 @@
                                     </p>
                                     </div>
                                     <div class="post_single_bottom_wrapper">
-                                        <?php if($event['Facebook_ID'] != $sessionUser){
+                                        <?php if($event['event_type'] != "Private" || ($event['event_type'] == "Private" && $event['usr_create'] == $sessionUser)){
+                                                        if($event['Facebook_ID'] != $sessionUser){
+                                                            $participated_query = $connect->query("
+                                                                SELECT count(*) AS participanted FROM joinevents
+                                                                where event_id = ".$event['event_id']." and usr_ID = ". $sessionUser . "
+                                                            ");
 
-                                            $participated_query = $connect->query("
+                                                            if($participanted = $participated_query->fetch()){
+                                                                if($participanted["participanted"] > 0){?>
+                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
+                                                                <?php }else{ 
+                                                                        $participated_query = $connect->query("
+                                                                            SELECT count(*) AS participanted FROM following
+                                                                            where following_user = ".$event['usr_create']." and user_me = ". $sessionUser . "
+                                                                        ");
+                                                                        if($follow = $participated_query->fetch()){
+                                                                            if($follow["participanted"] > 0){?>
+                                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Following</span>
+                                                                            <?php }else{ ?>
+                                                                                    <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
+                                                                            <?php }
+                                                                        }
 
-                                                SELECT count(*) AS participanted FROM joinevents
-                                                where event_id = ".$event_id." and usr_ID = ". $sessionUser . "
-                                            ");
+                                                                    ?>
+                                                                    
+                                                            <?php }
+                                                                }
+                                                            }else{ ?>
+                                                                <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
+                                                                <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">End it</a>
+                                                        
 
-                                            if($participanted = $participated_query->fetch()){
-                                                if($participanted["participanted"] > 0){ 
-                                            ?>
-                                                <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
-                                        <?php } else {?>
-                                                <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
-                                        <?php } } ?>
-                                            
-
-                                        <?php }else{ ?>
-
-                                            <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
-                                            <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">Delete</a>                                                            
-
-                                        <?php } ?>
+                                                            <?php } }?>
 
 
                                         <?php $participants_query = $connect->query("
@@ -431,7 +441,7 @@
                 <?php if($participant["Facebook_ID"] == $sessionUser){
                     $piked = true;
                 } ?>
-                    <div class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div>
+                    <a href="/userProfile.php?user_id=<?php echo $participant["Facebook_ID"]; ?>"><div class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div></a>
             </div>
 
         <?php } ?>
@@ -627,7 +637,7 @@
                                 SELECT * 
                                 FROM  friends 
                                 JOIN userapps U ON U.Facebook_ID = friends.user_other
-                                WHERE user_me = $sessionUser and friends.user_other NOT IN (SELECT notification_user from notification where event_id = $event_id)
+                                WHERE user_me = $sessionUser AND friend_request = 'Friends' and friends.user_other NOT IN (SELECT notification_user from notification where event_id = $event_id)
                                 and friends.user_other NOT IN (SELECT joinevents.usr_id from joinevents where event_id = $event_id)
                                 LIMIT 0, 5
                             ");
@@ -841,7 +851,7 @@
             <div id="chatTabUptdate"><?php
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser
+                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser  AND friend_request = 'Friends'
                 ");
 
                 if($newUpdate = $newUpdate_query->fetch()){ 
@@ -869,7 +879,7 @@
                             $contact_query = $connect->query("
                                 SELECT * 
                                 FROM  friends 
-                                JOIN userapps U ON U.Facebook_ID = friends.user_other
+                                JOIN userapps U ON U.Facebook_ID = friends.user_other  AND friend_request = 'Friends'
                                 WHERE user_me =$sessionUser
                                 ORDER BY last_chat DESC
                                 LIMIT 0,5
@@ -884,7 +894,7 @@
                             <?php } ?>
                                     <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
-                                        <cite><a href=""><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
+                                        <cite><a href="/userProfile.php?user_id=<?php echo $contact["user_other"]; ?>"><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
                                     </p>
                                     <div class="clear"></div>

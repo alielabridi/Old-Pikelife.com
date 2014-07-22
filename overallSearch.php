@@ -30,7 +30,7 @@
               $hint = $hint . "<li>";
               $hint = $hint . "<a href='#$usr_id' class='small_thumb'>";
               $hint = $hint . "<img src='/include/Profil_pictures/$usr_pic' width='50' height='50'></a>";
-              $hint = $hint . "<a href='#$usr_id' class='title'>$usr_lname $usr_fname</a><div class='clear'></div></a>";                        
+              $hint = $hint . "<a href='/userProfile.php?user_id=$usr_id' class='title'>$usr_lname $usr_fname</a><div class='clear'></div></a>";                        
               $hint = $hint . "</li>";
             }
 

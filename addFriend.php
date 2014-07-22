@@ -11,7 +11,8 @@ $user_id = $_GET['user_id'];
           $query = $connect->query("
           		   UPDATE friends
           		   SET friend_request= 'Friends' WHERE user_me = $user_id and user_other = $sessionUser
-
+		   ");
+           $query = $connect->query("
 			       INSERT INTO friends (user_me, user_other, friend_request) 
 			       VALUES ($sessionUser, $user_id, 'Friends')
 		   ");

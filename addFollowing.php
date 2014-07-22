@@ -8,8 +8,8 @@ $user_id = $_GET['user_id'];
 
     //lookup all links from the xml file if length of q>0
     if (strlen($user_id)>0) {
-          $query = $connect->query("
-			       DELETE FROM friends where user_me = $user_id and user_other = $sessionUser
+           $query = $connect->query("
+			       INSERT INTO following(user_me, following_user) VALUES ($sessionUser, $user_id)
 		   ");
       }
 

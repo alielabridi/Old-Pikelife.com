@@ -11,7 +11,7 @@
         SELECT * 
         FROM  friends 
         JOIN userapps U ON U.Facebook_ID = friends.user_other
-        WHERE user_me =$sessionUser
+        WHERE user_me =$sessionUser AND friend_request = 'Friends'
         ORDER BY last_chat DESC
         LIMIT $contact_load, 5
     ");

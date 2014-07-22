@@ -580,7 +580,7 @@ $sessionUser = $_SESSION['usr_id'];
             <div id="chatTabUptdate"><?php
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser
+                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser AND friend_request = 'Friends'
                 ");
 
                 if($newUpdate = $newUpdate_query->fetch()){ 
@@ -609,7 +609,7 @@ $sessionUser = $_SESSION['usr_id'];
                                 SELECT * 
                                 FROM  friends 
                                 JOIN userapps U ON U.Facebook_ID = friends.user_other
-                                WHERE user_me =$sessionUser
+                                WHERE user_me =$sessionUser  AND friend_request = 'Friends'
                                 ORDER BY last_chat DESC
                                 LIMIT 0,5
                             ");

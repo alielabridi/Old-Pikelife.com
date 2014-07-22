@@ -555,12 +555,11 @@ $sessionUser = $_SESSION['usr_id'];
                 });
             });
         </script>
-
-        <div class="widget widget_invitations white_box">
+<div class="widget widget_invitations white_box">
             <div id="chatTabUptdate"><?php
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser
+                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser  AND friend_request = 'Friends'
                 ");
 
                 if($newUpdate = $newUpdate_query->fetch()){ 
@@ -588,7 +587,7 @@ $sessionUser = $_SESSION['usr_id'];
                             $contact_query = $connect->query("
                                 SELECT * 
                                 FROM  friends 
-                                JOIN userapps U ON U.Facebook_ID = friends.user_other
+                                JOIN userapps U ON U.Facebook_ID = friends.user_other  AND friend_request = 'Friends'
                                 WHERE user_me =$sessionUser
                                 ORDER BY last_chat DESC
                                 LIMIT 0,5
@@ -603,7 +602,7 @@ $sessionUser = $_SESSION['usr_id'];
                             <?php } ?>
                                     <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
-                                        <cite><a href=""><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
+                                        <cite><a href="/userProfile.php?user_id=<?php echo $contact["user_other"]; ?>"><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
                                     </p>
                                     <div class="clear"></div>
