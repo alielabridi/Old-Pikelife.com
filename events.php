@@ -957,7 +957,7 @@
             });
         </script>
 
-        <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Interests</h3>
+        <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Search for specific interest?</h3>
             <form>
                 <input type="text" placeholder="click here to start searching in communities" onkeyup="showResult(this.value)">
             </form> 

@@ -126,11 +126,10 @@ else {
 
 <head>
 	<title>Pikelife</title>
+
+  
+
 <style>
-body 
-{	
-	background-color: #c53334;
-}
 .top_banner{
 	background-color: white;
 	height:60px;
@@ -235,15 +234,19 @@ img{
     <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
     <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
 
+    <script type="text/javascript" src="/background_slider/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/background_slider/jquery.vegas.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/background_slider/jquery.vegas.css" />
 </head>
 
 <body>
 	<div class='top_banner'><a href="/"><img src="images/logo_home.png"></a></div>
 	<div class="text_adver">
-	      <h3>The best experiences of life, only happen once with friends.</h3>
-	      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PikeLife gives you the power to gather your friends, do activities together, and have everyone share pictures, documents and talk about it.<br><br>
+	      <h3>The best experiences of life, only happen, once with friends.</h3>
+	      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PikeLife gives you the power to gather and do things with your friends, while keeping those experiences warm and memorable.<br><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sign up and find out what your friends are doing<br><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sign in with facebook will get you in touch with your friends that are using our application in an instant
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Sign in with facebook" will get you in touch with your friends that are using our application in an instant
         <br><br> this application is free and forever
 	</div>
 	<div class="face_book">
@@ -253,7 +256,6 @@ img{
         <input class = "textfield_css" type="password" name="LastName" placeholder="Password"><br><br>
         <input class="btn btn-default" type="submit" value="login">
     </form>
-	      <h5><em>Or</em></h5>
 	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>
         Not yet member?
         <em><a style="text-decoration: none; color:red" href="Register.php">Register</a></em><br><em><a style="text-decoration: none; color:red" href="contactUs.php">Contact Us</a></em>
@@ -261,7 +263,23 @@ img{
 	</div>
 	<div id="fb-root"></div>
 
-	
+	<script type="text/javascript">
+
+    $.vegas('slideshow', {
+      delay:7000,
+      backgrounds:[
+        { src:'/background_slider/images/background.jpg', fade:1000 },
+        { src:'/background_slider/images/background2.jpg', fade:1000 },
+        { src:'/background_slider/images/background3.jpg', fade:1000 },
+        { src:'/background_slider/images/background4.jpg', fade:1000 },
+        { src:'/background_slider/images/background5.jpg', fade:1000 },
+        { src:'/background_slider/images/background6.jpg', fade:1000 },
+        { src:'/background_slider/images/background7.jpg', fade:1000 }
+      ]
+    })('overlay', {
+      src:'/background_slider/overlays/10.png'
+    });
+    </script>
 
 </body>
 

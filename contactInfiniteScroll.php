@@ -8,7 +8,6 @@
     $contact_load = htmlentities(strip_tags($_POST['contact_load'])) * 5;
     $notification_query = $connect->query("
         SELECT COUNT(*) notif_num 
-        FROM chat
         FROM  friends 
         JOIN userapps U ON U.Facebook_ID = friends.user_other
         WHERE user_me =$sessionUser AND friend_request = 'Friends'

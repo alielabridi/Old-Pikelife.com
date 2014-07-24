@@ -168,7 +168,7 @@ img{
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size: 20px;
 	position: absolute;
-	top: 80px;
+	top: 70px;
 	left: 300px;
 	color: white;
 	padding: 15px 20px 20px 20px;
@@ -244,12 +244,10 @@ img{
         <input style="width:210px" class = "textfield_css" type="text" name="FirstName" placeholder="FirstName">
         <input style="width:210px" class = "textfield_css" type="text" name="LastName" placeholder="LastName"><br><br>
         <input style="width:450px" class = "textfield_css" type="password" name="LastName" placeholder="Password"><br><br>
-        Your profile picture: <input class = "textfield_css" type="file" name="file" placeholder="User Profile Picture"><br><br>
+        Your profile picture<em style="font-size:10px">(optional)</em>: <br><input class = "textfield_css" type="file" name="file" placeholder="User Profile Picture"><br><br>
         <input class="btn btn-default" type="submit" value="Sign up">
     </form>
-	      <br><em>Or</em>
 	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>
-        <br><em><a style="text-decoration: none; color:white" href="contactUs.php">Contact Us</a></em>
 	      
 	</div>
 	<div id="fb-root"></div>
