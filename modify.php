@@ -249,6 +249,7 @@ $sessionUser = $_SESSION['usr_id'];
                             $event_cat = $event["event_cat"];
                             $event_cat_prev = $event_cat;
                             $event_type = $event["event_type"];
+                            $oldEvent_name = $event["event_name"];
                         }
 
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -320,7 +321,7 @@ $sessionUser = $_SESSION['usr_id'];
                                     WHERE event_id = $event_id 
                                 "); 
 
-                                  if($event_cat != $event_cat_prev){
+                                if($event_cat != $event_cat_prev){
                                     require_once('connect.php');
 
                                     $query = $connect->query("
@@ -332,6 +333,24 @@ $sessionUser = $_SESSION['usr_id'];
                                     ");
                                   }
                                 
+                                $joinevent_query = $connect->query("
+                                       SELECT usr_id FROM joinevents where event_id = $event_id and usr_id != $sessionUser
+                               ");
+
+                               $user_joined = $connect->query("
+                                       SELECT usr_lname, usr_fname FROM userapps where Facebook_ID = $sessionUser 
+                               ");
+
+                               $usrJoined = $user_joined->fetch();
+
+                               while($joinevent = $joinevent_query->fetch()){
+                                    $query = $connect->query("
+                                        INSERT INTO notification
+                                            (notification_title, notification_user, notification_image, event_id, notification_type) 
+                                        VALUES ('this Pike information $oldEvent_name has been modified', " . $joinevent["usr_id"] . ", '$event_id.jpg', $event_id, 'Event')
+                                    ");            
+                               }
+
                                 header( "Location: /view.php?event_id=$event_id") ;
                            }  
                         }

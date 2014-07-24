@@ -240,11 +240,19 @@ img{
 	<div class="face_book">
       <h3>Registration</h3>
     <form action="demo_form.asp">
+<<<<<<< HEAD
         <input style="width:450px" class = "textfield_css" type="text" name="Email" placeholder="Email"><br><br>
         <input style="width:210px" class = "textfield_css" type="text" name="FirstName" placeholder="FirstName">
         <input style="width:210px" class = "textfield_css" type="text" name="LastName" placeholder="LastName"><br><br>
         <input style="width:450px" class = "textfield_css" type="password" name="LastName" placeholder="Password"><br><br>
         Your profile picture<em style="font-size:10px">(optional)</em>: <br><input class = "textfield_css" type="file" name="file" placeholder="User Profile Picture"><br><br>
+=======
+        <input style="width:450px" class = "textfield_css" type="text" name="Email" placeholder="Email" required><br><br>
+        <input style="width:210px" class = "textfield_css" type="text" name="FirstName" placeholder="FirstName" required>
+        <input style="width:210px" class = "textfield_css" type="text" name="LastName" placeholder="LastName" required><br><br>
+        <input style="width:450px" class = "textfield_css" type="password" name="LastName" placeholder="Password" required><br><br>
+        Your profile picture: <input class = "textfield_css" type="file" name="file" placeholder="User Profile Picture" required><br><br>
+>>>>>>> origin/newIdriss
         <input class="btn btn-default" type="submit" value="Sign up">
     </form>
 	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>

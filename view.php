@@ -66,47 +66,6 @@
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-    <style type="text/css">
-            .ul_scrolling{
-                overflow-x:hidden;
-                height: 450px;
-                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-
-            }
-
-            #participants_view{
-                overflow-x:hidden;
-                height: 600px;
-                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-            }
-            #discussions_view{
-                overflow-x:hidden;
-                height: 600px;
-                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-            }
-            #pictures_view{
-                overflow-x:hidden;
-                height: 600px;
-                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-            }
-            #files_view{
-                overflow-x:hidden;
-                height: 600px;
-                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-            }
-
-        </style>
-
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
         
         <script type="text/javascript">
@@ -1194,7 +1153,7 @@
             <?php 
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_notif from notification where notification_status = 'new'
+                    SELECT count(*) as new_notif from notification where notification_status = 'new' and notification_user = $sessionUser
                 ");
             ?>
 

@@ -252,8 +252,8 @@ img{
 	<div class="face_book">
       <h3>Start Now</h3>
     <form action="demo_form.asp">
-        <input class = "textfield_css" type="text" name="FirstName" placeholder="Email"><br><br>
-        <input class = "textfield_css" type="password" name="LastName" placeholder="Password"><br><br>
+        <input class = "textfield_css" type="text" name="FirstName" placeholder="Email" required><br><br>
+        <input class = "textfield_css" type="password" name="LastName" placeholder="Password" required><br><br>
         <input class="btn btn-default" type="submit" value="login">
     </form>
 	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>

@@ -1,7 +1,7 @@
 <?php
 
-session_start();
-$sessionUser = $_SESSION['usr_id'];
+	session_start();
+	$sessionUser = $_SESSION['usr_id'];
 
     $event_id=$_GET["event_id"];
 
@@ -12,21 +12,39 @@ $sessionUser = $_SESSION['usr_id'];
           $query = $connect->query("
 			       INSERT INTO joinevents(event_id, usr_id) VALUES ($event_id, $sessionUser)
 		   ");
-          require_once('connect.php');
 
            $event_query = $connect->query("
-			       SELECT event_cat FROM events where event_id = $event_id 
+			       SELECT event_cat, event_name, event_pic FROM events where event_id = $event_id 
 		   ");
 
-           while($event = $event_query->fetch()){
-			   require_once('connect.php');
-
+           if($event = $event_query->fetch()){
 	           $query = $connect->query("
 	                UPDATE interests 
 	                SET interest_score = interest_score+1
 	                WHERE interest_id = " . $event["event_cat"] ."
 	            ");
 	       }
+
+	       $joinevent_query = $connect->query("
+			       SELECT usr_id FROM joinevents where event_id = $event_id and usr_id != $sessionUser
+		   ");
+
+	       $user_joined = $connect->query("
+			       SELECT usr_lname, usr_fname FROM userapps where Facebook_ID = $sessionUser 
+		   ");
+
+	       $usrJoined = $user_joined->fetch();
+
+           while($joinevent = $joinevent_query->fetch()){
+	           	$query = $connect->query("
+					INSERT INTO notification
+						(notification_title, notification_user, notification_image, event_id, notification_type) 
+					VALUES ('". $usrJoined["usr_lname"] . " ". $usrJoined["usr_fname"] ." joined the pike ". $event['event_name'] ."', " . $joinevent["usr_id"] . ",'". $event["event_pic"] ."',$event_id, 'Event')
+				");			   
+	       }
+
+
+	       
       }
 
       header( "Location: /view.php?event_id=$event_id#Participants" ) ;   
