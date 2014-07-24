@@ -319,7 +319,7 @@ img{
         <input class="btn btn-default" type="submit" value="Sign up">
     </form>
 	      <br><em>Or</em>
-	      <p><a class="btn-auth btn-facebook large" href="include/Facebook_SignUp.html">Sign in with <b>Facebook</b></a></p>
+        <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>
 	      
 	</div>
 	<div id="fb-root"></div>
