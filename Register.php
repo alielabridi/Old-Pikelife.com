@@ -239,7 +239,7 @@ img{
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size: 20px;
 	position: absolute;
-	top: 80px;
+	top: 70px;
 	left: 300px;
 	color: white;
 	padding: 15px 20px 20px 20px;
@@ -307,7 +307,7 @@ img{
 </head>
 
 <body>
-	<div class='top_banner'><img src="images/logo_home.png"></div>
+	<div class='top_banner'><a href="/"><img src="images/logo_home.png"></a></div>
 	<div class="face_book">
       <h3>Registration</h3>
     <form action="Register.php" method="POST">

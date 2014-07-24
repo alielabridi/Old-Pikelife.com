@@ -43,17 +43,6 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
-        <style type="text/css">
-            .ul_scrolling{
-                overflow-x:hidden;
-                height: 450px;
-                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
-
-            }
-
-        </style>
         
         <script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
 
@@ -114,6 +103,8 @@
 
 <div id="header">
         <div class="container clearfix">
+            
+            
             <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="PikeLife" /></a></h1>
             <div class="header_search">
             
@@ -123,8 +114,23 @@
                     <ul id="overallSearchInput" style="background-color:white">
                     </ul>
                 </div>
+            </div>  
+            <?php 
+                require_once('connect.php');
+
+                $users_query = $connect->query("
+
+                    SELECT *
+                    FROM userapps
+                    WHERE Facebook_ID = $sessionUser
+                ");
+
+                                
+                if($user = $users_query->fetch()){ ?>
+                <a href="/userProfile.php?user_id=<?php echo $sessionUser ?>" title="view your profile" style="float:right"><img alt="" src="/include/Profil_pictures/<?php echo $user['picture_link']; ?>" class="avatar avatar-50 photo hoverZoomLink" height="50" width="50"></a>
+
+            <?php } ?>
             </div>
-        </div>  
 </div>
 
     <div id="main">
@@ -260,9 +266,6 @@
                                                                       FROM  friends 
                                                                       WHERE user_me = $sessionUser AND friend_request = 'Friends')
                                                 OR events.usr_create = $sessionUser
-                                                OR events.usr_create In(SELECT following_user 
-                                                                      FROM  following 
-                                                                      WHERE user_me = $sessionUser)
                                                 )
                                             AND event_type != 'Secret'
                                             OR (event_type = 'Secret' and usr_create = $sessionUser)
@@ -313,19 +316,19 @@
 
                                                             if($participanted = $participated_query->fetch()){
                                                                 if($participanted["participanted"] > 0){?>
-                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Piked</span>
+                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Joined</span>
                                                                 <?php }else{ 
-                                                                        $participated_query = $connect->query("
+                                                                        /*$participated_query = $connect->query("
                                                                             SELECT count(*) AS participanted FROM following
                                                                             where following_user = ".$event['usr_create']." and user_me = ". $sessionUser . "
                                                                         ");
                                                                         if($follow = $participated_query->fetch()){
-                                                                            if($follow["participanted"] > 0){?>
-                                                                                    <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Following</span>
-                                                                            <?php }else{ ?>
-                                                                                    <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Pike</a>
-                                                                            <?php }
-                                                                        }
+                                                                            if($follow["participanted"] > 0){*/?>
+                                                                                    <!-- <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Following</span> -->
+                                                                            <?php //}else{ ?>
+                                                                                    <a href="/joinEvents.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Join</a>
+                                                                            <?php //}
+                                                                       // }
 
                                                                     ?>
                                                                     
@@ -363,6 +366,122 @@
 
         <div id="sidebar">
   
+        <script type="text/javascript">
+            jQuery(function($){
+
+                $('.month').hide();
+                var current = parseInt("<?php echo $qmonth; ?>");
+                $('#month'+current).show();
+                $('#Month'+current).show();
+
+                    $('#monthPrev').click(function(){
+                        if(current > 1){
+                            console.log(current)
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current - 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        
+                    });
+
+                    $('#monthNext').click(function(){
+                        if(current < 12){
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current + 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+
+                    });
+            });
+        </script>
+        <div id="calendar-2" class="widget widget_calendar white_box">
+
+            <h3 class="widget_title">Calendar</h3>
+            <div id="calendar_wrap">
+                 <table id="wp-calendar">
+                    <caption>
+                     <?php foreach ($date->months as $id=>$m): ?>
+                            <b href="#" class="month" id="Month<?php echo $id+1; ?>" width="50px" ><?php echo $m; ?></b>
+                        <?php endforeach; ?> <?php echo $year; ?>
+                    </caption>
+
+                    <thead>
+                    <tr>
+                        <th scope="col" title="Monday">M</th>
+                        <th scope="col" title="Tuesday">T</th>
+                        <th scope="col" title="Wednesday">W</th>
+                        <th scope="col" title="Thursday">T</th>
+                        <th scope="col" title="Friday">F</th>
+                        <th scope="col" title="Saturday">S</th>
+                        <th scope="col" title="Sunday">S</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2" id="monthPrev"><a href="#">&laquo;</a></td>
+                        <td colspan="3"><a href="/add.php">Add a Pike ?</a></td>
+                        <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
+                    </tr>
+                    </tfoot>
+                <div class="clear"></div>
+
+                <?php $dates = current($dates); ?>
+                    <?php foreach ($dates as $m => $days): ?>
+
+                <tbody class="month" id="month<?php echo $m; ?>">
+                    <tr>
+                    <?php $end = end($days); foreach($days as $d=>$w): ?>
+                        <?php if($d == 1 && $w-1 > 0): ?>
+                            <td colspan="<?php echo $w-1; ?>" class="pad">&nbsp;</td>
+                        <?php endif ?>
+
+                        <?php
+                             if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                            {
+
+                                $qyear = $_GET['year'];
+                                $qmonth = $_GET['month'];
+                                $qday = $_GET['day'];
+                            }else{
+                                
+                                $qyear = $todyear;
+                                $qmonth = $todmonth;
+                                $qday = $todday;
+                            }
+                             if($d == $qday  && $m == $qmonth): ?>
+                            <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
+                        <?php else: ?>
+                            <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
+                        <?php endif ?>
+
+                        <?php if($w == 7): ?>
+                            </tr><tr>
+                        <?php endif; ?>
+                    <?php endforeach ?>
+                </tr>
+               
+                </tbody>
+            <?php endforeach; ?>
+
+
+             </table>
+            </div>
+        </div>
 
         <script type="text/javascript">
         jQuery(document).ready(function($){ 
@@ -686,20 +805,27 @@
                                 SELECT * 
                                 FROM  notification 
                                 WHERE notification_user =$sessionUser
-                                LIMIT 0, 5
+                                ORDER BY notification_time DESC
+                                LIMIT 0, 10
                             ");
 
                             while($notification = $notification_query->fetch()){
                                 if($notification['notification_status'] == "new"){ ?>
                                     <li style="background-color:rgb(255, 226, 226)">
-                                <?php }else{ ?>
-                                    <li>
-                                <?php } ?>
-                                    <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                        <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
                                         <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
                                     </a>
                                     <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
                                     </a> 
+                                <?php }else{ ?>
+                                    <li>
+                                        <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                        <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                    </a>
+                                    <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                    </a> 
+                                <?php } ?>
+                                    
                                     </li>
                             <?php } ?>
                         
@@ -727,7 +853,7 @@
                                 SELECT event_id,event_pic,event_name,event_date, event_time FROM  events
                                     WHERE usr_create =$sessionUser
                                 ORDER BY event_date, event_time DESC
-                                LIMIT 0, 5
+                                LIMIT 0, 10
                             ");
 
                             while($pike = $pikes_query->fetch()){
@@ -820,7 +946,7 @@
             });
         </script>
 
-        <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Interests</h3>
+        <div id="categories-3" class="widget widget_categories white_box"><h3 class="widget_title">Search for specific interest?</h3>
             <form>
                 <input type="text" placeholder="click here to start searching in communities" onkeyup="showResult(this.value)">
             </form> 
@@ -848,122 +974,7 @@
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>
         
-        <script type="text/javascript">
-            jQuery(function($){
-
-                $('.month').hide();
-                var current = parseInt("<?php echo $qmonth; ?>");
-                $('#month'+current).show();
-                $('#Month'+current).show();
-
-                    $('#monthPrev').click(function(){
-                        if(current > 1){
-                            console.log(current)
-                            $('#month'+current).hide();
-                            $('#Month'+current).hide();
-                            current = current - 1;
-                            $('#month'+current).show();
-                            $('#Month'+current).show();
-                            return false;
-                        }
-                        else{
-                            $('#month'+current).show();
-                            $('#Month'+current).show();
-                            return false;
-                        }
-                        
-                    });
-
-                    $('#monthNext').click(function(){
-                        if(current < 12){
-                            $('#month'+current).hide();
-                            $('#Month'+current).hide();
-                            current = current + 1;
-                            $('#month'+current).show();
-                            $('#Month'+current).show();
-                            return false;
-                        }else{
-                            $('#month'+current).show();
-                            $('#Month'+current).show();
-                            return false;
-                        }
-
-                    });
-            });
-        </script>
-        <div id="calendar-2" class="widget widget_calendar white_box">
-
-            <h3 class="widget_title">Calendar</h3>
-            <div id="calendar_wrap">
-                 <table id="wp-calendar">
-                    <caption>
-                     <?php foreach ($date->months as $id=>$m): ?>
-                            <b href="#" class="month" id="Month<?php echo $id+1; ?>" width="50px" ><?php echo $m; ?></b>
-                        <?php endforeach; ?> <?php echo $year; ?>
-                    </caption>
-
-                    <thead>
-                    <tr>
-                        <th scope="col" title="Monday">M</th>
-                        <th scope="col" title="Tuesday">T</th>
-                        <th scope="col" title="Wednesday">W</th>
-                        <th scope="col" title="Thursday">T</th>
-                        <th scope="col" title="Friday">F</th>
-                        <th scope="col" title="Saturday">S</th>
-                        <th scope="col" title="Sunday">S</th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr>
-                        <td colspan="2" id="monthPrev"><a href="#">&laquo;</a></td>
-                        <td colspan="3"><a href="/add.php">New Pike</a></td>
-                        <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
-                    </tr>
-                    </tfoot>
-                <div class="clear"></div>
-
-                <?php $dates = current($dates); ?>
-                    <?php foreach ($dates as $m => $days): ?>
-
-                <tbody class="month" id="month<?php echo $m; ?>">
-                    <tr>
-                    <?php $end = end($days); foreach($days as $d=>$w): ?>
-                        <?php if($d == 1 && $w-1 > 0): ?>
-                            <td colspan="<?php echo $w-1; ?>" class="pad">&nbsp;</td>
-                        <?php endif ?>
-
-                        <?php
-                             if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
-                            {
-
-                                $qyear = $_GET['year'];
-                                $qmonth = $_GET['month'];
-                                $qday = $_GET['day'];
-                            }else{
-                                
-                                $qyear = $todyear;
-                                $qmonth = $todmonth;
-                                $qday = $todday;
-                            }
-                             if($d == $qday  && $m == $qmonth): ?>
-                            <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
-                        <?php else: ?>
-                            <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
-                        <?php endif ?>
-
-                        <?php if($w == 7): ?>
-                            </tr><tr>
-                        <?php endif; ?>
-                    <?php endforeach ?>
-                </tr>
-               
-                </tbody>
-            <?php endforeach; ?>
-
-
-             </table>
-            </div>
-        </div>
+        
     <div id="footer">
         <div class="container clearfix">
             <div style="text-align:center">&copy; 2014 <a href="/events.php">PikeLife</a> - <a href="/contactUs.php">Contact Us</a></div>

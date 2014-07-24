@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<script type="text/javascript" src="C:/Users/User/Desktop/background_slider/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="C:/Users/User/Desktop/background_slider/jquery.vegas.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="C:/Users/User/Desktop/background_slider/jquery.vegas.css" />
+
+	</head>
+
+	<body>
+
+		<script type="text/javascript">
+
+		$.vegas('slideshow', {
+			delay:5000,
+		  backgrounds:[
+		    { src:'C:/Users/User/Desktop/background_slider/images/background.jpg', fade:1000 },
+		    { src:'C:/Users/User/Desktop/background_slider/images/background2.jpg', fade:1000 },
+		    { src:'C:/Users/User/Desktop/background_slider/images/background3.jpg', fade:1000 },
+		    { src:'C:/Users/User/Desktop/background_slider/images/background4.jpg', fade:1000 },
+		    { src:'C:/Users/User/Desktop/background_slider/images/background5.jpg', fade:1000 },
+		    { src:'C:/Users/User/Desktop/background_slider/images/background6.jpg', fade:1000 },
+		    { src:'C:/Users/User/Desktop/background_slider/images/background7.jpg', fade:1000 }
+		  ]
+		})('overlay', {
+		  src:'C:/Users/User/Desktop/background_slider/overlays/10.png'
+		});
+			/*$(function() {
+				  $.vegas({
+				    src:'C:/Users/User/Desktop/background_slider/images/background.jpg'
+				  });
+
+				  $.vegas('overlay', {
+				    src:'C:/Users/User/Desktop/background_slider/overlays/10.png'
+				  });
+			});*/
+
+		</script>
+	</body>
+
+
+</html>

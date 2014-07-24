@@ -36,7 +36,11 @@
             $feedback_time = $feedback["feedback_time"];
             $feedback_message = $feedback["feedback_message"];
 
-            $hint = $hint . "<li><img src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>$usr_lname $usr_fname:</cite> <em>$feedback_time</em><br> <a href=''>$feedback_message</a></p><div class='clear'></div></li>";
+            $hint = $hint . "<li><img src='/include/Profil_pictures/$picture_link' class='avatar avatar-50 photo' height='50' width='50' /><p><cite>$usr_lname $usr_fname:</cite> <em>$feedback_time</em><br> <a href='#''>$feedback_message</a></p>";
+            if($feedback["feedback_user_id"] == $sessionUser){
+              $hint = $hint . "<em><a style='color:red' href='/deleteDiscussions.php?event_id=$event_id&amp;feedback_id=" . $feedback["feedback_id"] . "''>remove</a></em>";
+            }
+              $hint = $hint . "<div class='clear'></div></li>";
           }
       }
 

@@ -14,9 +14,135 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 
 /** GENERAL
 -------------------------------------------- **/
+	
+	.ul_scrolling{
+        overflow-x:hidden;
+        height: 450px;
+        -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+
+    }
+
+	.ul_scrolling::-webkit-scrollbar-track
+	{
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+		background-color: #F5F5F5;
+	}
+
+	.ul_scrolling::-webkit-scrollbar
+	{
+		width: 6px;
+		background-color: #F5F5F5;
+	}
+
+	.ul_scrolling::-webkit-scrollbar-thumb
+	{
+		background-color: #C53434;
+	}
+
+	#participants_view{
+        overflow-x:hidden;
+        height: 600px;
+        -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+    }
+
+    #participants_view::-webkit-scrollbar-track
+	{
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+		background-color: #F5F5F5;
+	}
+
+	#participants_view::-webkit-scrollbar
+	{
+		width: 6px;
+		background-color: #F5F5F5;
+	}
+
+	#participants_view::-webkit-scrollbar-thumb
+	{
+		background-color: #C53434;
+	}
+    
+    #discussions_view{
+        overflow-x:hidden;
+        height: 600px;
+        -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+    }
+
+    #discussions_view::-webkit-scrollbar-track
+	{
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+		background-color: #F5F5F5;
+	}
+
+	#discussions_view::-webkit-scrollbar
+	{
+		width: 6px;
+		background-color: #F5F5F5;
+	}
+
+	#discussions_view::-webkit-scrollbar-thumb
+	{
+		background-color: #C53434;
+	}
+    
+    #pictures_view{
+        overflow-x:hidden;
+        height: 600px;
+        -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+    }
+
+    #pictures_view::-webkit-scrollbar-track
+	{
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+		background-color: #F5F5F5;
+	}
+
+	#pictures_view::-webkit-scrollbar
+	{
+		width: 6px;
+		background-color: #F5F5F5;
+	}
+
+	#pictures_view::-webkit-scrollbar-thumb
+	{
+		background-color: #C53434;
+	}
+     
+    #files_view{
+        overflow-x:hidden;
+        height: 600px;
+        -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+        box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+    }
+
+    #files_view::-webkit-scrollbar-track
+	{
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+		background-color: #F5F5F5;
+	}
+
+	#files_view::-webkit-scrollbar
+	{
+		width: 6px;
+		background-color: #F5F5F5;
+	}
+
+	#files_view::-webkit-scrollbar-thumb
+	{
+		background-color: #C53434;
+	}
 
 	body{
-		background:#eee url(images/bg/bg11.png);
+		background:#eee;
 		font: 13px/1.6 Arial, "Droid Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
 		font-weight:400;
 		color:#666;
@@ -203,6 +329,7 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 	.header_search { 
 		position:absolute; right:0; top: 50%; margin-top:-18px; z-index:99; -webkit-touch-callout: none;
 		-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;
+		margin-right: 70px;
 	}
 	.header_search .search_zoom { 
 		float:right; width:36px; height:36px; cursor:pointer; 
@@ -1168,7 +1295,7 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 }
 
 html {
-  background: #249991;
+  background: #eee;
 }
 
 .calendar {

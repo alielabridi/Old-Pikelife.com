@@ -1,0 +1,165 @@
+/**
+ * Registration Form
+ * -------------------------------------
+ */
+.fcorn-register {
+  font-family: "Source Sans Pro";
+  width: 550px;
+  margin: 0 auto;
+  padding: 10px 35px;
+  letter-spacing: 1px;
+  box-shadow: 0 0 2px rgba(60, 60, 60, 0.1);
+  /** To hide default arrow */
+  /** Register Toogle Btn **/
+  /* Register button */
+}
+.fcorn-register p {
+  margin-bottom: 30px;
+}
+.fcorn-register p.register-info {
+  background: #b5b5b5;
+  color: #fff;
+  padding: 8px 15px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 30px;
+}
+.fcorn-register p > input,
+.fcorn-register p > select {
+  display: inline-block;
+  width: 100%;
+  padding: 10px 15px;
+  font-weight: 100;
+  color: #686868;
+  border: 1px solid rgba(159, 159, 159, 0.2);
+  box-shadow: 0 0 3px rgba(60, 60, 60, 0.05);
+}
+.fcorn-register p > input:focus,
+.fcorn-register p > select:focus {
+  border: 1px solid #fd997d;
+  outline: none;
+}
+.fcorn-register p > select:focus {
+  border: 1px solid rgba(159, 159, 159, 0.2);
+}
+.fcorn-register p > select {
+  text-indent: 0.01px;
+  /** if it doesn't work change to something 0.05 etc... **/
+  text-overflow: "";
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.fcorn-register p > select::-ms-expand {
+  display: none;
+}
+.fcorn-register p.gender-wrap,
+.fcorn-register p.country-wrap {
+  /** For custom arrow in select box **/
+  position: relative;
+}
+.fcorn-register p.gender-wrap:before,
+.fcorn-register p.country-wrap:before {
+  position: absolute;
+  content: "#";
+  font-family: "entypo";
+  font-size: 18px;
+  color: #686868;
+  top: 10px;
+  right: 25px;
+}
+.fcorn-register p > span.extern-type {
+  float: right;
+  text-align: right;
+  font-size: 12px;
+  display: block;
+  color: #b5b5b5;
+}
+.fcorn-register p.register-toggle {
+  position: relative;
+}
+.fcorn-register p.register-toggle > .info {
+  font-size: 13px;
+  margin-left: 20px;
+}
+.fcorn-register p.register-toggle > label.toggle-label {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  display: inline-block;
+  background: #fd8564;
+  width: 60px;
+  height: 24px;
+  float: left;
+  position: relative;
+  font-size: 10px;
+  color: #fff;
+  /** this is for labeling of on/off text **/
+  /** handle switch **/
+}
+.fcorn-register p.register-toggle > label.toggle-label > input.toggle-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+.fcorn-register p.register-toggle > label.toggle-label:before,
+.fcorn-register p.register-toggle > label.toggle-label:after {
+  position: absolute;
+  top: 30%;
+  line-height: 1.1;
+  font-weight: 100;
+}
+.fcorn-register p.register-toggle > label.toggle-label:before {
+  content: attr(data-on);
+  left: 7px;
+}
+.fcorn-register p.register-toggle > label.toggle-label:after {
+  content: attr(data-off);
+  right: 7px;
+}
+.fcorn-register p.register-toggle > label.toggle-label .toggle-handle {
+  position: absolute;
+  background: #fff;
+  left: 0;
+  top: 0;
+  border: 1px solid #fd8564;
+  display: inline-block;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  box-shadow: inset 0 0 5px rgba(50, 50, 50, 0.1);
+  width: 50%;
+  height: inherit;
+}
+.fcorn-register p.register-toggle > label.toggle-label > input.toggle-input:checked ~ .toggle-handle {
+  left: 30px;
+}
+.fcorn-register p.register-submit {
+  display: inline-block;
+  float: right;
+}
+.fcorn-register p.register-submit > input {
+  border: none;
+  width: 200px;
+  color: #fff;
+  padding: 10px 15px;
+  background: #fd7d5a;
+  text-align: center;
+  letter-spacing: 1px;
+  box-shadow: 0 1px 1px #fc5528;
+}
+.fcorn-register p.register-submit > input:focus {
+  border: none;
+  outline: none;
+}
+.fcorn-register p.register-submit > input:hover {
+  background: #fd7550;
+}
+.fcorn-register p.register-submit > input:active {
+  box-shadow: inset 0 0 10px #fc5528;
+  -webkit-transform: translate(0, 1px);
+  -ms-transform: translate(0, 1px);
+  transform: translate(0, 1px);
+}
