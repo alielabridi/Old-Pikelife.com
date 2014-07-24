@@ -119,7 +119,78 @@ else {
     'scope' => 'email',
   );
   $loginUrl =  $helper->getLoginUrl($params);
-  ?>
+
+  /* REGISTRATION PART using the html form */
+
+
+  if( 
+    //to verify that the user went through the first page with the FB SDK JS
+    !empty($_POST["email"]) &&
+    !empty($_POST["last_name"]) &&
+    !empty($_POST["first_name"]) &&
+    !empty($_POST["password"]) 
+   )
+  {
+
+
+    $db = new mysqli($hostname_mysqli,$username_mysqli,$password_mysqli,$database_mysqli);
+    if($db->connect_error)
+    {
+      die("Connect error ({$db->connect_errno}) {$db->connect_error}");
+    }
+
+    //Escape ID to prepare it for the SELECT query
+
+    $email = mysqli_escape_string($db,$_POST["email"]);
+
+    $result = $db->query("SELECT * FROM `userapps` WHERE `usr_email` = '$email';");
+
+    /*Check whether the user is not already registered in the database*/
+    if($result->num_rows==0)
+    {
+
+      $first_name = mysqli_escape_string($db,$_POST["first_name"]);
+      $last_name = mysqli_escape_string($db,$_POST["last_name"]);
+      $password = mysqli_escape_string($db,$_POST["password"]);
+
+      /*Generate a random ID that does not exist in the database*/
+      $result_fetch_id=0;
+      while($result_fetch_id==0){
+        $Facebook_ID = mt_rand();
+        $result_fetch_id_sql = $db->query("SELECT * FROM `userapps` WHERE `Facebook_ID` = '$Facebook_ID';");
+        /*Check no ID already exist to exist loop*/
+        if($result_fetch_id_sql->num_rows==0 && $Facebook_ID>0)
+          $result_fetch_id = 1;
+      }
+
+      $random_number = mt_rand();
+      /*Fill the database with the basic information*/
+      $sql = "INSERT INTO userapps (`usr_email`,`usr_lname`,`usr_fname`,`Facebook_ID`,`confirm_code`,confirmed)
+          VALUES(
+            '$email',
+            '$last_name',
+            '$first_name',
+            '$Facebook_ID',
+            '$random_number',
+            '0'
+            );";
+
+      $db->query($sql);
+
+      /*Set the session and redirect to the main dashboard*/
+      $_SESSION['usr_id']=$Facebook_ID;
+      header("location: checkemail.php?id=$Facebook_ID");
+    
+    } 
+    else
+      echo "You are already registred !";
+    exit;
+  }
+  else
+  {   
+    echo "An error occured, you have not been registered please retry!<br />";
+  }
+?>
 
 <!DOCTYPE html>
 <html>
@@ -239,16 +310,16 @@ img{
 	<div class='top_banner'><img src="images/logo_home.png"></div>
 	<div class="face_book">
       <h3>Registration</h3>
-    <form action="demo_form.asp">
-        <input style="width:450px" class = "textfield_css" type="text" name="Email" placeholder="Email" required><br><br>
-        <input style="width:210px" class = "textfield_css" type="text" name="FirstName" placeholder="FirstName" required>
-        <input style="width:210px" class = "textfield_css" type="text" name="LastName" placeholder="LastName" required><br><br>
-        <input style="width:450px" class = "textfield_css" type="password" name="LastName" placeholder="Password" required><br><br>
-        Your profile picture: <input class = "textfield_css" type="file" name="file" placeholder="User Profile Picture" required><br><br>
+    <form action="Register.php" method="POST">
+        <input style="width:450px" class = "textfield_css" type="email" name="email" id="email" placeholder="Email" required><br><br>
+        <input style="width:210px" class = "textfield_css" type="text" name="first_name" id="first_name" placeholder="FirstName" required>
+        <input style="width:210px" class = "textfield_css" type="text" name="last_name" id="last_name" placeholder="LastName" required><br><br>
+        <input style="width:450px" class = "textfield_css" type="password" name="password" id="password" placeholder="Password" required><br><br>
+        Your profile picture: <input class = "textfield_css" type="file" name="picture" placeholder="User Profile Picture"><br><br>
         <input class="btn btn-default" type="submit" value="Sign up">
     </form>
 	      <br><em>Or</em>
-	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>
+	      <p><a class="btn-auth btn-facebook large" href="include/Facebook_SignUp.html">Sign in with <b>Facebook</b></a></p>
 	      
 	</div>
 	<div id="fb-root"></div>
@@ -260,4 +331,4 @@ img{
 </html>
 <?php
 }
-?>
+?> 
