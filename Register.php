@@ -236,7 +236,7 @@ img{
 </head>
 
 <body>
-	<div class='top_banner'><img src="images/logo_home.png"></div>
+	<div class='top_banner'><a href="/"><img src="images/logo_home.png"></a></div>
 	<div class="face_book">
       <h3>Registration</h3>
     <form action="demo_form.asp">
@@ -249,6 +249,7 @@ img{
     </form>
 	      <br><em>Or</em>
 	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>
+        <br><em><a style="text-decoration: none; color:white" href="contactUs.php">Contact Us</a></em>
 	      
 	</div>
 	<div id="fb-root"></div>

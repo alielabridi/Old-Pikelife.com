@@ -1,27 +1,12 @@
-<?php
+<?php   session_start(); 
 
-session_start();
-$sessionUser = $_SESSION['usr_id'];
+        $search_query = $_GET['search_query'];
 
-/**
- *
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.View.Layouts
- * @since         CakePHP(tm) v 0.10.0.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- * @author        Said Alaoui Idriss
- */
+        require_once('connect.php');
 
+        $sessionUser = $_SESSION['usr_id'];
 ?>
+
 <!DOCTYPE html>
 <html>
 <!--<![endif]-->
@@ -33,6 +18,9 @@ $sessionUser = $_SESSION['usr_id'];
     <meta name="author" content="PressLayer">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
     <style type="text/css">
             .ul_scrolling{
                 overflow-x:hidden;
@@ -43,9 +31,36 @@ $sessionUser = $_SESSION['usr_id'];
 
             }
 
+            #participants_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #discussions_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #pictures_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+            #files_view{
+                overflow-x:hidden;
+                height: 600px;
+                -webkit-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                -moz-box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+                box-shadow: inset 0px -33px 35px -13px rgba(0,0,0,0.25);
+            }
+
         </style>
-        
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300' rel='stylesheet' type='text/css'>
         
@@ -117,6 +132,27 @@ $sessionUser = $_SESSION['usr_id'];
 </head>
 <body>
 
+<!-- Facebook share button start -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/fr_FR/sdk.js#xfbml=1&appId=563460800438057&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- Facebook share button end -->
+
+<!-- Facebook send button start -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/fr_FR/sdk.js#xfbml=1&appId=563460800438057&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- Facebook send button end -->
       <?php
             require('date.php');
             $date = new Date();
@@ -141,9 +177,7 @@ $sessionUser = $_SESSION['usr_id'];
                     }
                 ?>
 
-
-
-        <script>
+<script>
          
             function overallSearchResult(str) {
                   
@@ -167,7 +201,7 @@ $sessionUser = $_SESSION['usr_id'];
 
 <div id="header">
         <div class="container clearfix">
-            <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="PikeLife" /></a></h1>
+            <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="Place" /></a></h1>
             <div class="header_search">
             
                 <div class="search_zoom search_btn" onclick="overallSearchResult('')"></div> 
@@ -178,21 +212,30 @@ $sessionUser = $_SESSION['usr_id'];
                     </ul>
                 </div>
             </div>
+            <?php 
+                require_once('connect.php');
+
+                $users_query = $connect->query("
+
+                    SELECT *
+                    FROM userapps
+                    WHERE Facebook_ID = $sessionUser
+                ");
+
+                                
+                if($user = $users_query->fetch()){ ?>
+                <a href="/userProfile.php?user_id=<?php echo $sessionUser ?>" title="view your profile" style="float:right"><img alt="" src="/include/Profil_pictures/<?php echo $user['picture_link']; ?>" class="avatar avatar-50 photo hoverZoomLink" height="50" width="50"></a>
+
+            <?php } ?>
         </div>  
-</div>
+    </div>
 
     <div id="main">
         <div class="container clearfix">
             <div id="leftContent">
                 <div class="inner">
-                    
-
-
-                    <div class="post_item post_single white_box">
-
-                    <div class="post_single_inner">
-
-                        <?php
+                
+                           <?php
 
                             $todyear = date('Y');
                             $todmonth = date('m');
@@ -211,141 +254,49 @@ $sessionUser = $_SESSION['usr_id'];
                                 $qday = $todday;
                             }
                         ?>
-
-                        <?php
-
-                        require_once('connect.php');
-
-                        
-
-                         // define variables and set to empty values
-                        $Error = "";
-                        $event_name = $event_description = $event_place = $event_date = $event_time = $file_name = $event_type="";
-
-                        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-                            $allowedExts = array("jpeg", "jpg", "png");
-                            $temp = explode(".", $_FILES["file"]["name"]);
-                            $extension = end($temp);
-
-                            if ((($_FILES["file"]["type"] == "image/gif")
-                            || ($_FILES["file"]["type"] == "image/jpeg")
-                            || ($_FILES["file"]["type"] == "image/jpg")
-                            || ($_FILES["file"]["type"] == "image/pjpeg")
-                            || ($_FILES["file"]["type"] == "image/x-png")
-                            || ($_FILES["file"]["type"] == "image/png"))
-                            && ($_FILES["file"]["size"] < 20000)
-                            && in_array($extension, $allowedExts)) 
-                            {
-                                    $query = $connect->query("SELECT MAX(event_id) AS Last_id FROM events;");
-                                    $event_id = $query->fetch();
-                                    $_FILES["file"]["name"] = ($event_id["Last_id"]+1) . '.' . $extension;
-
-                                  if ($_FILES["file"]["error"] > 0) {
-                                    echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
-                                  } else {
-                                        if (file_exists("img/upload/events/" . $_FILES["file"]["name"])) {
-                                            $Error = $_FILES["file"]["name"] . " already exists. ";
-                                        } else {
-                                          move_uploaded_file($_FILES["file"]["tmp_name"],
-                                          "img/upload/events/" . $_FILES["file"]["name"]);
-                                          $file_name = $_FILES["file"]["name"];
-                                        }
-                                    }
-
-                                function test_input($data) {
-                               $data = trim($data);
-                               $data = stripslashes($data);
-                               $data = htmlspecialchars($data);
-                               return $data;
-                             }
-
-                              if (empty($_POST["event_name"]) || empty($_POST["event_description"]) || empty($_POST["event_place"]) ) {
-                                $Error = "missing fields";
-                              } else {
-                                $event_name = test_input($_POST["event_name"]);
-                                $event_description = test_input($_POST["event_description"]);
-                                $event_place = test_input($_POST["event_place"]);
-                              }
-
-                              if (!empty($_POST["event_date"]) && !empty($_POST["event_time"]) && !empty($_POST["event_type"])) {
-                                    $event_date = test_input($_POST["event_date"]);
-                                    $event_time = test_input($_POST["event_time"]);
-                                    $event_type = test_input($_POST["event_type"]);
-                                    $event_cat = test_input($_POST["event_cat"]);
-                              }else{
-                                    $Error = "missing fields";
-                              }
-
-                              if(!empty($_POST["event_date"]) && !empty($_POST["event_time"]) && !empty($_POST["event_type"]) && !empty($_POST["event_name"]) && !empty($_POST["event_description"]) && !empty($_POST["event_place"])){
-                                $query = $connect->query("
-
-                                    INSERT INTO events
-                                    (event_name, event_time, event_date, usr_create, event_place, event_pic, event_description, event_cat, event_type)
-                                    VALUES ('$event_name','$event_time','$event_date',$sessionUser,'$event_place','$file_name','$event_description',$event_cat,'$event_type')
-
-                                ");
-
-                                require_once('connect.php');
-
-                                $query = $connect->query("
-
-                                    UPDATE interests 
-                                    SET interest_score = interest_score+1
-                                    WHERE interest_id = $event_cat
-
-                                ");
-
-                                header( "Location: /events.php");
-
-                              }
-                            }else {
-                              $Error = "File exceeds 2Mb or it is not of the following format {jpeg, jpg, pjpeg, x-png, png}";
-                            }     
-                          }
-                    ?>
                     
-                    <div class="post_entry" style="text-align: center">
-                        <h1 style="color:#C53434; font-weight:bold;">New Pike?</h1>
-                        <p><span style="color:#C53434;"><?php echo $Error;?><span></span><br><form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post"
-                            enctype="multipart/form-data">
-                                <input type="text" name="event_name" placeholder="your activity name" value="<?php echo $event_name;?>"><br><br>
-                                <label>Date : <input type="date" name="event_date" value="<?php echo $event_date; ?>"></label><br>
-                                <label>Time : <input type="time" name="event_time" value="<?php echo $event_time ?>"></label><br>
-                                <input type="text" name="event_place" placeholder="where would it be" value="<?php echo $event_place ?>"><br><br>
-                                <select name="event_cat">
-                                <?php
-                                    require_once('connect.php');
 
-                                      $interests_query = $connect->query("
-                                          SELECT *
-                                          FROM interests
-                                          ORDER BY interest_name Asc 
-                                    ");
-                                    while($interest = $interests_query->fetch()){
-                                        ?>
-                                
-                                        <option value="<?php echo $interest['interest_id'] ?>"><?php echo $interest['interest_name'] ?></option>
-                                    <?php } ?>
-                                </select><br><br>
-                                <textarea name="event_description" placeholder="inform us of what all would be about"><?php echo $event_description; ?></textarea><br><br>
-                                <select name="event_type">
-                                    <option value="Private">Private</option>
-                                    <option value="Public">Public</option>
-                                    <option value="Secret">Secret</option>
-                                </select><br><br>
-                                <label>select a picture for your event</label>
-                                <input type="file" name="file" id="file"><br><br><br>
-                                <input type="submit" name="submit" value="Submit">
-                            </form>
-                        </p>
+                    
 
-                    </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                var participants_load = 0;
+                var search_query = "<?php echo $search_query; ?>"
+
+                $('#participants_view').bind('scroll', function(){
+                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                        participants_load++;
+                        $.post("overallPikesSearchInfiniteScroll.php",{participants_load:participants_load, search_query:search_query},function(data){
+                            $('#participants_view').append(data);
+                        });
+                   }
+                });
+            });
+        </script>
+<div class="related_posts white_box">
+    <a id="Participants"><h3 class="rp_title">Search results of pikes having in their name '<?php echo $search_query; ?>'</h3></a>
+    <div class="rp_col_wrapper clearfix" id="participants_view">
+        
+        <?php 
+
+            $pikes_query = $connect->query("
+                SELECT * 
+                FROM  events 
+                WHERE event_name LIKE '%$search_query%'
+                ORDER BY event_name DESC
+                LIMIT 0, 100
+            ");
+
+            while($picture = $pikes_query->fetch()){ ?>
+                <div class="rp_col">
+                    <div class="small_thumb" style="text-align:center"><a href="/view.php?event_id=<?php echo $picture["event_id"]; ?>"><img src="/img/upload/events/<?php echo $picture["event_pic"]; ?>"/></a><em><strong><?php echo $picture["event_name"]; ?></strong></em></div>
                 </div>
-            </div>
+            <?php } ?>
+        
 
-                
-                
+    </div>
+</div>                 
                 <script type="text/javascript">
                     $(document).ready(function() {
                         $("a.fancybox").fancybox();
@@ -357,9 +308,125 @@ $sessionUser = $_SESSION['usr_id'];
         </div>
 
 
- <div id="sidebar">
-  
+        <div id="sidebar">
 
+        <script type="text/javascript">
+            jQuery(function($){
+
+                $('.month').hide();
+                var current = parseInt("<?php echo $qmonth; ?>");
+                $('#month'+current).show();
+                $('#Month'+current).show();
+
+                    $('#monthPrev').click(function(){
+                        if(current > 1){
+                            console.log(current)
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current - 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+                        
+                    });
+
+                    $('#monthNext').click(function(){
+                        if(current < 12){
+                            $('#month'+current).hide();
+                            $('#Month'+current).hide();
+                            current = current + 1;
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }else{
+                            $('#month'+current).show();
+                            $('#Month'+current).show();
+                            return false;
+                        }
+
+                    });
+            });
+        </script>
+        <div id="calendar-2" class="widget widget_calendar white_box">
+
+            <h3 class="widget_title">Calendar</h3>
+            <div id="calendar_wrap">
+                 <table id="wp-calendar">
+                    <caption>
+                     <?php foreach ($date->months as $id=>$m): ?>
+                            <b href="#" class="month" id="Month<?php echo $id+1; ?>" width="50px" ><?php echo $m; ?></b>
+                        <?php endforeach; ?> <?php echo $year; ?>
+                    </caption>
+
+                    <thead>
+                    <tr>
+                        <th scope="col" title="Monday">M</th>
+                        <th scope="col" title="Tuesday">T</th>
+                        <th scope="col" title="Wednesday">W</th>
+                        <th scope="col" title="Thursday">T</th>
+                        <th scope="col" title="Friday">F</th>
+                        <th scope="col" title="Saturday">S</th>
+                        <th scope="col" title="Sunday">S</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2" id="monthPrev"><a href="#">&laquo;</a></td>
+                        <td colspan="3"><a href="/add.php">Add a Pike ?</a></td>
+                        <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
+                    </tr>
+                    </tfoot>
+                <div class="clear"></div>
+
+                <?php $dates = current($dates); ?>
+                    <?php foreach ($dates as $m => $days): ?>
+
+                <tbody class="month" id="month<?php echo $m; ?>">
+                    <tr>
+                    <?php $end = end($days); foreach($days as $d=>$w): ?>
+                        <?php if($d == 1 && $w-1 > 0): ?>
+                            <td colspan="<?php echo $w-1; ?>" class="pad">&nbsp;</td>
+                        <?php endif ?>
+
+                        <?php
+                             if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                            {
+
+                                $qyear = $_GET['year'];
+                                $qmonth = $_GET['month'];
+                                $qday = $_GET['day'];
+                            }else{
+                                
+                                $qyear = $todyear;
+                                $qmonth = $todmonth;
+                                $qday = $todday;
+                            }
+                             if($d == $qday  && $m == $qmonth): ?>
+                            <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
+                        <?php else: ?>
+                            <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
+                        <?php endif ?>
+
+                        <?php if($w == 7): ?>
+                            </tr><tr>
+                        <?php endif; ?>
+                    <?php endforeach ?>
+                </tr>
+               
+                </tbody>
+            <?php endforeach; ?>
+
+
+             </table>
+            </div>
+        </div>
+        
         <script type="text/javascript">
         jQuery(document).ready(function($){ 
             $('#tab_wrapper_tab_widget-2').each(function() {
@@ -560,7 +627,7 @@ $sessionUser = $_SESSION['usr_id'];
             <div id="chatTabUptdate"><?php
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser
+                    SELECT count(*) as new_chat from friends where sent_chat = 'yes' and user_me = $sessionUser  AND friend_request = 'Friends'
                 ");
 
                 if($newUpdate = $newUpdate_query->fetch()){ 
@@ -588,7 +655,7 @@ $sessionUser = $_SESSION['usr_id'];
                             $contact_query = $connect->query("
                                 SELECT * 
                                 FROM  friends 
-                                JOIN userapps U ON U.Facebook_ID = friends.user_other
+                                JOIN userapps U ON U.Facebook_ID = friends.user_other  AND friend_request = 'Friends'
                                 WHERE user_me =$sessionUser
                                 ORDER BY last_chat DESC
                                 LIMIT 0,5
@@ -603,7 +670,7 @@ $sessionUser = $_SESSION['usr_id'];
                             <?php } ?>
                                     <img alt='' src='/include/Profil_pictures/<?php echo $contact["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
                                     <p>
-                                        <cite><a href=""><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
+                                        <cite><a href="/userProfile.php?user_id=<?php echo $contact["user_other"]; ?>"><?php echo $contact["usr_lname"]; ?> <?php echo $contact["usr_fname"]; ?></a></cite><br>
                                         <em style="cursor:pointer" onclick="chatResult(<?php echo $contact["user_other"]; ?>)">click to view conversation</em>
                                     </p>
                                     <div class="clear"></div>
@@ -682,7 +749,8 @@ $sessionUser = $_SESSION['usr_id'];
                                 SELECT * 
                                 FROM  notification 
                                 WHERE notification_user =$sessionUser
-                                LIMIT 0, 5
+                                ORDER BY notification_time DESC
+                                LIMIT 0, 10
                             ");
 
                             while($notification = $notification_query->fetch()){
@@ -723,7 +791,7 @@ $sessionUser = $_SESSION['usr_id'];
                                 SELECT event_id,event_pic,event_name,event_date, event_time FROM  events
                                     WHERE usr_create =$sessionUser
                                 ORDER BY event_date, event_time DESC
-                                LIMIT 0, 5
+                                LIMIT 0, 10
                             ");
 
                             while($pike = $pikes_query->fetch()){
@@ -843,132 +911,18 @@ $sessionUser = $_SESSION['usr_id'];
                     </div>
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>
-        
-        <script type="text/javascript">
-            jQuery(function($){
 
-                $('.month').hide();
-                var current = parseInt("<?php echo $qmonth; ?>");
-                $('#month'+current).show();
-                $('#Month'+current).show();
-
-                    $('#monthPrev').click(function(){
-                        if(current > 1){
-                            console.log(current)
-                            $('#month'+current).hide();
-                            $('#Month'+current).hide();
-                            current = current - 1;
-                            $('#month'+current).show();
-                            $('#Month'+current).show();
-                            return false;
-                        }
-                        else{
-                            $('#month'+current).show();
-                            $('#Month'+current).show();
-                            return false;
-                        }
-                        
-                    });
-
-                    $('#monthNext').click(function(){
-                        if(current < 12){
-                            $('#month'+current).hide();
-                            $('#Month'+current).hide();
-                            current = current + 1;
-                            $('#month'+current).show();
-                            $('#Month'+current).show();
-                            return false;
-                        }else{
-                            $('#month'+current).show();
-                            $('#Month'+current).show();
-                            return false;
-                        }
-
-                    });
-            });
-        </script>
-        <div id="calendar-2" class="widget widget_calendar white_box">
-
-            <h3 class="widget_title">Calendar</h3>
-            <div id="calendar_wrap">
-                 <table id="wp-calendar">
-                    <caption>
-                     <?php foreach ($date->months as $id=>$m): ?>
-                            <b href="#" class="month" id="Month<?php echo $id+1; ?>" width="50px" ><?php echo $m; ?></b>
-                        <?php endforeach; ?> <?php echo $year; ?>
-                    </caption>
-
-                    <thead>
-                    <tr>
-                        <th scope="col" title="Monday">M</th>
-                        <th scope="col" title="Tuesday">T</th>
-                        <th scope="col" title="Wednesday">W</th>
-                        <th scope="col" title="Thursday">T</th>
-                        <th scope="col" title="Friday">F</th>
-                        <th scope="col" title="Saturday">S</th>
-                        <th scope="col" title="Sunday">S</th>
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr>
-                        <td colspan="2" id="monthPrev"><a href="#">&laquo;</a></td>
-                        <td colspan="3"><a href="/add.php">New Pike</a></td>
-                        <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
-                    </tr>
-                    </tfoot>
-                <div class="clear"></div>
-
-                <?php $dates = current($dates); ?>
-                    <?php foreach ($dates as $m => $days): ?>
-
-                <tbody class="month" id="month<?php echo $m; ?>">
-                    <tr>
-                    <?php $end = end($days); foreach($days as $d=>$w): ?>
-                        <?php if($d == 1 && $w-1 > 0): ?>
-                            <td colspan="<?php echo $w-1; ?>" class="pad">&nbsp;</td>
-                        <?php endif ?>
-
-                        <?php
-                             if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
-                            {
-
-                                $qyear = $_GET['year'];
-                                $qmonth = $_GET['month'];
-                                $qday = $_GET['day'];
-                            }else{
-                                
-                                $qyear = $todyear;
-                                $qmonth = $todmonth;
-                                $qday = $todday;
-                            }
-                             if($d == $qday  && $m == $qmonth): ?>
-                            <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
-                        <?php else: ?>
-                            <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
-                        <?php endif ?>
-
-                        <?php if($w == 7): ?>
-                            </tr><tr>
-                        <?php endif; ?>
-                    <?php endforeach ?>
-                </tr>
-               
-                </tbody>
-            <?php endforeach; ?>
-
-
-             </table>
-            </div>
-        </div>
     <div id="footer">
         <div class="container clearfix">
             <div style="text-align:center">&copy; 2014 <a href="/events.php">PikeLife</a> - <a href="/contactUs.php">Contact Us</a></div>
             <div class="clear"></div>
         </div>
     </div>
+    
     </div>
 </div><!-- #main -->
     
+
 <div id="toTop"><a href="#">TOP</a></div>   
 </body>
 </html>

@@ -16,7 +16,7 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 -------------------------------------------- **/
 
 	body{
-		background:#eee url(images/bg/bg11.png);
+		background:#eee;
 		font: 13px/1.6 Arial, "Droid Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
 		font-weight:400;
 		color:#666;
@@ -203,6 +203,7 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 	.header_search { 
 		position:absolute; right:0; top: 50%; margin-top:-18px; z-index:99; -webkit-touch-callout: none;
 		-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;
+		margin-right: 70px;
 	}
 	.header_search .search_zoom { 
 		float:right; width:36px; height:36px; cursor:pointer; 
@@ -1168,7 +1169,7 @@ Text Domain: http://themeforest.net/user/PressLayer/?ref=PressLayer
 }
 
 html {
-  background: #249991;
+  background: #eee;
 }
 
 .calendar {

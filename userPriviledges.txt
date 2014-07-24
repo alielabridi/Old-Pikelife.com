@@ -1,0 +1,44 @@
+Visitting
+you can view the events that are decided to be public, or the user that wanted anyone to see the event,
+But you can not pike or do anything in the application until you are in
+You cannot create pikes
+
+
+Logged in Normal
+
+
+Publish pikes:
+*Anyone can view your pike even if they are not logged in the application
+*people who are following u and your friends can view the event
+*Only friends can view the events
+
+
+firend - follow:
+you can choose if someone would pike you , means follow you or
+he can add you as his friend
+
+you can choose if you want to be asked friend or followed
+
+Logged in Facebook
+the same as logged in Normal however 
+the priviledge is that we bring your friends using facebook connected in our application without your hassle to 
+
+
+
+
+*********************
+
+Profile information
+ 
+EMAIL
+FIRST NAME
+LAST NAME
+PROFILE PICTURE
+LOCATION
+INTERESTS
+TIME CREATED
+
+Event => pike
+Dedication to an event => join
+following => follow
+

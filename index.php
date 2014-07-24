@@ -128,8 +128,7 @@ else {
 	<title>Pikelife</title>
 <style>
 body 
-{
-	background:url('images/Wall.jpg') no-repeat;	
+{	
 	background-color: #c53334;
 }
 .top_banner{
@@ -151,8 +150,10 @@ img{
 }
 .text_adver{
 	background-color:rgba(0, 0, 0, 0.5);
-	height:160px;
-	width: 700px;
+
+    width: 500px;
+    height: 400px;
+
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size: 20px;
 	position: absolute;
@@ -170,7 +171,7 @@ img{
 	font-size: 20px;
 	position: absolute;
 	top: 100px;
-	left: 930px;
+	left: 830px;
 	color: white;
 	padding: 15px 20px 20px 20px;
 	border-radius: 40px 40px 40px 40px;
@@ -237,10 +238,13 @@ img{
 </head>
 
 <body>
-	<div class='top_banner'><img src="images/logo_home.png"></div>
+	<div class='top_banner'><a href="/"><img src="images/logo_home.png"></a></div>
 	<div class="text_adver">
 	      <h3>The best experiences of life, only happen once with friends.</h3>
-	      PikeLife gives you the opportunity to create small activities, gather your friends, and have everyone share pictures, documents and feedbacks of your events.
+	      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PikeLife gives you the power to gather your friends, do activities together, and have everyone share pictures, documents and talk about it.<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sign up and find out what your friends are doing<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sign in with facebook will get you in touch with your friends that are using our application in an instant
+        <br><br> this application is free and forever
 	</div>
 	<div class="face_book">
       <h3>Start Now</h3>
@@ -252,7 +256,7 @@ img{
 	      <h5><em>Or</em></h5>
 	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>
         Not yet member?
-        <em><a style="text-decoration: none; color:red" href="Register.php">Register</a></em>
+        <em><a style="text-decoration: none; color:red" href="Register.php">Register</a></em><br><em><a style="text-decoration: none; color:red" href="contactUs.php">Contact Us</a></em>
 	      
 	</div>
 	<div id="fb-root"></div>

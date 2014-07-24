@@ -12,7 +12,7 @@
 
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-                $allowedExts = array("pdf");
+                $allowedExts = array("pdf", "ppt", "doc", "docx", "pptx", "rar");
                 $temp = explode(".", $_FILES["file"]["name"]);
                 $extension = end($temp);
 

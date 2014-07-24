@@ -18,7 +18,7 @@
             SELECT * 
             FROM  notification 
             WHERE notification_user =$sessionUser and notification_title LIKE '%$q%'
-            ORDER BY notification_time Asc
+            ORDER BY notification_time DESC
           ");
 
           while($notification = $notification_query->fetch()){
@@ -40,7 +40,7 @@
             SELECT * 
             FROM  notification 
             WHERE notification_user =$sessionUser
-            ORDER BY notification_time Asc
+            ORDER BY notification_time DESC
           ");
 
           while($notification = $notification_query->fetch()){
