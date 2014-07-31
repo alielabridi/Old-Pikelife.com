@@ -109,6 +109,25 @@ if ( isset( $session ) ) {
   else {
     header('Location: include/Facebook_SignUp.html');
   }
+}
+  // see if we have a session
+if( isset( $_SESSION["usr_id"] ) ) {
+
+
+  $db = new mysqli($hostname_mysqli,$username_mysqli,$password_mysqli,$database_mysqli);
+  if($db->connect_error)
+  {
+    die("Connect error ({$db->connect_errno}) {$db->connect_error}");
+  }
+  $id = mysqli_escape_string($db,$_SESSION["usr_id"]);
+  $result = $db->query("SELECT * FROM `userapps` WHERE `Facebook_ID` = $id;");
+
+  /*Check whether the user is already registered in the database with that ID*/
+  if($result->num_rows>0)
+    { 
+    // if user recognized set a session
+    header("location: events.php");
+    }
 
 
   
@@ -251,9 +270,34 @@ img{
 	</div>
 	<div class="face_book">
       <h3>Start Now</h3>
-    <form action="demo_form.asp">
-        <input class = "textfield_css" type="text" name="FirstName" placeholder="Email" required><br><br>
-        <input class = "textfield_css" type="password" name="LastName" placeholder="Password" required><br><br>
+    <form action="index.php" method="post">
+    <?php
+    /*Authentification form*/
+    if(isset($_POST["pass"]) AND isset($_POST["email"]) ){
+      $pass = $_POST["pass"];
+      $email = $_POST["email"];
+      $db = new mysqli($hostname_mysqli,$username_mysqli,$password_mysqli,$database_mysqli);
+      if($db->connect_error){
+        die("Connect error ({$db->connect_errno}) {$db->connect_error}");
+      }
+      $email = $db->real_escape_string($email);
+      $pass = $db->real_escape_string(md5($pass));
+      $sql = "SELECT * FROM `userapps` WHERE `usr_email` = '$email' AND `password` = '$pass';";
+      $result = $db->query($sql);
+      if($result->num_rows==1){
+        $row = $result->fetch_assoc();
+        $_SESSION["usr_id"] = $row["Facebook_ID"];
+      }
+      else 
+        echo $error_message = "You entered an incorrect identification";
+
+
+
+    }
+    ?>
+      
+        <input class = "textfield_css" type="text" name="email" placeholder="Email" required><br><br>
+        <input class = "textfield_css" type="password" name="pass" placeholder="Password" required><br><br>
         <input class="btn btn-default" type="submit" value="login">
     </form>
 	      <p><a class="btn-auth btn-facebook large" href="<?= $helper->getLoginUrl($params) ?>">Sign in with <b>Facebook</b></a></p>
