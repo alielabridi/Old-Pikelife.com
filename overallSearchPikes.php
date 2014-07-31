@@ -381,6 +381,11 @@
                         <td colspan="3"><a href="/add.php">Add a Pike ?</a></td>
                         <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
                     </tr>
+                    <tr>
+                        <td colspan="2" id="monthPrev"><a href="#"></a></td>
+                        <td colspan="3" id="monthPrev"><a href="/logout.php">logout</a></td>
+                        <td colspan="2" id="monthNext"><a href="#"></a></td>   
+                    </tr>
                     </tfoot>
                 <div class="clear"></div>
 

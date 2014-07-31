@@ -4,10 +4,10 @@
 
     //get the q parameter from URL
     $q=$_GET["q"];
-
+    
     require_once('connect.php');
-
-
+    $q =  mysql_real_escape_string($q);
+    
     //lookup all links from the xml file if length of q>0
     if (strlen($q)>0) {
         $query = $connect->query("SELECT COUNT(interest_name) AS num_interest FROM interests WHERE interest_name = '$q'");

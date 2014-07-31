@@ -437,6 +437,11 @@
                         <td colspan="3"><a href="/add.php">Add a Pike ?</a></td>
                         <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
                     </tr>
+                    <tr>
+                        <td colspan="2" id="monthPrev"><a href="#"></a></td>
+                        <td colspan="3" id="monthPrev"><a href="/logout.php">logout</a></td>
+                        <td colspan="2" id="monthNext"><a href="#"></a></td>   
+                    </tr>
                     </tfoot>
                 <div class="clear"></div>
 
@@ -621,8 +626,17 @@
                      });            
             }
 
-            function sendChat(element) {
-                if(window.event.keyCode == 13){
+            function sendChat(element, e) {
+
+                var characterCode
+                if(e && e.which){ // NN4 specific code
+                    e = e
+                    characterCode = e.which
+                }
+                else {
+                    e = event
+                    characterCode = e.keyCode // IE specific code
+                }if (characterCode == 13){
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp=new XMLHttpRequest();
@@ -700,7 +714,7 @@
 
                     <div id='chatBoxForm'>
                         <a class='button red full' onclick='returnContact()'>Return to contacts</a>
-                        <textarea placeholder='send your message here' onkeydown='sendChat(this)'></textarea>
+                        <textarea placeholder='write something and click enter' onkeyup='sendChat(this, event)'></textarea>
                     </div>
 
                     <ul class="ul_scrolling" id="contactSearch">
@@ -773,7 +787,7 @@
             <?php 
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_notif from notification where notification_status = 'new'
+                    SELECT count(*) as new_notif from notification where notification_status = 'new' and notification_user = $sessionUser
                 ");
             ?>
 
@@ -812,18 +826,39 @@
                             while($notification = $notification_query->fetch()){
                                 if($notification['notification_status'] == "new"){ ?>
                                     <li style="background-color:rgb(255, 226, 226)">
-                                        <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
-                                        <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
-                                    </a>
-                                    <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
-                                    </a> 
+                                        
+                                        <?php if($notification['notification_type'] == "Event"){ ?>
+                                            <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                            <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                            </a>
+                                            <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                            </a> 
+                                        <?php }else{ ?>
+                                            <a href="/notificationUpdate.php?user_id=<?php echo $notification['sender_id'] ?>" class="small_thumb">
+                                            <img src="/include/Profil_pictures/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                            </a>
+                                            <a href="/notificationUpdate.php?user_id=<?php echo $notification['sender_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                            </a> 
+                                        <?php } ?>
                                 <?php }else{ ?>
                                     <li>
-                                        <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
-                                        <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
-                                    </a>
-                                    <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
-                                    </a> 
+                                        
+                                        
+                                        <?php if($notification['notification_type'] == "Event"){ ?>
+                                                <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                                <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                                </a>
+                                                <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                                </a>
+                                        <?php }else{ ?>
+                                                <a href="/userProfile.php?user_id=<?php echo $notification['sender_id'] ?>" class="small_thumb">
+                                                <img src="/include/Profil_pictures/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                                </a>
+                                                <a href="/userProfile.php?user_id=<?php echo $notification['sender_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                                </a>
+                                        <?php } ?>
+
+                                     
                                 <?php } ?>
                                     
                                     </li>
@@ -904,8 +939,16 @@
                 });
             }
 
-            function addInterest(element) {
-                if(window.event.keyCode == 13){
+            function addInterest(element, e) {
+               var characterCode
+                if(e && e.which){ // NN4 specific code
+                    e = e
+                    characterCode = e.which
+                }
+                else {
+                    e = event
+                    characterCode = e.keyCode // IE specific code
+                }if (characterCode == 13){
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp=new XMLHttpRequest();
@@ -969,7 +1012,7 @@
                     </ul>
                     
                     <div id='interestsForm'>
-                        <textarea placeholder='enter your interest' onkeyup='addInterest(this)'></textarea>
+                        <textarea placeholder='enter your interest' onkeyup='addInterest(this, event)'></textarea>
                     </div>
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>

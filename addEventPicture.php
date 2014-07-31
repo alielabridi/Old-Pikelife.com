@@ -46,6 +46,24 @@
                 $query = $connect->query("
                     INSERT INTO picture(event_id, pic_link, usr_upload) VALUES ($event_id, '$picture_name', $sessionUser)
                 ");
+
+                $joinevent_query = $connect->query("
+                    SELECT usr_id FROM joinevents where event_id = $event_id and usr_id != $sessionUser
+                ");
+
+                $event_query = $connect->query("
+                 SELECT event_name, event_pic FROM events where event_id = $event_id 
+                ");
+
+                $event = $event_query->fetch();
+
+                while($joinevent = $joinevent_query->fetch()){
+                    $query = $connect->query("
+                        INSERT INTO notification
+                            (notification_title, notification_user, notification_image, event_id, notification_type) 
+                        VALUES ('a new picture added to this Pike " . $event["event_name"] ."', " . $joinevent["usr_id"] . ", '$event_id.jpg', $event_id, 'Event')
+                    ");            
+                }
             }
 
         

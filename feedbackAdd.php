@@ -8,7 +8,8 @@
     //get the q parameter from URL
     $q=$_GET["q"];
     $event_id=$_GET["event_id"];
-
+    
+    $q =  mysql_real_escape_string($q);
     require_once('connect.php');
 
 
@@ -19,6 +20,7 @@
               INSERT INTO feedback (feedback_event_id, feedback_user_id, feedback_message) 
               VALUES ($event_id, $sessionUser, '$q')
       		  ");
+
             $feedbacks_query = $connect->query("
             SELECT * 
             FROM feedback
@@ -26,6 +28,30 @@
             where feedback_event_id = $event_id
             ORDER BY feedback_time DESC
           ");
+
+            $joinevent_query = $connect->query("
+              SELECT usr_id FROM joinevents where event_id = $event_id and usr_id != $sessionUser
+            ");
+
+            $user_add = $connect->query("
+              SELECT usr_lname, usr_fname FROM userapps where Facebook_ID != $sessionUser
+            ");
+
+            $event_query = $connect->query("
+             SELECT event_name, event_pic FROM events where event_id = $event_id 
+            ");
+
+            $event = $event_query->fetch();
+
+            $UserAdd = $user_add->fetch();
+
+            while($joinevent = $joinevent_query->fetch()){
+              $query = $connect->query("
+                INSERT INTO notification
+                  (notification_title, notification_user, notification_image, event_id, notification_type) 
+                VALUES ('" . $UserAdd["usr_lname"] . " " . $UserAdd["usr_fname"] . " said something in the Pike " . $event["event_name"] ."', " . $joinevent["usr_id"] . ", '$event_id.jpg', $event_id, 'Event')
+            ");            
+        }
           
           $hint="";
           

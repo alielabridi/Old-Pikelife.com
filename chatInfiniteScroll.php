@@ -6,25 +6,30 @@
 	require_once("connect.php");
 	$chat_load = htmlentities(strip_tags($_POST['chat_load'])) * 10;
 	$userSender = htmlentities(strip_tags($_POST['userSender']));
-  $notification_query = $connect->query("
+    
+    $notification_query = $connect->query("
         SELECT COUNT(*) notif_num 
         FROM chat
-                JOIN userapps U1 ON U1.Facebook_ID = chat.chat_user_receiver
-                JOIN userapps U2 ON U2.Facebook_ID = chat.chat_user_sender
-                WHERE chat_user_sender =$sessionUser
-                AND chat_user_receiver =$userSender
-                UNION 
-                SELECT * 
-                FROM chat
-                JOIN userapps U3 ON U3.Facebook_ID = chat.chat_user_receiver
-                JOIN userapps U4 ON U4.Facebook_ID = chat.chat_user_sender
-                WHERE chat_user_sender =$userSender
-                AND chat_user_receiver =$sessionUser
+        JOIN userapps U1 ON U1.Facebook_ID = chat.chat_user_receiver
+        JOIN userapps U2 ON U2.Facebook_ID = chat.chat_user_sender
+        WHERE chat_user_sender =$sessionUser AND chat_user_receiver =$userSender
+        
+        UNION 
+        
+        SELECT COUNT(*) notif_num 
+        FROM chat
+        JOIN userapps U3 ON U3.Facebook_ID = chat.chat_user_receiver
+        JOIN userapps U4 ON U4.Facebook_ID = chat.chat_user_sender
+        WHERE chat_user_sender =$userSender AND chat_user_receiver =$sessionUser
     ");
 
-    $notification = $notification_query->fetch();
+    $chat_number = 0;
 
-    if($chat_load <= $notification["notif_num"]){
+    while ($notification = $notification_query->fetch()) {
+        $chat_number += $notification["notif_num"];
+    }
+
+    if($chat_load <= $chat_number){
       $contact_query = $connect->query("
                 SELECT * 
                 FROM chat

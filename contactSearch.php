@@ -6,7 +6,7 @@
 
     //get the q parameter from URL
     $q=$_GET["q"];
-
+    $q =  mysql_real_escape_string($q);
     require_once('connect.php');
 
     //lookup all links from the xml file if length of q>0

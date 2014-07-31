@@ -520,8 +520,16 @@
 
 <script type="text/javascript">
 
-            function addFeedback(element, event_id) {
-                if(window.event.keyCode == 13){
+            function addFeedback(element, event_id, e) {
+                var characterCode
+                if(e && e.which){ // NN4 specific code
+                    e = e
+                    characterCode = e.which
+                }
+                else {
+                    e = event
+                    characterCode = e.keyCode // IE specific code
+                }if (characterCode == 13){
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp=new XMLHttpRequest();
@@ -575,7 +583,7 @@
     <?php if($piked){ ?>
         <div style="text-align: center">
             <form>
-                <textarea type="text" placeholder="say what you think ;)" style="width:756px; height:131px" onkeydown="addFeedback(this, <?php echo $event_id ?>)"></textarea><br>
+                <textarea type="text" placeholder="say what you think ;)" style="width:756px; height:131px" onkeydown="addFeedback(this, <?php echo $event_id ?>, event)"></textarea><br>
             </form>
         </div> 
     <?php } ?>
@@ -740,6 +748,11 @@
                         <td colspan="3"><a href="/add.php">Add a Pike ?</a></td>
                         <td colspan="2" id="monthNext"><a href="#">&raquo;</a></td>
                     </tr>
+                    <tr>
+                        <td colspan="2" id="monthPrev"><a href="#"></a></td>
+                        <td colspan="3" id="monthPrev"><a href="/logout.php">logout</a></td>
+                        <td colspan="2" id="monthNext"><a href="#"></a></td>   
+                    </tr>
                     </tfoot>
                 <div class="clear"></div>
 
@@ -793,77 +806,76 @@
             ");
             
             if($follow = $participated_query->fetch()){
-                if($follow["participanted"] > 0){?>
+                if($follow["participanted"] > 0 || $sessionUser == $event["usr_create"]){?>
                     <script type="text/javascript">
             
-            function showinvitations(str, event_id) {
-              
-              if (window.XMLHttpRequest) {
-                     // code for IE7+, Firefox, Chrome, Opera, Safari
-                    xmlhttp=new XMLHttpRequest();
-              } else {  // code for IE6, IE5
-                     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-              }
-              
-              xmlhttp.onreadystatechange=function() {
-                    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-                      document.getElementById("invitationSearch").innerHTML=xmlhttp.responseText;
+                    function showinvitations(str, event_id) {
+                      
+                      if (window.XMLHttpRequest) {
+                             // code for IE7+, Firefox, Chrome, Opera, Safari
+                            xmlhttp=new XMLHttpRequest();
+                      } else {  // code for IE6, IE5
+                             xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                      }
+                      
+                      xmlhttp.onreadystatechange=function() {
+                            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                              document.getElementById("invitationSearch").innerHTML=xmlhttp.responseText;
+                            }
+                      }
+                      
+                      xmlhttp.open("GET","invitationSearch.php?q="+str+"&event_id="+event_id,true);
+                      xmlhttp.send();
                     }
-              }
-              
-              xmlhttp.open("GET","invitationSearch.php?q="+str+"&event_id="+event_id,true);
-              xmlhttp.send();
-            }
 
-        </script>
+                </script>
 
-        <script type="text/javascript">
-            $(document).ready(function(){
+                <script type="text/javascript">
+                    $(document).ready(function(){
 
-                var contact_load = 0;
-                var event_id = "<?php echo $event_id; ?>"
+                        var contact_load = 0;
+                        var event_id = "<?php echo $event_id; ?>"
 
-                $('#invitationSearch').bind('scroll', function(){
-                   if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
-                        contact_load++;
-                        $.post("invitationInfiniteScroll.php",{contact_load:contact_load, event_id:event_id},function(data){
-                            $('#invitationSearch').append(data);
+                        $('#invitationSearch').bind('scroll', function(){
+                           if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+                                contact_load++;
+                                $.post("invitationInfiniteScroll.php",{contact_load:contact_load, event_id:event_id},function(data){
+                                    $('#invitationSearch').append(data);
+                                });
+                           }
                         });
-                   }
-                });
-            });
+                    });
 
-        </script>
+                </script>
 
-        <div class="widget widget_invitations white_box"><h3 class="widget_title">Send Invitations</h3>
-            <form>
-                <input type="text" placeholder="click here to start searching in your contacts" onkeyup="showinvitations(this.value, <?php echo $event_id; ?>)">
-            </form> 
-                    <ul class="ul_scrolling" id="invitationSearch">
-                        <?php      
-                            require_once('connect.php');
+                <div class="widget widget_invitations white_box"><h3 class="widget_title">Send Invitations</h3>
+                    <form>
+                        <input type="text" placeholder="click here to start searching in your contacts" onkeyup="showinvitations(this.value, <?php echo $event_id; ?>)">
+                    </form> 
+                            <ul class="ul_scrolling" id="invitationSearch">
+                                <?php      
+                                    require_once('connect.php');
 
-                            $invitations_query = $connect->query("
-                                SELECT * 
-                                FROM  friends 
-                                JOIN userapps U ON U.Facebook_ID = friends.user_other
-                                WHERE user_me = $sessionUser AND friend_request = 'Friends' and friends.user_other NOT IN (SELECT notification_user from notification where event_id = $event_id)
-                                and friends.user_other NOT IN (SELECT joinevents.usr_id from joinevents where event_id = $event_id)
-                                LIMIT 0, 5
-                            ");
+                                    $invitations_query = $connect->query("
+                                        SELECT * 
+                                        FROM  friends 
+                                        JOIN userapps U ON U.Facebook_ID = friends.user_other
+                                        WHERE user_me = $sessionUser AND friend_request = 'Friends' and friends.user_other NOT IN (SELECT notification_user from notification where event_id = $event_id)
+                                        and friends.user_other NOT IN (SELECT joinevents.usr_id from joinevents where event_id = $event_id)
+                                        LIMIT 0, 5
+                                    ");
 
-                            while($invitation = $invitations_query->fetch()){
-                        ?>
-                            <li ><img alt='' src='/include/Profil_pictures/<?php echo $invitation["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
-                                <p><cite><?php echo $invitation["usr_lname"] . ' ' . $invitation["usr_fname"] ?></cite><br><a href="/pike_invitation.php?event_id=<?php echo $event_id ?>&amp;user_invited=<?php echo $invitation["Facebook_ID"]; ?>" style="width:55%;margin-top:10px;text-align:center;" class="button blue small">Invite</a><div class='clear'><br></li>
-                         <?php } ?>
+                                    while($invitation = $invitations_query->fetch()){
+                                ?>
+                                    <li ><img alt='' src='/include/Profil_pictures/<?php echo $invitation["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' />
+                                        <p><cite><?php echo $invitation["usr_lname"] . ' ' . $invitation["usr_fname"] ?></cite><br><a href="/pike_invitation.php?event_id=<?php echo $event_id ?>&amp;user_invited=<?php echo $invitation["Facebook_ID"]; ?>" style="width:55%;margin-top:10px;text-align:center;" class="button blue small">Invite</a><div class='clear'><br></li>
+                                 <?php } ?>
 
-                    </ul>
-        </div> 
-                                                                            <?php }
-                                                                        }
-
-                                                                    ?> 
+                            </ul>
+                </div> 
+        <?php }
+            }
+        ?> 
 
         <script type="text/javascript">
         jQuery(document).ready(function($){ 
@@ -1003,8 +1015,16 @@
                      });            
             }
 
-            function sendChat(element) {
-                if(window.event.keyCode == 13){
+            function sendChat(element, e) {
+                var characterCode
+                if(e && e.which){ // NN4 specific code
+                    e = e
+                    characterCode = e.which
+                }
+                else {
+                    e = event
+                    characterCode = e.keyCode // IE specific code
+                }if (characterCode == 13){
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp=new XMLHttpRequest();
@@ -1082,7 +1102,7 @@
 
                     <div id='chatBoxForm'>
                         <a class='button red full' onclick='returnContact()'>Return to contacts</a>
-                        <textarea placeholder='send your message here' onkeydown='sendChat(this)'></textarea>
+                        <textarea placeholder='send your message here' onkeydown='sendChat(this, event)'></textarea>
                     </div>
 
                     <ul class="ul_scrolling" id="contactSearch">
@@ -1192,14 +1212,41 @@
                             while($notification = $notification_query->fetch()){
                                 if($notification['notification_status'] == "new"){ ?>
                                     <li style="background-color:rgb(255, 226, 226)">
+                                        
+                                        <?php if($notification['notification_type'] == "Event"){ ?>
+                                            <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                            <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                            </a>
+                                            <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                            </a> 
+                                        <?php }else{ ?>
+                                            <a href="/notificationUpdate.php?user_id=<?php echo $notification['sender_id'] ?>" class="small_thumb">
+                                            <img src="/include/Profil_pictures/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                            </a>
+                                            <a href="/notificationUpdate.php?user_id=<?php echo $notification['sender_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                            </a> 
+                                        <?php } ?>
                                 <?php }else{ ?>
                                     <li>
+                                        
+                                        
+                                        <?php if($notification['notification_type'] == "Event"){ ?>
+                                                <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                                <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                                </a>
+                                                <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                                </a>
+                                        <?php }else{ ?>
+                                                <a href="/userProfile.php?user_id=<?php echo $notification['sender_id'] ?>" class="small_thumb">
+                                                <img src="/include/Profil_pictures/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                                </a>
+                                                <a href="/userProfile.php?user_id=<?php echo $notification['sender_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                                </a>
+                                        <?php } ?>
+
+                                     
                                 <?php } ?>
-                                    <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
-                                        <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
-                                    </a>
-                                    <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
-                                    </a> 
+                                    
                                     </li>
                             <?php } ?>
                         
@@ -1226,7 +1273,6 @@
 
                                 SELECT event_id,event_pic,event_name,event_date, event_time FROM  events
                                     WHERE usr_create =$sessionUser
-                                
                                 ORDER BY event_date, event_time DESC
                                 LIMIT 0, 10
                             ");
@@ -1279,8 +1325,16 @@
                 });
             }
 
-            function addInterest(element) {
-                if(window.event.keyCode == 13){
+            function addInterest(element, e) {
+                var characterCode
+                if(e && e.which){ // NN4 specific code
+                    e = e
+                    characterCode = e.which
+                }
+                else {
+                    e = event
+                    characterCode = e.keyCode // IE specific code
+                }if (characterCode == 13){
                     if (window.XMLHttpRequest) {
                         // code for IE7+, Firefox, Chrome, Opera, Safari
                         xmlhttp=new XMLHttpRequest();
@@ -1344,7 +1398,7 @@
                     </ul>
                     
                     <div id='interestsForm'>
-                        <textarea placeholder='enter your interest' onkeyup='addInterest(this)'></textarea>
+                        <textarea placeholder='enter your interest' onkeyup='addInterest(this, event)'></textarea>
                     </div>
                     <a id="createButton" class="button red full" onclick='showTextBox()'>New Interest</a>
         </div>
