@@ -140,9 +140,9 @@
 
                     <div class="pikeInfo">
                         <h1>Welcome to Pikelife</h1>
-                        A Pike is the experience that you want and aim gathering your friends for<br>
-                        start the experience by clicking on 'add a pike ?' in the Calendar<br>
-                        Hope you enjoy the journey :)
+                        A Pike is the experience that you want and you aim gathering your friends for.<br>
+                        start the experience by clicking on 'add a pike ?' in the Calendar.<br>
+                        wish you an enjoyable journey :)
                     </div>
 
                     <div id="post_grids" class="post_content clearfix">

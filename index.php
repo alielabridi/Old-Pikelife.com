@@ -244,7 +244,7 @@ img{
 	<div class='top_banner'><a href="/"><img src="images/logo_home.png"></a></div>
 	<div class="text_adver">
 	      <h3>The best experiences of life, only happen, once with friends.</h3>
-	      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PikeLife gives you the power to gather and do things with your friends, while keeping those experiences warm and memorable.<br><br>
+	      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PikeLife makes it easy to gather and do things with your friends, while keeping those experiences unforgettable.<br><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sign up and find out what your friends are doing<br><br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Sign in with facebook" will get you in touch with your friends that are using our application in an instant
         <br><br> this application is free and forever
