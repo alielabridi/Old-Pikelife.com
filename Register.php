@@ -151,7 +151,7 @@ else {
 
       $first_name = mysqli_escape_string($db,$_POST["first_name"]);
       $last_name = mysqli_escape_string($db,$_POST["last_name"]);
-      $password = mysqli_escape_string($db,$_POST["password"]);
+      $password = mysqli_escape_string($db,md5($_POST["password"]));
 
       /*Generate a random ID that does not exist in the database*/
       $result_fetch_id=0;
@@ -165,14 +165,15 @@ else {
 
       $random_number = mt_rand();
       /*Fill the database with the basic information*/
-      $sql = "INSERT INTO userapps (`usr_email`,`usr_lname`,`usr_fname`,`Facebook_ID`,`confirm_code`,confirmed)
+      $sql = "INSERT INTO userapps (`usr_email`,`usr_lname`,`usr_fname`,`Facebook_ID`,`confirm_code`,confirmed,password)
           VALUES(
             '$email',
             '$last_name',
             '$first_name',
             '$Facebook_ID',
             '$random_number',
-            '0'
+            '0',
+            '$password'
             );";
 
       $db->query($sql);
