@@ -1,15 +1,21 @@
 <?php
 	session_start();
-    $sessionUser = $_SESSION['usr_id'];
+    if(isset($_SESSION['usr_id'])){
+        $sessionUser = $_SESSION['usr_id'];
+    }else{
+        header( "Location: /") ;  
+    }
 
 	require_once("connect.php");
 	$participants_load = htmlentities(strip_tags($_POST['participants_load'])) * 20;
     $search_query = htmlentities(strip_tags($_POST['search_query']));
 
+    $search_query =  mysql_real_escape_string($search_query);
+    
     $pikes_query = $connect->query("
                 SELECT * 
                 FROM  events 
-                WHERE event_name LIKE '%$search_query%'
+                WHERE event_name LIKE '%$search_query%' and event_type != 'Secret'
                 ORDER BY event_name DESC
                 LIMIT 0, 100
             ");

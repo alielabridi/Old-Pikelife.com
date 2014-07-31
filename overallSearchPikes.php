@@ -1,10 +1,15 @@
-<?php   session_start(); 
+<?php  
 
         $search_query = $_GET['search_query'];
 
         require_once('connect.php');
 
-        $sessionUser = $_SESSION['usr_id'];
+        session_start();
+        if(isset($_SESSION['usr_id'])){
+            $sessionUser = $_SESSION['usr_id'];
+        }else{
+            header( "Location: /") ;  
+        }
 ?>
 
 <!DOCTYPE html>
@@ -279,11 +284,11 @@
     <div class="rp_col_wrapper clearfix" id="participants_view">
         
         <?php 
-
+            $search_query =  mysql_real_escape_string($search_query);
             $pikes_query = $connect->query("
                 SELECT * 
                 FROM  events 
-                WHERE event_name LIKE '%$search_query%'
+                WHERE event_name LIKE '%$search_query%' and event_type != 'Secret'
                 ORDER BY event_name DESC
                 LIMIT 0, 100
             ");
@@ -722,7 +727,7 @@
             <?php 
                 require_once('connect.php');
                 $newUpdate_query = $connect->query("
-                    SELECT count(*) as new_notif from notification where notification_status = 'new'
+                    SELECT count(*) as new_notif from notification where notification_status = 'new' and notification_user = $sessionUser
                 ");
             ?>
 
@@ -731,11 +736,11 @@
                         if($newUpdate["new_notif"] > 0){
                     ?>
                         <li class="tab_post" >
-                            <a href="#post_tab" id="notif_tab">Notifications<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
+                            <a href="#post_tab" id="notif_tab">News<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
                         </li>
                     <?php }else{ ?>
                         <li class="tab_post">
-                            <a href="#post_tab" id="notif_tab">Notifications</a>
+                            <a href="#post_tab" id="notif_tab">News</a>
                         </li>
                 <?php }} ?>
                 
@@ -761,14 +766,41 @@
                             while($notification = $notification_query->fetch()){
                                 if($notification['notification_status'] == "new"){ ?>
                                     <li style="background-color:rgb(255, 226, 226)">
+                                        
+                                        <?php if($notification['notification_type'] == "Event"){ ?>
+                                            <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                            <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                            </a>
+                                            <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                            </a> 
+                                        <?php }else{ ?>
+                                            <a href="/notificationUpdate.php?user_id=<?php echo $notification['sender_id'] ?>" class="small_thumb">
+                                            <img src="/include/Profil_pictures/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                            </a>
+                                            <a href="/notificationUpdate.php?user_id=<?php echo $notification['sender_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                            </a> 
+                                        <?php } ?>
                                 <?php }else{ ?>
                                     <li>
+                                        
+                                        
+                                        <?php if($notification['notification_type'] == "Event"){ ?>
+                                                <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
+                                                <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                                </a>
+                                                <a href="/view.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                                </a>
+                                        <?php }else{ ?>
+                                                <a href="/userProfile.php?user_id=<?php echo $notification['sender_id'] ?>" class="small_thumb">
+                                                <img src="/include/Profil_pictures/<?php echo $notification['notification_image'] ?>" width="50" height="50">
+                                                </a>
+                                                <a href="/userProfile.php?user_id=<?php echo $notification['sender_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
+                                                </a>
+                                        <?php } ?>
+
+                                     
                                 <?php } ?>
-                                    <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="small_thumb">
-                                        <img src="img/upload/events/<?php echo $notification['notification_image'] ?>" width="50" height="50">
-                                    </a>
-                                    <a href="/notificationUpdate.php?event_id=<?php echo $notification['event_id'] ?>" class="title"><?php echo $notification['notification_title'] ?></a><em><?php echo $notification['notification_time'] ?></em><div class="clear"></div>   
-                                    </a> 
+                                    
                                     </li>
                             <?php } ?>
                         

@@ -1,4 +1,10 @@
 <?php
+    session_start();
+    if(isset($_SESSION['usr_id'])){
+        $sessionUser = $_SESSION['usr_id'];
+    }else{
+        header( "Location: /") ;  
+    }
     
     $event_id=$_GET["event_id"];
     $feedback_id=$_GET["feedback_id"];

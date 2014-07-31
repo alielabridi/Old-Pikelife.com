@@ -1,12 +1,12 @@
 <?php
         
     session_start();
-    $sessionUser = $_SESSION['usr_id'];
+    
 
-    if(isset($_GET['interest'])){
-        $interest = $_GET['interest'];
+    if(isset($_SESSION['usr_id'])){
+        $sessionUser = $_SESSION['usr_id'];
     }else{
-        $interest = -1;
+        header( "Location: /") ;
     }
 
 /**
@@ -201,7 +201,6 @@
 
                                 var nbr = "<?php echo $event_num; ?>";
                                 var load = 0;
-                                var interest = "<?php echo $interest; ?>";
                                 var year = "<?php echo $qyear; ?>";
                                 var month = "<?php echo $qmonth; ?>";
                                 var day = "<?php echo $qday; ?>";
@@ -796,11 +795,11 @@
                         if($newUpdate["new_notif"] > 0){
                     ?>
                         <li class="tab_post" >
-                            <a href="#post_tab" id="notif_tab">Notifications<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
+                            <a href="#post_tab" id="notif_tab">News<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
                         </li>
                     <?php }else{ ?>
                         <li class="tab_post">
-                            <a href="#post_tab" id="notif_tab">Notifications</a>
+                            <a href="#post_tab" id="notif_tab">News</a>
                         </li>
                 <?php }} ?>
                 

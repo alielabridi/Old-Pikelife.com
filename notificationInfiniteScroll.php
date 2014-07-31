@@ -1,7 +1,11 @@
 <?php
 
 	session_start();
-    $sessionUser = $_SESSION['usr_id'];
+    if(isset($_SESSION['usr_id'])){
+        $sessionUser = $_SESSION['usr_id'];
+    }else{
+        header( "Location: /") ;  
+    }
 
 	require_once("connect.php");
 	$notifications_load = htmlentities(strip_tags($_POST['notifications_load'])) * 10;

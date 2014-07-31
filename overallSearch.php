@@ -1,15 +1,20 @@
 <?php
-
+  
     $xmlDoc=new DOMDocument();
 
     //get the q parameter from URL
     $q=$_GET["q"];
-
+    $q =  mysql_real_escape_string($q);
+    
     //lookup all links from the xml file if length of q>0
     if (strlen($q)>0) {
           $hint="";
           session_start();
-          $sessionUser = $_SESSION['usr_id'];
+          if(isset($_SESSION['usr_id'])){
+              $sessionUser = $_SESSION['usr_id'];
+          }else{
+              header( "Location: /") ;  
+          }
 
           require_once('connect.php');
 
@@ -39,7 +44,7 @@
           $pikes_query = $connect->query("
               SELECT *
               FROM events
-              WHERE event_name LIKE '%$q%'
+              WHERE event_name LIKE '%$q%' and event_type != 'Secret'
               ORDER BY event_name Asc
               LIMIT 0,3
           ");

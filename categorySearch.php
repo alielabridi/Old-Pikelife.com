@@ -1,4 +1,10 @@
 <?php
+    session_start();
+    if(isset($_SESSION['usr_id'])){
+        $sessionUser = $_SESSION['usr_id'];
+    }else{
+        header( "Location: /") ;  
+    }
     $xmlDoc=new DOMDocument();
 
     //get the q parameter from URL

@@ -1,7 +1,11 @@
 <?php
 
-session_start();
-$sessionUser = $_SESSION['usr_id'];
+    session_start();
+    if(isset($_SESSION['usr_id'])){
+        $sessionUser = $_SESSION['usr_id'];
+    }else{
+        header( "Location: /") ;  
+    }
 
 /**
  *
@@ -249,9 +253,7 @@ $sessionUser = $_SESSION['usr_id'];
                             || ($_FILES["file"]["type"] == "image/jpg")
                             || ($_FILES["file"]["type"] == "image/pjpeg")
                             || ($_FILES["file"]["type"] == "image/x-png")
-                            || ($_FILES["file"]["type"] == "image/png"))
-                            && ($_FILES["file"]["size"] < 20000)
-                            && in_array($extension, $allowedExts)) 
+                            || ($_FILES["file"]["type"] == "image/png"))) 
                             {
                                     $query = $connect->query("SELECT MAX(event_id) AS Last_id FROM events;");
                                     $event_id = $query->fetch();
@@ -269,7 +271,7 @@ $sessionUser = $_SESSION['usr_id'];
                                         }
                                     }
 
-                                function test_input($data) {
+                            function test_input($data) {
                                $data = trim($data);
                                $data = stripslashes($data);
                                $data = htmlspecialchars($data);
@@ -372,8 +374,8 @@ $sessionUser = $_SESSION['usr_id'];
                         <p><span style="color:#C53434;"><?php echo $Error;?><span></span><br><form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post"
                             enctype="multipart/form-data">
                                 <input type="text" name="event_name" placeholder="your activity name" value="<?php echo $event_name;?>"><br><br>
-                                <label>Date : <input type="date" name="event_date" value="<?php echo $event_date; ?>"></label><br>
-                                <label>Time : <input type="time" name="event_time" value="<?php echo $event_time ?>"></label><br>
+                                <label>Date : <input type="date" name="event_date" value="<?php echo $event_date; ?>" placeholder="YYYY-MM-DD"></label><br>
+                                <label>Time : <input type="time" name="event_time" value="<?php echo $event_time ?>" placeholder="hh:mm"></label><br>
                                 <input type="text" name="event_place" placeholder="where would it be" value="<?php echo $event_place ?>"><br><br>
                                 <select name="event_cat">
                                 <?php
@@ -840,11 +842,11 @@ $sessionUser = $_SESSION['usr_id'];
                         if($newUpdate["new_notif"] > 0){
                     ?>
                         <li class="tab_post" >
-                            <a href="#post_tab" id="notif_tab">Notifications<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
+                            <a href="#post_tab" id="notif_tab">News<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
                         </li>
                     <?php }else{ ?>
                         <li class="tab_post">
-                            <a href="#post_tab" id="notif_tab">Notifications</a>
+                            <a href="#post_tab" id="notif_tab">News</a>
                         </li>
                 <?php }} ?>
                 

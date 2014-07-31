@@ -1,20 +1,7 @@
-<?php   session_start(); 
+<?php  
 
         $event_id = $_GET['event_id'];
         require_once('connect.php');
-
-        $sessionUser = $_SESSION['usr_id'];
-
-        $piked = false;
-        $invited = 0;
-
-        $creator_query = $connect->query("
-
-            SELECT count(*) AS creator_exist
-            FROM events
-            WHERE event_id = ". $event_id ." and usr_create = $sessionUser
-
-        ");
 
         $type_query = $connect->query("
 
@@ -26,32 +13,54 @@
 
         $type = $type_query->fetch();
 
-        $invited_query = $connect->query("
-
-            SELECT count(*) AS invited
-            FROM notification
-            WHERE event_id = ". $event_id ." and notification_user = $sessionUser
-
-        ");
-
-
-        if($invite = $invited_query->fetch()){
-            if($invite["invited"] > 0){
-                $invited = 1;
+        session_start();
+        if(isset($_SESSION['usr_id'])){
+            $sessionUser = $_SESSION['usr_id'];
+        }else{
+            if ($type["event_type"] != "Public") {
+                header( "Location: /") ;
             }
-        }
-                                    
-        if($creator = $creator_query->fetch()){
-
-            if($creator["creator_exist"] > 0){
-                $piked = true;
-            }
-
-            if($type["event_type"] == "Secret" && $invited == 0){
-                header( "Location: /events.php") ;
-            }
+            
         }
 
+        $piked = false;
+        $invited = 0;
+
+        if(isset($_SESSION['usr_id'])){
+            $creator_query = $connect->query("
+
+                SELECT count(*) AS creator_exist
+                FROM events
+                WHERE event_id = ". $event_id ." and usr_create = $sessionUser
+
+            ");
+
+            $invited_query = $connect->query("
+
+                SELECT count(*) AS invited
+                FROM notification
+                WHERE event_id = ". $event_id ." and notification_user = $sessionUser
+
+            ");
+
+
+            if($invite = $invited_query->fetch()){
+                if($invite["invited"] > 0){
+                    $invited = 1;
+                }
+            }
+                                        
+            if($creator = $creator_query->fetch()){
+
+                if($creator["creator_exist"] > 0){
+                    $piked = true;
+                }
+
+                if($type["event_type"] == "Secret" && $invited == 0){
+                    header( "Location: /events.php") ;
+                }
+            }
+        }
 
 ?>
 
@@ -206,16 +215,22 @@
 <div id="header">
         <div class="container clearfix">
             <h1 id="logo"><a href="/events.php"><img src="/images/logo.png" alt="Place" /></a></h1>
-            <div class="header_search">
             
-                <div class="search_zoom search_btn" onclick="overallSearchResult('')"></div> 
-                <input type="text" placeholder="Type &amp; Search for Pikes and Friends" class="search_box" onkeyup="overallSearchResult(this.value)">
-                <div style="position:inherit; ; left:0px; top:36px; width:63%; border-color: rgb(10, 10, 10);box-shadow: 4px 4px 4px #888888;" class="tab_content search_results">
-                    <ul id="overallSearchInput" style="background-color:white">
-                        
-                    </ul>
+            <?php 
+
+                if(isset($_SESSION['usr_id'])){ ?>
+
+                <div class="header_search">
+                
+                    <div class="search_zoom search_btn" onclick="overallSearchResult('')"></div> 
+                    <input type="text" placeholder="Type &amp; Search for Pikes and Friends" class="search_box" onkeyup="overallSearchResult(this.value)">
+                    <div style="position:inherit; ; left:0px; top:36px; width:63%; border-color: rgb(10, 10, 10);box-shadow: 4px 4px 4px #888888;" class="tab_content search_results">
+                        <ul id="overallSearchInput" style="background-color:white">
+                            
+                        </ul>
+                    </div>
                 </div>
-            </div>
+
             <?php 
                 require_once('connect.php');
 
@@ -230,7 +245,9 @@
                 if($user = $users_query->fetch()){ ?>
                 <a href="/userProfile.php?user_id=<?php echo $sessionUser ?>" title="view your profile" style="float:right"><img alt="" src="/include/Profil_pictures/<?php echo $user['picture_link']; ?>" class="avatar avatar-50 photo hoverZoomLink" height="50" width="50"></a>
 
-            <?php } ?>
+            <?php }
+            }
+             ?>
         </div>  
     </div>
 
@@ -318,16 +335,16 @@
                                     </div>
                                     <div class="post_single_bottom_wrapper">
                                         <?php if($event['event_type'] != "Private" || ($event['event_type'] == "Private" && $event['usr_create'] == $sessionUser) || ($type["event_type"] == "Private" && $invited == 1)){
-                                                        if($event['Facebook_ID'] != $sessionUser){
+                                                        if(isset($_SESSION['usr_id']) && $event['Facebook_ID'] != $sessionUser){
                                                             $participated_query = $connect->query("
                                                                 SELECT count(*) AS participanted FROM joinevents
                                                                 WHERE event_id = ".$event['event_id']." and usr_ID = ". $sessionUser . "
                                                             ");
 
                                                             if($participanted = $participated_query->fetch()){
-                                                                if($participanted["participanted"] > 0){?>
+                                                                if(isset($_SESSION['usr_id']) && $participanted["participanted"] > 0){?>
                                                                     <span style="color:green;border:2px solid green;padding:10px 10px 10px 10px">Joined</span>
-                                                                <?php }else{ 
+                                                                <?php }elseif (isset($_SESSION['usr_id'])){ 
                                                                         $participated_query = $connect->query("
                                                                             SELECT count(*) AS participanted FROM friends
                                                                             where user_other = " . $event['usr_create'] . " and user_me = " . $sessionUser . " and friend_request = 'Friends'
@@ -343,9 +360,11 @@
                                                                     
                                                             <?php }
                                                                 }
-                                                            }else{ ?>
+                                                            }elseif (isset($_SESSION['usr_id'])){ ?>
                                                                 <a href="/modify.php?event_id=<?php echo $event['event_id']; ?>" class="button green">Modify</a>
                                                                 <a href="/delete.php?event_id=<?php echo $event['event_id']; ?>" class="button red">End it</a>
+                                                            <?php }else{?>
+                                                                <a href="/" class="button green">You must be logged in to join, click to go login </a>
                                                             <?php } 
                                                         }?>
 
@@ -502,11 +521,11 @@
             while($participant = $participants_query->fetch()){ ?>
 
             <div class="rp_col">
-                <?php if($participant["Facebook_ID"] == $sessionUser){
+                <?php if(isset($_SESSION['usr_id']) && $participant["Facebook_ID"] == $sessionUser){
                     $piked = true;
                 } ?>
 
-                <?php if($event["Facebook_ID"] == $sessionUser){ ?>
+                <?php if(isset($_SESSION['usr_id']) && $event["Facebook_ID"] == $sessionUser){ ?>
                     <a href="/userProfile.php?user_id=<?php echo $participant["Facebook_ID"]; ?>"><div style="text-align:center" class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></a><a href="/deleteParticipants.php?event_id=<?php echo $event_id; ?>&amp;joinevent_id=<?php echo $participant["joinevent_id"]; ?>">remove</a></div>
                 <?php }else{ ?>
                     <a href="/userProfile.php?user_id=<?php echo $participant["Facebook_ID"]; ?>"><div class="small_thumb"><img src="/include/Profil_pictures/<?php echo $participant["picture_link"]; ?>" title="<?php echo $participant["usr_lname"] . ' ' . $participant["usr_fname"]; ?>"  /></div></a>
@@ -569,7 +588,7 @@
 
                             while($feedback = $feedbacks_query->fetch()){ ?>
                                 <li><img src='/include/Profil_pictures/<?php echo $feedback["picture_link"]; ?>' class='avatar avatar-50 photo' height='50' width='50' /><p><cite><?php echo $feedback["usr_lname"] . ' '. $feedback["usr_fname"]; ?>:</cite> <em><?php echo $feedback["feedback_time"]; ?></em><br> <a href="#"><?php echo $feedback["feedback_message"]; ?></a></p>
-                                <?php if($event["Facebook_ID"] == $sessionUser || $feedback["feedback_user_id"] == $sessionUser){ ?>
+                                <?php if(isset($_SESSION['usr_id']) && ($event["Facebook_ID"] == $sessionUser || $feedback["feedback_user_id"] == $sessionUser)){ ?>
                                     <em><a style="color:red" href="/deleteDiscussions.php?event_id=<?php echo $event_id; ?>&amp;feedback_id=<?php echo $feedback["feedback_id"]; ?>">remove</a></em>
                                 <?php } ?> 
                                     <div class="clear"></div></li>
@@ -580,7 +599,7 @@
                 </div>
                 
     </div>
-    <?php if($piked){ ?>
+    <?php if(isset($_SESSION['usr_id']) && $piked){ ?>
         <div style="text-align: center">
             <form>
                 <textarea type="text" placeholder="say what you think ;)" style="width:756px; height:131px" onkeydown="addFeedback(this, <?php echo $event_id ?>, event)"></textarea><br>
@@ -604,7 +623,7 @@
             while($picture = $pictures_query->fetch()){ ?>
                 <div class="rp_col">
                     <div class="small_thumb" style="text-align:center"><a href="/img/upload/pictures/<?php echo $picture["pic_link"]; ?>" class="icon view fancybox"><img src="/img/upload/pictures/<?php echo $picture["pic_link"]; ?>"/></a><em>Uploaded by<br><strong><?php echo $picture["usr_lname"] . ' '. $picture["usr_fname"]; ?></strong></em>
-                        <?php if($event["Facebook_ID"] == $sessionUser || $picture["Facebook_ID"] == $sessionUser){ ?>
+                        <?php if(isset($_SESSION['usr_id']) && ($event["Facebook_ID"] == $sessionUser || $picture["Facebook_ID"] == $sessionUser)){ ?>
                             <br><em><a style="color:red" href="/deleteEventPicture.php?event_id=<?php echo $event_id; ?>&amp;picture_id=<?php echo $picture["picture_id"]; ?>">remove</a></em>
                         <?php } ?>
                     </div>
@@ -612,7 +631,7 @@
             <?php } ?>
 
     </div>
-    <?php if($piked){ ?>
+    <?php if(isset($_SESSION['usr_id']) && $piked){ ?>
         <div style="text-align:center">
             <br>
             <form action="/addEventPicture.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
@@ -644,14 +663,14 @@
                         <em style="color:blue">view</em>
                     <?php } ?>
                     </a>
-                    <?php if($event["Facebook_ID"] == $sessionUser || $file["Facebook_ID"] == $sessionUser){ ?>
+                    <?php if(isset($_SESSION['usr_id'])&& ($event["Facebook_ID"] == $sessionUser || $file["Facebook_ID"] == $sessionUser)){ ?>
                         <br><em><a style="color:red" href="/deleteEventFile.php?event_id=<?php echo $event_id; ?>&amp;file_id=<?php echo $file["file_id"]; ?>">remove</a></em>
                     <?php } ?>
                     </div>
                 </div>
             <?php } ?>
     </div>
-    <?php if($piked){ ?>
+    <?php if(isset($_SESSION['usr_id']) && $piked){ ?>
         <div style="text-align:center">
             <br>
             <form action="/addEventFile.php?event_id=<?php echo $event_id ?>" method="post" enctype="multipart/form-data">
@@ -674,7 +693,7 @@
             </div>
         </div>
 
-
+<?php if (isset($_SESSION['usr_id'])) { ?>
         <div id="sidebar">
 
             <script type="text/javascript">
@@ -1182,11 +1201,11 @@
                         if($newUpdate["new_notif"] > 0){
                     ?>
                         <li class="tab_post" >
-                            <a href="#post_tab" id="notif_tab">Notifications<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
+                            <a href="#post_tab" id="notif_tab">News<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_notif"] ?></span></a>
                         </li>
                     <?php }else{ ?>
                         <li class="tab_post">
-                            <a href="#post_tab" id="notif_tab">Notifications</a>
+                            <a href="#post_tab" id="notif_tab">News</a>
                         </li>
                 <?php }} ?>
                 
@@ -1404,14 +1423,15 @@
         </div>
         
         
-    <div id="footer">
-        <div class="container clearfix">
-            <div style="text-align:center">&copy; 2014 <a href="/events.php">PikeLife</a> - <a href="/contactUs.php">Contact Us</a></div>
-            <div class="clear"></div>
+        <div id="footer">
+            <div class="container clearfix">
+                <div style="text-align:center">&copy; 2014 <a href="/events.php">PikeLife</a> - <a href="/contactUs.php">Contact Us</a></div>
+                <div class="clear"></div>
+            </div>
         </div>
-    </div>
-    
-    </div>
+        
+        </div>
+    <?php } ?>
 </div><!-- #main -->
     
 

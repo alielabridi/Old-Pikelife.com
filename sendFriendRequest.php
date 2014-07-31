@@ -1,7 +1,11 @@
 <?php
 
-session_start();
-$sessionUser = $_SESSION['usr_id'];
+    session_start();
+    if(isset($_SESSION['usr_id'])){
+        $sessionUser = $_SESSION['usr_id'];
+    }else{
+        header( "Location: /") ;  
+    }
 $user_id = $_GET['user_id'];
 
     require_once('connect.php');

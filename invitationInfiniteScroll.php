@@ -1,8 +1,11 @@
 <?php
 
-
-    session_start();
+session_start();
+if(isset($_SESSION['usr_id'])){
     $sessionUser = $_SESSION['usr_id'];
+}else{
+    header( "Location: /") ;
+}
     
     require_once("connect.php");
     $contact_load = htmlentities(strip_tags($_POST['contact_load'])) * 5;

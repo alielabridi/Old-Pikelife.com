@@ -1,6 +1,10 @@
 <?php
     session_start();
-    $sessionUser = $_SESSION['usr_id'];
+    if(isset($_SESSION['usr_id'])){
+        $sessionUser = $_SESSION['usr_id'];
+    }else{
+        header( "Location: /") ;  
+    }
     
     $xmlDoc=new DOMDocument();
 
