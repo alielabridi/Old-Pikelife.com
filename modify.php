@@ -256,6 +256,14 @@ if(isset($_SESSION['usr_id'])){
                             $oldEvent_name = $event["event_name"];
                         }
 
+                        function test_input($data) {
+                               $data = trim($data);
+                               $data = stripslashes($data);
+                               $data = htmlspecialchars($data);
+                               $data =  mysql_real_escape_string($data);
+                               return $data;
+                             }
+
                         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                             $allowedExts = array("jpeg", "jpg", "png");
@@ -277,18 +285,14 @@ if(isset($_SESSION['usr_id'])){
                                       move_uploaded_file($_FILES["file"]["tmp_name"],
                                       "img/upload/events/" . $_FILES["file"]["name"] );
                                       $file_name = $_FILES["file"]["name"];
+                                      $file_name = test_input($file_name);
                                 }
 
                             
                             }
                            
 
-                            function test_input($data) {
-                               $data = trim($data);
-                               $data = stripslashes($data);
-                               $data = htmlspecialchars($data);
-                               return $data;
-                             }
+                            
 
                               if (empty($_POST["event_name"]) || empty($_POST["event_description"]) || empty($_POST["event_place"]) ) {
                                 $Error = "missing fields";

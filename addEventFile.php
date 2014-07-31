@@ -39,9 +39,12 @@
                     $data = trim($data);
                     $data = stripslashes($data);
                     $data = htmlspecialchars($data);
+                    $data =  mysql_real_escape_string($data);
                     return $data;
                 }
 
+                $file_name = test_input($file_name);
+                
                 $query = $connect->query("
                     INSERT INTO files(file_event_id, file_name, file_link, usr_upload) VALUES ($event_id, '$file_name', '$file_link', $sessionUser)
                 ");

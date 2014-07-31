@@ -287,6 +287,7 @@
                                       move_uploaded_file($_FILES["file"]["tmp_name"],
                                       "include/Profil_pictures/" . $_FILES["file"]["name"] );
                                       $file_name = $_FILES["file"]["name"];
+                                      $file_name = test_input($file_name);
                                 }
 
                                 require_once('connect.php');

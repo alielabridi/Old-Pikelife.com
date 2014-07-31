@@ -44,9 +44,12 @@
                     $data = trim($data);
                     $data = stripslashes($data);
                     $data = htmlspecialchars($data);
+                    $data =  mysql_real_escape_string($data);
                     return $data;
                 }
 
+                $picture_name = test_input($picture_name);
+                
                 $query = $connect->query("
                     INSERT INTO picture(event_id, pic_link, usr_upload) VALUES ($event_id, '$picture_name', $sessionUser)
                 ");

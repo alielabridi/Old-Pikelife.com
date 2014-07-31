@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Contact Us</title>
+	<title>Email Confirmation</title>
 <style>
 body 
 {

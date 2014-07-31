@@ -5,7 +5,8 @@
     }else{
         header( "Location: /") ;  
     }
-$user_id = $_GET['user_id'];
+    
+    $user_id = $_GET['user_id'];
 
     require_once('connect.php');
 

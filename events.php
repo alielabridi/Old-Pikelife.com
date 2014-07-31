@@ -137,7 +137,14 @@
         <div class="container clearfix">
             <div id="leftContent">
                 <div class="inner">
-                    
+
+                    <div class="pikeInfo">
+                        <h1>Welcome to Pikelife</h1>
+                        A Pike is the experience that you want and aim gathering your friends for<br>
+                        start the experience by clicking on 'add a pike ?' in the Calendar<br>
+                        Hope you enjoy the journey :)
+                    </div>
+
                     <div id="post_grids" class="post_content clearfix">
 
                 <!-- STARTING THE PHP OPERATION TO GENERATES EVENTS -->
@@ -281,9 +288,6 @@
                                             <div class="post_item white_box">
                                                 <div class="large_thumb thumb_hover">
                                                     
-                                                        <div class="icon_bar for_link">
-                                                            <a href="single.html" class="icon link"></a> 
-                                                        </div>
                                                         <div class="icon_bar for_view">
                                                             <a href="/img/upload/events/<?php echo $event['event_pic']; ?>" class="icon view fancybox"></a> 
                                                         </div>
@@ -455,7 +459,7 @@
                         <?php endif ?>
 
                         <?php
-                             if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                            if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
                             {
 
                                 $qyear = $_GET['year'];
@@ -467,11 +471,12 @@
                                 $qmonth = $todmonth;
                                 $qday = $todday;
                             }
-                             if($d == $qday  && $m == $qmonth): ?>
-                            <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a>
-                        <?php else: ?>
-                            <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
-                        <?php endif ?>
+                            if($d == $qday  && $m == $qmonth){ ?>
+                                <td style="background-color:#C53434"><a style="color:white" href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>"><?php echo $d; ?></td></a> 
+                            <?php }else{ ?>
+                                <td><a href="/events.php?year=<?php echo $year; ?>&month=<?php echo $m; ?>&day=<?php echo $d; ?>" ><?php echo $d; ?></td></a>
+                            <?php
+                        }?>
 
                         <?php if($w == 7): ?>
                             </tr><tr>
@@ -702,9 +707,9 @@
                 if($newUpdate = $newUpdate_query->fetch()){ 
                         if($newUpdate["new_chat"] > 0){
                     ?>
-                        <h3 class="widget_title">Chats<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_chat"] ?></span></a></h3>
+                        <h3 class="widget_title">Friends<span style="background-color:red; padding:1px 3px 1px 3px; margin-left:4px; color: white;border-radius: 10px;border-color: rgb(10, 10, 10);box-shadow: 2px 2px 2px #888888;"><?php echo $newUpdate["new_chat"] ?></span></a></h3>
                 <?php }else{ ?>
-                        <h3 class="widget_title"><a href="#comment_tab" id="notif_tab">Chats</a></h3>
+                        <h3 class="widget_title"><a href="#comment_tab" id="notif_tab">Friends</a></h3>
                 <?php }} ?>
             </div>
                     <form id="contactSearchForm">
@@ -1003,9 +1008,23 @@
                                 LIMIT 0, 10
                             ");
 
+                            if(isset($_GET['year']) && isset($_GET['month']) && isset($_GET['day'])) 
+                            {
+
+                                $qyear = $_GET['year'];
+                                $qmonth = $_GET['month'];
+                                $qday = $_GET['day'];
+                            }else{
+                                
+                                $qyear = $todyear;
+                                $qmonth = $todmonth;
+                                $qday = $todday;
+                            }
+
                             while($interest = $interests_query->fetch()){
                         ?>
-                            <li class="cat-item cat-item-2"><a href="/events.php?interest=<?php echo $interest['interest_id'] ?>"><?php echo $interest['interest_name'] ?></a></li>
+
+                            <li class="cat-item cat-item-2"><a href="/events.php?year=<?php echo $qyear; ?>&month=<?php echo $qmonth; ?>&day=<?php echo $qday; ?>&interest=<?php echo $interest['interest_id'] ?>"><?php echo $interest['interest_name'] ?></a></li>
                         <?php } ?>
 
                     </ul>
