@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Lun 21 Juillet 2014 à 18:08
+-- Généré le: Jeu 31 Juillet 2014 à 03:05
 -- Version du serveur: 5.6.12-log
 -- Version de PHP: 5.4.12
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   PRIMARY KEY (`chat_id`),
   KEY `chat_user_sender` (`chat_user_sender`,`chat_user_receiver`),
   KEY `chat_user_receiver` (`chat_user_receiver`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=86 ;
 
 --
 -- Contenu de la table `chat`
@@ -98,7 +98,37 @@ INSERT INTO `chat` (`chat_id`, `chat_user_sender`, `chat_user_receiver`, `chat_m
 (52, 10202951483540580, 22, 'e', '2014-07-21 00:31:54'),
 (53, 10202951483540580, 22, 'd', '2014-07-21 00:31:54'),
 (54, 10202951483540580, 22, 'e', '2014-07-21 00:31:54'),
-(55, 10202951483540580, 12, 'hder assahbi', '2014-07-21 01:35:41');
+(55, 10202951483540580, 12, 'hder assahbi', '2014-07-21 01:35:41'),
+(56, 10202951483540580, 11, 'hey ca va??', '2014-07-21 18:21:25'),
+(57, 10202951483540580, 12, 'wa hddeeeeeeer', '2014-07-22 00:55:52'),
+(58, 10202951483540580, 11, 'ca va??', '2014-07-22 18:34:42'),
+(59, 10202951483540580, 12, 'azdzadaz', '2014-07-25 02:57:06'),
+(60, 10202951483540580, 12, 'd', '2014-07-25 02:57:07'),
+(61, 10202951483540580, 12, 'az', '2014-07-25 02:57:07'),
+(62, 10202951483540580, 12, 'dza', '2014-07-25 02:57:08'),
+(63, 10202951483540580, 12, 'dd', '2014-07-25 02:57:08'),
+(64, 10202951483540580, 12, 'za', '2014-07-25 02:57:08'),
+(65, 10202951483540580, 12, 'd', '2014-07-25 02:57:09'),
+(66, 10202951483540580, 12, 'dza', '2014-07-25 02:57:09'),
+(67, 10202951483540580, 12, 'az', '2014-07-25 02:57:09'),
+(68, 10202951483540580, 12, 'd', '2014-07-25 02:57:11'),
+(69, 10202951483540580, 12, 'd', '2014-07-25 02:57:12'),
+(70, 10202951483540580, 12, 'az', '2014-07-25 02:57:12'),
+(71, 10202951483540580, 1, 'dcc', '2014-07-25 02:59:18'),
+(72, 10202951483540580, 12, 'cer', '2014-07-30 00:51:53'),
+(73, 10202951483540580, 12, 'ksjfssdf', '2014-07-30 00:57:26'),
+(74, 10202951483540580, 12, 'ksjfssdfsdfdsdsfdssdfds', '2014-07-30 00:57:41'),
+(75, 10202951483540580, 12, 'ksjfssdfsdfds', '2014-07-30 00:57:57'),
+(76, 10202951483540580, 12, 'kljflkdjs sdfdsklf sdfkjds', '2014-07-30 00:58:26'),
+(77, 10202951483540580, 12, 'd', '2014-07-30 01:06:05'),
+(78, 10202951483540580, 11, 'dd', '2014-07-30 01:15:34'),
+(79, 10202951483540580, 11, 'dd', '2014-07-30 01:21:49'),
+(80, 10202951483540580, 11, 'dd', '2014-07-30 01:21:50'),
+(81, 10202951483540580, 11, 'ddddd', '2014-07-30 01:21:52'),
+(82, 10202951483540580, 11, 'qsdqs cool and on firefix :p', '2014-07-30 01:22:01'),
+(83, 10202951483540580, 12, 'coucou', '2014-07-30 21:59:22'),
+(84, 10202951483540580, 12, 'ss', '2014-07-30 22:03:23'),
+(85, 10202951483540580, 12, 'd', '2014-07-30 22:06:07');
 
 -- --------------------------------------------------------
 
@@ -119,20 +149,24 @@ CREATE TABLE IF NOT EXISTS `events` (
   `event_type` varchar(100) NOT NULL,
   PRIMARY KEY (`event_id`),
   KEY `usr_create` (`usr_create`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=102 ;
 
 --
 -- Contenu de la table `events`
 --
 
 INSERT INTO `events` (`event_id`, `event_name`, `event_time`, `event_date`, `usr_create`, `event_place`, `event_pic`, `event_description`, `event_cat`, `event_type`) VALUES
-(74, 'this is no longuer shit shit', '12:12:00', '2014-07-16', 10202951483540580, 'HTIS nnoqsdnsq', '74.jpg', 'SWDWSWSDSW', 12, 'Public'),
-(77, 'jqdqks', '12:12:00', '2014-07-14', 10202951483540580, 'somwhere in the sky', '77.jpg', 'here', 18, 'Public'),
+(77, 'jqdqks', '12:12:00', '2014-07-14', 10202951483540580, 'somwhere in the sky', '77.jpg', 'here', 16, 'Public'),
 (79, 'this is not 74 it is 79', '12:12:00', '2014-07-14', 268310453348365, 'HTIS nnoqsdnsq', '79.jpg', 'SWDWSWSDSW', 12, 'Public'),
-(84, 'wcwx', '12:12:00', '2014-07-18', 268310453348365, 'FERD', '12.jpg', 'sqdsqdsq', 12, 'Public'),
-(85, 'hello peopole derti', '12:12:00', '2014-07-18', 10202951483540580, 'casablanca', '85.jpg', 'walou', 18, 'Private'),
-(89, 'hello', '12:12:00', '2014-07-18', 10202951483540580, 'somewhere', '89.jpg', 'heey', 18, 'Private'),
-(90, 'A public person posted this', '12:12:12', '2014-07-19', 1, 'PUBLIC PLACE', '74.jpg', 'PUBLIC PUBLICATION', 12, 'Public');
+(90, 'A public person posted this', '12:12:12', '2014-07-19', 1, 'PUBLIC PLACE', '74.jpg', 'PUBLIC PUBLICATION', 12, 'Secret'),
+(91, 'something posted by follower', '00:00:00', '2014-07-21', 12, 'dlskfj', '79.jpg', 'somehting followed', 12, 'Public'),
+(93, 'dzzz', '12:12:00', '2014-07-22', 10202951483540580, 'DEZDZE', 'default.jpg', 'ZEDZE', 13, 'Public'),
+(94, 'the follwing', '10:10:00', '2014-07-25', 10202951483540580, 'somewhere in the sky', '94.jpg', 'ahahaa', 26, 'Public'),
+(96, 'azesqdd', '12:22:00', '2014-07-07', 1, 'qsdqs', 'qsdsqd', 'qsdsqdqs', 12, 'Private'),
+(97, 'sdcds', '12:12:00', '0000-00-00', 10202951483540580, 'KJSDS', 'default.jpg', 'SDQSDQSD', 18, 'Private'),
+(99, 'qxqs', '12:22:00', '2014-07-31', 10202951483540580, 'SQDQSD', 'QSD', 'QSDSQ', 12, 'Public'),
+(100, 'AAAA', '12:12:00', '2014-07-31', 10202951483540580, 'FDFZE', '100.jpg', 'EZFEZF', 18, 'Public'),
+(101, 'QSDQ', '12:12:00', '2014-07-31', 10202951483540580, 'SDFDS', '101.jpg', 'SDFDSF', 18, 'Public');
 
 -- --------------------------------------------------------
 
@@ -149,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `feedback` (
   PRIMARY KEY (`feedback_id`),
   KEY `feedback_user_id` (`feedback_user_id`),
   KEY `feedback_event_id` (`feedback_event_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
 
 --
 -- Contenu de la table `feedback`
@@ -159,34 +193,24 @@ INSERT INTO `feedback` (`feedback_id`, `feedback_event_id`, `feedback_user_id`, 
 (1, 77, 10202951483540580, 'this is my first oppinion of this', '2014-07-17 17:22:56'),
 (2, 77, 10202951483540580, 'again', '2014-07-17 18:42:14'),
 (3, 77, 753896647975714, '3andek allah9e a BA kakashi', '2014-07-17 18:43:45'),
-(4, 74, 10202951483540580, 'okaay', '2014-07-17 23:15:47'),
-(5, 74, 10202951483540580, 'so this seems interesting', '2014-07-17 23:18:01'),
-(6, 84, 10202951483540580, 'waaw great', '2014-07-18 01:11:32'),
-(7, 84, 10202951483540580, 'extreemly great', '2014-07-18 01:11:39'),
-(8, 89, 10202951483540580, 'welcome guys in my event', '2014-07-18 18:50:02'),
-(9, 74, 10202951483540580, 'hhsd', '2014-07-21 00:28:54'),
-(10, 74, 10202951483540580, 'dsfds', '2014-07-21 00:28:55'),
-(11, 74, 10202951483540580, 'sdfd', '2014-07-21 00:28:56'),
-(12, 74, 10202951483540580, 'sdfdsdsfds', '2014-07-21 00:28:57'),
-(13, 74, 10202951483540580, 'sdfsdf', '2014-07-21 00:28:58'),
-(14, 74, 10202951483540580, 'hihi', '2014-07-21 00:42:08'),
-(15, 74, 10202951483540580, 'hoho', '2014-07-21 00:42:10'),
-(16, 74, 10202951483540580, 'ijlzdez', '2014-07-21 00:42:11'),
-(17, 74, 10202951483540580, 'ezd', '2014-07-21 00:42:12'),
-(18, 74, 10202951483540580, 'ezdez', '2014-07-21 00:42:13'),
-(19, 74, 10202951483540580, 'ezdezd', '2014-07-21 00:42:13'),
-(20, 74, 10202951483540580, 'ezdezdezd', '2014-07-21 00:42:13'),
-(21, 74, 10202951483540580, 'ezdezdezdez', '2014-07-21 00:42:13'),
-(22, 74, 10202951483540580, 'ezdezdezdezedd', '2014-07-21 00:42:13'),
-(23, 74, 10202951483540580, 'ezd', '2014-07-21 00:42:14'),
-(24, 74, 10202951483540580, 'zed', '2014-07-21 00:42:14'),
-(25, 74, 10202951483540580, 'zed', '2014-07-21 00:42:15'),
-(26, 74, 10202951483540580, 'ezd', '2014-07-21 00:42:15'),
-(27, 74, 10202951483540580, 'ezd', '2014-07-21 00:42:16'),
-(28, 74, 10202951483540580, 'ezd', '2014-07-21 00:42:16'),
-(29, 74, 10202951483540580, 'ezd', '2014-07-21 00:42:17'),
-(30, 74, 10202951483540580, 'ezd', '2014-07-21 00:42:17'),
-(31, 74, 10202951483540580, 'ezdez', '2014-07-21 00:42:17');
+(32, 79, 10202951483540580, 'wa3etit IP assahbi', '2014-07-22 15:50:24'),
+(34, 94, 10202951483540580, 'hey guys ready for it??', '2014-07-25 01:34:56'),
+(35, 77, 10202951483540580, 'sss', '2014-07-30 22:08:12'),
+(36, 77, 10202951483540580, 'sss', '2014-07-30 22:08:25'),
+(37, 77, 10202951483540580, 'qqsz', '2014-07-30 22:08:29'),
+(38, 77, 10202951483540580, 'a', '2014-07-30 22:08:53'),
+(39, 77, 10202951483540580, 'a', '2014-07-30 22:08:54'),
+(40, 77, 10202951483540580, 'a', '2014-07-30 22:08:55'),
+(41, 77, 10202951483540580, 'fff', '2014-07-30 22:08:58'),
+(42, 77, 10202951483540580, 'ffff', '2014-07-30 22:09:00'),
+(43, 77, 10202951483540580, 'fffff', '2014-07-30 22:09:01'),
+(44, 77, 10202951483540580, 'fff fff f', '2014-07-30 22:09:04'),
+(45, 77, 10202951483540580, 'okay cool', '2014-07-30 22:09:11'),
+(46, 77, 10202951483540580, 'sdsqq', '2014-07-30 22:09:42'),
+(47, 77, 10202951483540580, 'sss qklsdjs qslqdj ksq', '2014-07-30 22:09:53'),
+(48, 77, 10202951483540580, 'zdkj akdjad ad', '2014-07-30 22:11:30'),
+(49, 77, 10202951483540580, 'd.d', '2014-07-30 22:14:09'),
+(50, 77, 10202951483540580, 'd''d', '2014-07-31 00:26:24');
 
 -- --------------------------------------------------------
 
@@ -204,25 +228,27 @@ CREATE TABLE IF NOT EXISTS `files` (
   KEY `file_event_id` (`file_event_id`),
   KEY `file_event_id_2` (`file_event_id`),
   KEY `usr_upload` (`usr_upload`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `files`
 --
 
 INSERT INTO `files` (`file_id`, `file_event_id`, `file_name`, `file_link`, `usr_upload`) VALUES
-(21, 85, 'Global Community Leadership Council 2014-2015 - Final.pdf', '1.pdf', 10202951483540580),
-(22, 85, 'Girls Education.pdf', '8522.pdf', 10202951483540580),
-(24, 85, 'SaidAlaouiIdriss_Algorith_Paper.pdf', '8523.pdf', 10202951483540580),
-(25, 85, 'SaidAlaoui_Resume.pdf', '8525.pdf', 10202951483540580),
-(26, 74, 'Cracking the Coding Interview, 4 Edition - 150 Programming Interview Questions and Solutions.pdf', '7426.pdf', 10202951483540580),
-(27, 74, 'SaidAlaoui_Resume.pdf', '7427.pdf', 10202951483540580),
-(28, 74, 'SaidAlaoui_Resume.pdf', '7428.pdf', 10202951483540580),
-(29, 74, 'SaidAlaoui_Resume.pdf', '7429.pdf', 10202951483540580),
-(30, 74, 'SaidAlaoui_Resume.pdf', '7430.pdf', 10202951483540580),
-(31, 74, 'SaidAlaoui_Resume.pdf', '7431.pdf', 10202951483540580),
-(32, 74, 'SaidAlaoui_Resume.pdf', '7432.pdf', 10202951483540580),
-(33, 74, 'SaidAlaoui_Resume.pdf', '7433.pdf', 10202951483540580);
+(2, 94, 'badri.Rabin-Karp.pptx', '941.pptx', 10202951483540580);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `following`
+--
+
+CREATE TABLE IF NOT EXISTS `following` (
+  `user_me` bigint(20) NOT NULL,
+  `following_user` bigint(20) NOT NULL,
+  PRIMARY KEY (`user_me`,`following_user`),
+  KEY `following_user` (`following_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -247,10 +273,16 @@ CREATE TABLE IF NOT EXISTS `friends` (
 --
 
 INSERT INTO `friends` (`user_me`, `last_chat`, `sent_chat`, `user_other`, `friend_request`) VALUES
-(11, '2014-07-21 18:04:46', 'no', 10202951483540580, 'Friends'),
+(1, '2014-07-25 02:59:18', 'yes', 10202951483540580, 'Friends'),
+(11, '2014-07-30 01:22:01', 'yes', 10202951483540580, 'Friends'),
+(12, '2014-07-30 22:06:07', 'yes', 10202951483540580, 'Friends'),
 (268310453348365, '2014-07-19 15:44:22', 'yes', 10202951483540580, 'Friends'),
 (753896647975714, '2014-07-19 15:50:49', 'yes', 10202951483540580, 'Friends'),
-(10202951483540580, '2014-07-21 18:06:51', 'no', 11, 'Friends'),
+(880152931994714, '2014-07-21 18:33:06', 'no', 10202951483540580, 'Friends'),
+(10202951483540580, '2014-07-25 02:59:18', 'no', 1, 'Friends'),
+(10202951483540580, '2014-07-30 01:22:01', 'no', 11, 'Friends'),
+(10202951483540580, '2014-07-30 22:06:07', 'no', 12, 'Friends'),
+(10202951483540580, '2014-07-25 01:40:30', 'no', 34, 'Request'),
 (10202951483540580, '2014-07-19 15:30:00', 'no', 268310453348365, 'Friends'),
 (10202951483540580, '2014-07-19 15:50:49', 'no', 753896647975714, 'Friends'),
 (10202951483540580, '2014-07-19 15:47:58', 'no', 880152931994714, 'Friends');
@@ -266,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `interests` (
   `interest_name` varchar(50) NOT NULL,
   `interest_score` int(11) NOT NULL,
   PRIMARY KEY (`interest_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
 
 --
 -- Contenu de la table `interests`
@@ -275,12 +307,12 @@ CREATE TABLE IF NOT EXISTS `interests` (
 INSERT INTO `interests` (`interest_id`, `interest_name`, `interest_score`) VALUES
 (10, 'haha', 0),
 (11, 'Hike', 0),
-(12, 'Football', 3),
-(13, 'something special', 0),
+(12, 'Football', 9),
+(13, 'something special', 1),
 (14, 'ziide', 3),
-(16, 'Teniss', 0),
+(16, 'Teniss', 2),
 (17, 'Tennis', 0),
-(18, 'Counter Strike', 1),
+(18, 'Counter Strike', 12),
 (19, 'kora', 0),
 (20, 'something', 0),
 (21, 'TEST1', 0),
@@ -288,13 +320,21 @@ INSERT INTO `interests` (`interest_id`, `interest_name`, `interest_score`) VALUE
 (23, 'TEST2', 0),
 (24, 'TES4', 0),
 (25, 'SQD', 0),
-(26, 'SQDS', 0),
+(26, 'SQDS', 1),
 (27, 'DQS', 0),
 (28, 'SQDSQD', 0),
 (29, 'DSSQDQ', 0),
 (30, 'SQDQSDSQ', 0),
 (31, 'SDQSQD', 0),
-(32, 'fer', 0);
+(32, 'fer', 0),
+(33, 'SLEEPING', 0),
+(34, 'footbal', 0),
+(35, 'dd', 0),
+(36, 'd', 0),
+(37, 'ddd', 0),
+(38, 'oob', 0),
+(39, 'd''d', 0),
+(40, 'd''dd', 0);
 
 -- --------------------------------------------------------
 
@@ -309,21 +349,15 @@ CREATE TABLE IF NOT EXISTS `joinevents` (
   PRIMARY KEY (`joinevent_id`),
   KEY `event_id` (`event_id`,`usr_id`),
   KEY `usr_id` (`usr_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45 ;
 
 --
 -- Contenu de la table `joinevents`
 --
 
 INSERT INTO `joinevents` (`joinevent_id`, `event_id`, `usr_id`) VALUES
-(15, 77, 10202951483540580),
-(13, 79, 10202951483540580),
-(16, 79, 10202951483540580),
-(12, 84, 10202951483540580),
-(17, 84, 10202951483540580),
-(18, 85, 10202951483540580),
-(19, 89, 10202951483540580),
-(20, 90, 10202951483540580);
+(43, 94, 268310453348365),
+(44, 94, 753896647975714);
 
 -- --------------------------------------------------------
 
@@ -339,29 +373,30 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `notification_image` varchar(50) NOT NULL,
   `event_id` int(10) unsigned DEFAULT NULL,
   `sender_id` bigint(20) DEFAULT NULL,
-  `notification_status` varchar(10) DEFAULT NULL,
+  `notification_status` varchar(10) DEFAULT 'new',
+  `notification_type` varchar(50) NOT NULL,
   PRIMARY KEY (`notification_id`),
   KEY `notification_user` (`notification_user`),
   KEY `event_id` (`event_id`,`sender_id`),
   KEY `sender_id` (`sender_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=112 ;
 
 --
 -- Contenu de la table `notification`
 --
 
-INSERT INTO `notification` (`notification_id`, `notification_title`, `notification_user`, `notification_time`, `notification_image`, `event_id`, `sender_id`, `notification_status`) VALUES
-(35, 'someone calling', 10202951483540580, '2014-07-18 20:43:00', '85.jpg', 85, NULL, 'old'),
-(36, 'again calling you', 10202951483540580, '2014-07-18 20:33:00', '85.jpg', 85, NULL, 'old'),
-(37, 'NOTIF', 10202951483540580, '2014-07-20 19:36:45', '', 74, NULL, 'old'),
-(38, 'hey lool', 10202951483540580, '2014-07-20 19:38:08', '', 77, NULL, 'old'),
-(39, 'coucou', 10202951483540580, '2014-07-20 19:38:31', '77.jpg', 77, NULL, 'old'),
-(40, 'lool', 10202951483540580, '2014-07-20 19:39:03', '77.jpg', 77, NULL, 'old'),
-(41, 'titou', 10202951483540580, '2014-07-20 19:39:03', '85', 85, NULL, 'old'),
-(42, 'Kakashi Don invited you to pike this is no longuer shit shit', 1, '2014-07-21 01:16:23', '74.jpg', 74, NULL, NULL),
-(43, 'Kakashi Don invited you to pike this is no longuer shit shit', 22, '2014-07-21 01:16:25', '74.jpg', 74, NULL, NULL),
-(44, 'Kakashi Don invited you to pike this is no longuer shit shit', 753896647975714, '2014-07-21 01:16:27', '74.jpg', 74, NULL, NULL),
-(45, 'Kakashi Don invited you to pike this is no longuer shit shit', 12, '2014-07-21 01:16:32', '74.jpg', 74, NULL, NULL);
+INSERT INTO `notification` (`notification_id`, `notification_title`, `notification_user`, `notification_time`, `notification_image`, `event_id`, `sender_id`, `notification_status`, `notification_type`) VALUES
+(88, 'sss Don and you are now friends ', 10202951483540580, '2014-07-24 17:49:10', '10202951483540580.jpg', NULL, 12, 'old', 'User'),
+(102, 'Public Personsaid something in the Pike the follwing', 10202951483540580, '2014-07-25 01:34:56', '94.jpg', 94, NULL, 'old', 'Event'),
+(103, 'Public Personsaid something in the Pike the follwing', 753896647975714, '2014-07-25 01:34:56', '94.jpg', 94, NULL, 'new', 'Event'),
+(104, 'a new picture added to this Pike the follwing', 268310453348365, '2014-07-25 01:38:52', '94.jpg', 94, NULL, 'new', 'Event'),
+(105, 'a new picture added to this Pike the follwing', 10202951483540580, '2014-07-25 01:38:52', '94.jpg', 94, NULL, 'old', 'Event'),
+(106, 'a new file added to this Pike the follwing', 268310453348365, '2014-07-25 01:39:55', '94.jpg', 94, NULL, 'new', 'Event'),
+(107, 'a new file added to this Pike the follwing', 753896647975714, '2014-07-25 01:39:55', '94.jpg', 94, NULL, 'new', 'Event'),
+(108, 'sss Don wants to be your friend ', 34, '2014-07-25 01:40:31', '10202951483540580.jpg', NULL, 10202951483540580, 'new', 'User'),
+(109, 'sss Don and you are now friends ', 1, '2014-07-25 01:56:41', '10202951483540580.jpg', NULL, 10202951483540580, 'new', 'User'),
+(110, 'sss Don invited you to pike jqdqks', 12, '2014-07-30 22:00:27', '77.jpg', 77, NULL, 'new', 'Event'),
+(111, 'sss Don invited you to pike jqdqks', 1, '2014-07-30 22:00:30', '77.jpg', 77, NULL, 'new', 'Event');
 
 -- --------------------------------------------------------
 
@@ -377,28 +412,16 @@ CREATE TABLE IF NOT EXISTS `picture` (
   PRIMARY KEY (`picture_id`),
   KEY `event_id` (`event_id`),
   KEY `usr_upload` (`usr_upload`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 --
 -- Contenu de la table `picture`
 --
 
 INSERT INTO `picture` (`picture_id`, `event_id`, `pic_link`, `usr_upload`) VALUES
-(23, 85, '1.jpg', 10202951483540580),
-(24, 85, '8524.jpg', 10202951483540580),
-(25, 84, '8425.jpg', 10202951483540580),
-(26, 74, '7426.jpg', 10202951483540580),
-(27, 74, '7427.jpg', 10202951483540580),
-(28, 74, '7428.jpg', 10202951483540580),
-(29, 74, '7429.jpg', 10202951483540580),
-(30, 74, '7430.jpg', 10202951483540580),
-(31, 74, '7431.jpg', 10202951483540580),
-(32, 74, '7432.jpg', 10202951483540580),
-(33, 74, '7433.jpg', 10202951483540580),
-(34, 74, '7434.jpg', 10202951483540580),
-(35, 74, '7435.jpg', 10202951483540580),
-(36, 74, '7436.jpg', 10202951483540580),
-(37, 74, '7437.jpg', 10202951483540580);
+(38, 79, '7938.jpg', 10202951483540580),
+(39, 79, '7939.jpg', 10202951483540580),
+(41, 94, '9440.jpg', 10202951483540580);
 
 -- --------------------------------------------------------
 
@@ -435,7 +458,7 @@ INSERT INTO `userapps` (`usr_email`, `usr_created`, `usr_lname`, `usr_fname`, `F
 ('elabridiali@gmail.com', '2014-05-30 02:01:03', 'Elabridi', 'Ali', 268310453348365, 'https://www.facebook.com/app_scoped_user_id/268310453348365/', '1990-05-31', 'Ifrane, Morocco', 'male', '1982323_252235748289169_768536785_n_4.jpg'),
 ('elabridiali@live.fr', '0000-00-00 00:00:00', 'El', 'Ali', 753896647975714, 'https://www.facebook.com/app_scoped_user_id/753896647975714/', '1950-05-31', 'Rabat, Morocco', '', '252231_1002029915278_1941483569_n_1.jpg'),
 ('teensdoor@gmail.com', '0000-00-00 00:00:00', 'Eddahmani', 'Aymane', 880152931994714, 'https://www.facebook.com/app_scoped_user_id/880152931994714/', '1995-10-16', 'Midelt', '', '10513356_906096386067035_156912104903362139_n.jpg'),
-('s.a.idriss@hotmail.fr', '2014-07-14 00:26:53', 'Kakashi', 'Don', 10202951483540580, 'https://www.facebook.com/app_scoped_user_id/10202951483540580/', '1970-01-01', 'Ifrane, Morocco', 'male', '10269414_10203285658934756_2129261071064046260_n.jpg');
+('s.a.idriss@hotmail.fr', '2014-07-14 00:26:53', 'sss', 'Don', 10202951483540580, 'https://www.facebook.com/app_scoped_user_id/10202951483540580/', '1970-01-01', 'Kenitra, Morocco', 'male', '10202951483540580.jpg');
 
 --
 -- Contraintes pour les tables exportées
@@ -467,6 +490,13 @@ ALTER TABLE `feedback`
 ALTER TABLE `files`
   ADD CONSTRAINT `files_ibfk_1` FOREIGN KEY (`file_event_id`) REFERENCES `events` (`event_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `files_ibfk_2` FOREIGN KEY (`usr_upload`) REFERENCES `userapps` (`Facebook_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `following`
+--
+ALTER TABLE `following`
+  ADD CONSTRAINT `following_ibfk_1` FOREIGN KEY (`user_me`) REFERENCES `userapps` (`Facebook_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `following_ibfk_2` FOREIGN KEY (`following_user`) REFERENCES `userapps` (`Facebook_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `friends`
