@@ -179,7 +179,7 @@ else {
 
       /*Set the session and redirect to the main dashboard*/
       $_SESSION['usr_id']=$Facebook_ID;
-      header("location: checkemail.php?id=$Facebook_ID");
+      header("location: emailConfirmation.php?id=$Facebook_ID");
     
     } 
     else
