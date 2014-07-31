@@ -71,7 +71,7 @@ include 'Download_Picture_function.php';
 
 
 			/*Fill the database with the basic information*/
-			$sql = "INSERT INTO userapps (`usr_email`,`usr_lname`,`usr_fname`,`Facebook_ID`,`profil_link`,`birthday`,`location`,`gender`,`picture_link`)
+			$sql = "INSERT INTO userapps (`usr_email`,`usr_lname`,`usr_fname`,`Facebook_ID`,`profil_link`,`birthday`,`location`,`gender`,`picture_link`,`confirmed`)
 					VALUES(
 						'$email',
 						'$last_name',
@@ -81,7 +81,8 @@ include 'Download_Picture_function.php';
 						'$birthday',
 						'$position',
 						'$gender',
-						'$picture'
+						'$picture',
+						'1'
 						);";
 
 			$db->query($sql);
