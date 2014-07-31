@@ -300,8 +300,8 @@
                                 $query = $connect->query("
 
                                     INSERT INTO events
-                                    (event_name, event_time, event_date, usr_create, event_place, event_pic, event_description, event_cat, event_type)
-                                    VALUES ('$event_name','$event_time','$event_date',$sessionUser,'$event_place','$file_name','$event_description',$event_cat,'$event_type')
+                                    (event_id, event_name, event_time, event_date, usr_create, event_place, event_pic, event_description, event_cat, event_type)
+                                    VALUES (mt_rand(),'$event_name','$event_time','$event_date',$sessionUser,'$event_place','$file_name','$event_description',$event_cat,'$event_type')
 
                                 ");
 
@@ -348,8 +348,8 @@
                                 $query = $connect->query("
 
                                     INSERT INTO events
-                                    (event_name, event_time, event_date, usr_create, event_place, event_pic, event_description, event_cat, event_type)
-                                    VALUES ('$event_name','$event_time','$event_date',$sessionUser,'$event_place','default.jpg','$event_description',$event_cat,'$event_type')
+                                    (event_id,event_name, event_time, event_date, usr_create, event_place, event_pic, event_description, event_cat, event_type)
+                                    VALUES (mt_rand(),'$event_name','$event_time','$event_date',$sessionUser,'$event_place','default.jpg','$event_description',$event_cat,'$event_type')
 
                                 ");
 
