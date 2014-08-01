@@ -284,7 +284,7 @@
     <div class="rp_col_wrapper clearfix" id="participants_view">
         
         <?php 
-            $search_query =  mysql_real_escape_string($search_query);
+            $search_query =  addslashes($search_query);
             $participants_query = $connect->query("
                 SELECT * 
                 FROM  userapps 

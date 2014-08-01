@@ -9,7 +9,7 @@
         	require_once("connect.php");
         	$participants_load = htmlentities(strip_tags($_POST['participants_load'])) * 20;
             $search_query = htmlentities(strip_tags($_POST['search_query']));
-            $search_query =  mysql_real_escape_string($search_query);
+            $search_query =  addslashes($search_query);
             
             $participants_query = $connect->query("
                 SELECT * 

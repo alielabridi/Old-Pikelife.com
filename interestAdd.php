@@ -14,7 +14,7 @@
     $q=$_GET["q"];
     
     require_once('connect.php');
-    $q =  mysql_real_escape_string($q);
+    $q =  addslashes($q);
     
     //lookup all links from the xml file if length of q>0
     if (strlen($q)>0) {

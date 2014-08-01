@@ -4,7 +4,7 @@
 
     //get the q parameter from URL
     $q=$_GET["q"];
-    $q =  mysql_real_escape_string($q);
+    $q =  addslashes($q);
     
     //lookup all links from the xml file if length of q>0
     if (strlen($q)>0) {
